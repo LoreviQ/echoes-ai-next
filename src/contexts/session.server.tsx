@@ -5,6 +5,6 @@ export async function getInitialSession() {
     const { data: { user } } = await supabase.auth.getUser();
     return {
         active: !!user,
-        user: user
+        user: user?.user_metadata ?? null
     };
 }

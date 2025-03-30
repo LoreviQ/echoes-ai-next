@@ -27,7 +27,7 @@ export function SessionProvider({
         } = supabase.auth.onAuthStateChange((_event, session) => {
             setSessionStatus({
                 active: !!session,
-                user: session?.user ?? null,
+                user: session?.user.user_metadata ?? null,
             });
         });
 
