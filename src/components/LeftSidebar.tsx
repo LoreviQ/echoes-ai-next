@@ -1,4 +1,4 @@
-import { NavButton } from "@/components/buttons";
+import { NavButton } from "@/components/buttons/NavButton";
 import { TypefaceOutlined } from "@/components/branding";
 import UserSection from "@/components/UserSection";
 import { HomeIcon, DocumentIcon, SettingsIcon } from "@/assets/icons";

@@ -1,7 +1,8 @@
 'use client';
 
 import { useSession } from '@/contexts/session.client';
-import { NavButton, UserButton } from "@/components/buttons";
+import { NavButton } from "@/components/buttons/NavButton";
+import { UserButton } from "@/components/buttons/UserButton";
 import { LoginIcon } from "@/assets/icons";
 
 export default function UserSection() {
