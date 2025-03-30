@@ -1,10 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { SearchIcon, PlusIcon } from "@/assets/icons";
 import { ActionButton } from "@/components/buttons/ActionButton";
+import { Modal } from "@/components/Modal";
+import { CreateCharacterForm } from "@/components/CreateCharacterForm";
 
 export default function RightSidebar() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleCreateCharacter = (data: { name: string; description: string }) => {
+        console.log('Character data:', data);
+        // TODO: Handle character creation
+        setIsModalOpen(false);
+    };
+
     return (
         <div className="pt-4 pl-10 bg-black text-white w-340px h-screen transition-all duration-300 border-l border-gray-600">
             <div className="space-y-4">
@@ -12,10 +22,18 @@ export default function RightSidebar() {
                 <ActionButton
                     label="Create a Character"
                     icon={PlusIcon}
-                    onClick={() => { }}
+                    onClick={() => setIsModalOpen(true)}
                     className="w-full"
                 />
             </div>
+
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title="Create a New Character"
+            >
+                <CreateCharacterForm onSubmit={handleCreateCharacter} />
+            </Modal>
         </div>
     );
 }
