@@ -6,6 +6,7 @@ import { createClient } from '@/utils/supabase.client';
 
 const SessionContext = createContext<SessionStatus>({
     active: false,
+    user: null,
 });
 
 export const useSession = () => useContext(SessionContext);
@@ -26,7 +27,7 @@ export function SessionProvider({
         } = supabase.auth.onAuthStateChange((_event, session) => {
             setSessionStatus({
                 active: !!session,
-                user: session?.user,
+                user: session?.user ?? null,
             });
         });
 

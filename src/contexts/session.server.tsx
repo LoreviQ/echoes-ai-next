@@ -2,9 +2,9 @@ import { createClient } from '@/utils/supabase.server';
 
 export async function getInitialSession() {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user } } = await supabase.auth.getUser();
     return {
-        active: !!session,
-        user: session?.user
-    };;
+        active: !!user,
+        user: user
+    };
 }
