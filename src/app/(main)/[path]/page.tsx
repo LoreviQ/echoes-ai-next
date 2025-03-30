@@ -1,18 +1,20 @@
 import { createClient } from '@/utils/supabase.server';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
-export default async function DynamicPage({
+export default async function CharacterPage({
     params,
 }: {
     params: { path: string };
 }) {
     const supabase = await createClient();
+    const param = await params; //says it doesn't do anything but it does, required by nextjs 15
 
     // Fetch character data
     const { data: character, error } = await supabase
         .from('characters')
         .select('*')
-        .eq('path', params.path)
+        .eq('path', param.path)
         .single();
 
     if (error || !character) {
@@ -20,15 +22,28 @@ export default async function DynamicPage({
     }
 
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">{character.name}</h1>
-            {character.bio && (
-                <p className="text-gray-300 mb-4">{character.bio}</p>
-            )}
-            <div className="text-sm text-gray-400">
-                {character.public ? 'Public' : 'Private'} character
-                {character.nsfw && ' • NSFW'}
+        <main className="flex flex-col">
+            <div className="relative w-full max-w-[600px]">
+                <div className="relative w-full aspect-[3/1]">
+                    <Image
+                        src="/images/banner-placeholder.jpg"
+                        alt="Character banner placeholder"
+                        fill
+                        className="object-contain"
+                        priority
+                    />
+                </div>
+                <div className="absolute bottom-0 translate-y-1/2 left-4">
+                    <div className="relative w-[150px] h-[150px] rounded-full border-4 border-black">
+                        <Image
+                            src="/images/avatar-placeholder.jpg"
+                            alt="Character avatar"
+                            fill
+                            className="rounded-full object-cover"
+                        />
+                    </div>
+                </div>
             </div>
-        </div>
+        </main>
     );
 } 
