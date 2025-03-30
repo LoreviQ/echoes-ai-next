@@ -1,9 +1,17 @@
-
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { updateSession } from '@/utils/supabase.middleware'
 
 export async function middleware(request: NextRequest) {
     const publicUrls = ['/home', '/login'];
+
+    // Handle root path redirection
+    if (request.nextUrl.pathname === '/') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/home'
+        return NextResponse.redirect(url)
+    }
+
     return await updateSession(request, publicUrls)
 }
 
