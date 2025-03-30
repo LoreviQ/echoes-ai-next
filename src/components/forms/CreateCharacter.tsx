@@ -1,8 +1,7 @@
-"use client";
-
 import React, { useState, useEffect } from 'react';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
 import { Switch } from '@/components/ui/switch';
+import { createClient } from '@/utils/supabase.client';
 
 export interface CharacterFormData {
     name: string;
@@ -22,6 +21,8 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
     const [bio, setBio] = useState('');
     const [isPublic, setIsPublic] = useState(true);
     const [isNsfw, setIsNsfw] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const supabase = createClient();
 
     useEffect(() => {
         setPath(nameToPath(name));
@@ -29,36 +30,49 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
 
     const handleCreateCharacter = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
 
         // Validate path format
         const pathRegex = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/;
         if (!pathRegex.test(path)) {
-            alert('Path must start and end with a letter or number, and can only contain lowercase letters, numbers, and hyphens');
+            setError('Path must start and end with a letter or number, and can only contain lowercase letters, numbers, and hyphens');
             return;
         }
 
         // Check path length
         if (path.length < 1 || path.length > 255) {
-            alert('Path must be between 1 and 255 characters');
+            setError('Path must be between 1 and 255 characters');
             return;
         }
 
         try {
-            const characterData: CharacterFormData = {
-                name,
-                path,
-                bio,
-                public: isPublic,
-                nsfw: isNsfw,
-            };
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-            // TODO: Add your API call here to create the character
-            // await createCharacter(characterData);
+            if (!user || userError) {
+                throw new Error('Authentication error');
+            }
+
+            const { error: insertError } = await supabase
+                .from('characters')
+                .insert({
+                    user_id: user.id,
+                    name,
+                    path,
+                    bio: bio || null,
+                    public: isPublic,
+                    nsfw: isNsfw,
+                    avatar_url: null
+                });
+
+            if (insertError) {
+                console.error('Error creating character:', insertError);
+                throw insertError;
+            }
 
             setIsModalOpen(false); // Close the modal after successful creation
         } catch (error) {
             console.error('Error creating character:', error);
-            // TODO: Add error handling
+            setError('Failed to create character. Please try again.');
         }
     };
 
@@ -100,13 +114,12 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
                     id="bio"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    required
                     rows={4}
                     className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
-                    placeholder="Enter character bio"
+                    placeholder="Enter character bio (optional)"
                 />
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-center space-x-12">
                 <div className="flex items-center space-x-2">
                     <Switch
                         id="public"
@@ -125,6 +138,9 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
                 </div>
             </div>
             <div className="flex justify-end">
+                {error && (
+                    <div className="text-red-500 text-sm mr-4 self-center">{error}</div>
+                )}
                 <SubmitButton label="Create Character" />
             </div>
         </form>

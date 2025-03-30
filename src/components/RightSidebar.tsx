@@ -5,9 +5,20 @@ import { SearchIcon, PlusIcon } from "@/assets/icons";
 import { ActionButton } from "@/components/buttons/ActionButton";
 import { Modal } from "@/components/Modal";
 import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
+import { useSession } from "@/contexts/session.client";
 
 export default function RightSidebar() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { active: isLoggedIn } = useSession();
+
+    const handleCreateClick = () => {
+        if (!isLoggedIn) {
+            alert('You must be logged in to create a character');
+            return;
+        }
+
+        setIsModalOpen(true);
+    };
 
     return (
         <div className="pt-4 pl-10 bg-black text-white w-340px h-screen transition-all duration-300 border-l border-gray-600">
@@ -16,7 +27,7 @@ export default function RightSidebar() {
                 <ActionButton
                     label="Create a Character"
                     icon={PlusIcon}
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleCreateClick}
                     className="w-full"
                 />
             </div>
