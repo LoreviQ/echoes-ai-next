@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from 'react';
 
 interface ModalProps {
@@ -35,7 +33,6 @@ export function useModal() {
 
     return {
         Modal,
-        isOpen,
         setIsOpen
     };
 } 
