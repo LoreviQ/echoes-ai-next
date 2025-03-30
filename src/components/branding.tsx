@@ -4,10 +4,11 @@ export function TypefaceOutlined({ text, path, outlineColour, className }: { tex
     return (
         <Link
             href={path}
-            className={`${className} font-custom flex items-center justify-center`}
+            className={`${className} flex items-center justify-center`}
             style={{
                 WebkitTextStroke: `2px ${outlineColour}`,
-                color: 'transparent'
+                color: 'transparent',
+                fontFamily: 'var(--font-cyberway), sans-serif'
             }}
         >
             {text}
