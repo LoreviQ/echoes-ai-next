@@ -7,10 +7,9 @@ import type { NavItem } from "@/config/navigation";
 
 interface NavButtonProps {
     item: NavItem;
-    collapsed: boolean;
 }
 
-export function NavButton({ item, collapsed }: NavButtonProps) {
+export function NavButton({ item }: NavButtonProps) {
     const pathname = usePathname();
     const isActive = pathname === item.path;
 
@@ -27,11 +26,9 @@ export function NavButton({ item, collapsed }: NavButtonProps) {
             <div className="w-8 h-8 flex items-center justify-center">
                 <item.icon />
             </div>
-            {!collapsed && (
-                <span className="ml-3">
-                    {item.label}
-                </span>
-            )}
+            <span className="ml-3 md:hidden xl:block">
+                {item.label}
+            </span>
         </Link>
     );
 } 
