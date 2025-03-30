@@ -30,6 +30,19 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
     const handleCreateCharacter = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validate path format
+        const pathRegex = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/;
+        if (!pathRegex.test(path)) {
+            alert('Path must start and end with a letter or number, and can only contain lowercase letters, numbers, and hyphens');
+            return;
+        }
+
+        // Check path length
+        if (path.length < 1 || path.length > 255) {
+            alert('Path must be between 1 and 255 characters');
+            return;
+        }
+
         try {
             const characterData: CharacterFormData = {
                 name,
@@ -118,6 +131,15 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
     );
 }
 
-function nameToPath(name: string) {
-    return name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9-]/g, '');
+function nameToPath(name: string): string {
+    if (!name) return '';
+
+    // Convert to lowercase and replace spaces/special chars with hyphens
+    const path = name.toLowerCase()
+        .replace(/\s+/g, '-')           // Replace spaces with hyphens
+        .replace(/[^a-z0-9-]/g, '')     // Remove non-alphanumeric chars (except hyphens)
+        .replace(/-+/g, '-')            // Replace multiple hyphens with single hyphen
+        .replace(/^-+|-+$/g, '');       // Remove leading/trailing hyphens
+
+    return path || 'unnamed-character';  // Fallback if empty
 }
