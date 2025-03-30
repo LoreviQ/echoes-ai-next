@@ -1,10 +1,13 @@
+"use client";
+
 import React from "react";
-import { SearchIcon } from "@/assets/icons";
+import { SearchIcon, PlusIcon } from "@/assets/icons";
+import { ActionButton } from "@/components/buttons/ActionButton";
 
 export default function RightSidebar() {
     return (
         <div className="pt-4 pl-10 bg-black text-white w-340px h-screen transition-all duration-300 border-l border-gray-600">
-            <div className="relative">
+            <div className="space-y-4">
                 <Search />
                 <ActionButton
                     label="Create a Character"
