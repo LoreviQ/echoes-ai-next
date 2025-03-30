@@ -8,13 +8,12 @@ export default async function CharacterPage({
     params: { path: string };
 }) {
     const supabase = await createClient();
-    const param = await params; //says it doesn't do anything but it does, required by nextjs 15
 
     // Fetch character data
     const { data: character, error } = await supabase
         .from('characters')
         .select('*')
-        .eq('path', param.path)
+        .eq('path', params.path)
         .single();
 
     if (error || !character) {
