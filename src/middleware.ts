@@ -3,36 +3,9 @@ import type { NextRequest } from 'next/server'
 import { updateSession } from '@/utils/supabase.middleware'
 
 export async function middleware(request: NextRequest) {
-    return await updateSession(request)
+    const publicUrls = ['/home', '/login'];
+    return await updateSession(request, publicUrls)
 }
-
-/*
-export async function middleware(req: NextRequest) {
-    const res = NextResponse.next();
-    const path = req.nextUrl.pathname
-    const supabase = createMiddlewareClient({ req, res });
-    const { data: { session } } = await supabase.auth.getSession();
-
-    // Redirect / to /home
-    if (path === '/') {
-        return NextResponse.redirect(new URL('/home', req.url))
-    }
-
-    // Public URLs
-    const publicUrls = ['/home', '/login', '/register'];
-    if (publicUrls.includes(path)) {
-        return res;
-    }
-
-    // Redirect to login if not authenticated
-    if (!session) {
-        return NextResponse.redirect(new URL('/login', req.url))
-    }
-
-    // Continue with the request for all other paths
-    return res;
-}
-*/
 
 // Configure which paths the middleware will run on
 export const config = {
