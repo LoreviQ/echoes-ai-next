@@ -3,19 +3,22 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { NavItem } from "@/config/navigation";
+import { type IconComponent } from "@/assets/icons";
 
-interface NavButtonProps {
-    item: NavItem;
+
+export interface NavButtonProps {
+    label: string;
+    path: string;
+    icon: IconComponent;
 }
 
-export function NavButton({ item }: NavButtonProps) {
+export function NavButton({ label, path, icon: Icon }: NavButtonProps) {
     const pathname = usePathname();
-    const isActive = pathname === item.path;
+    const isActive = pathname === path;
 
     return (
         <Link
-            href={item.path}
+            href={path}
             className={`
         inline-flex items-center p-2 rounded-xl transition-colors
         bg-black text-white
@@ -24,10 +27,10 @@ export function NavButton({ item }: NavButtonProps) {
       `}
         >
             <div className="w-8 h-8 flex items-center justify-center">
-                <item.icon />
+                <Icon />
             </div>
             <span className="ml-3 md:hidden xl:block">
-                {item.label}
+                {label}
             </span>
         </Link>
     );

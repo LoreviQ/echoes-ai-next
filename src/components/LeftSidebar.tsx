@@ -1,9 +1,28 @@
-import { navigationItems, loginNavItem } from "@/config/navigation";
 import { NavButton } from "@/components/buttons";
 import { TypefaceOutlined } from "@/components/branding";
-import type { SessionStatus } from "@/types/session";
+import UserSection from "@/components/UserSection";
+import { HomeIcon, DocumentIcon, SettingsIcon } from "@/assets/icons";
 
-export default function LeftSidebar({ sessionStatus }: { sessionStatus: SessionStatus }) {
+
+const navigationItems = [
+    {
+        label: "Home",
+        path: "/home",
+        icon: HomeIcon,
+    },
+    {
+        label: "Notifications",
+        path: "/notifications",
+        icon: DocumentIcon,
+    },
+    {
+        label: "Settings",
+        path: "/settings",
+        icon: SettingsIcon,
+    },
+];
+
+export default function LeftSidebar() {
     return (
         <div className={`bg-black text-white w-[84px] xl:w-[280px] h-screen transition-all duration-300 border-r border-gray-600 flex flex-col`}>
             <div className="p-4 space-y-4">
@@ -23,22 +42,15 @@ export default function LeftSidebar({ sessionStatus }: { sessionStatus: SessionS
                     {navigationItems.map((item) => (
                         <div key={item.path} className="w-full">
                             <NavButton
-                                item={item}
+                                label={item.label}
+                                path={item.path}
+                                icon={item.icon}
                             />
                         </div>
                     ))}
                 </div>
             </div>
-
-            <div className="mt-auto border-t border-gray-600 h-[84px] flex items-center justify-center">
-                {sessionStatus.active ? (
-                    <span className="text-sm text-gray-300">Logged In</span>
-                ) : (
-                    <NavButton
-                        item={loginNavItem}
-                    />
-                )}
-            </div>
+            <UserSection />
         </div>
     );
 } 
