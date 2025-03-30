@@ -38,7 +38,7 @@ export function UserButton({ user }: UserButtonProps) {
                         </div>
                     )}
                 </div>
-                <div className="ml-3 text-left">
+                <div className="hidden xl:block ml-3 text-left">
                     <div className="font-bold">{user.name || 'User'}</div>
                     <div className="text-sm text-gray-300">{user.email || ''}</div>
                 </div>
