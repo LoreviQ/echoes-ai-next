@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import LeftSidebar from "@/components/LeftSidebar";
-import RightSidebar from "@/components/RightSidebar";
+import LayoutContent from "@/components/layoutContent";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,25 +23,16 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    // Temporary placeholder values - we'll handle dynamic logic later
-    const showLeftSidebar = true; // Replace with logic later
-    const showRightSidebar = true; // Replace with logic later
-    const leftSidebarCollapsed = false; // Replace with logic later
-    const rightSidebarCollapsed = false; // Replace with logic later
-    const sessionStatus = { active: false, user: undefined }; // Placeholder - fetch later
+    // For now, using a placeholder sessionStatus
+    // We'll implement proper session handling in the next step
+    const sessionStatus = { active: false, user: undefined };
 
     return (
         <html lang="en">
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
-                <div className="flex justify-center bg-black text-white min-h-screen">
-                    {showLeftSidebar && <LeftSidebar collapsed={leftSidebarCollapsed} sessionStatus={sessionStatus} />}
-                    <main className="max-w-[600px] w-full h-screen overflow-y-auto">
-                        {children}
-                    </main>
-                    {showRightSidebar && <RightSidebar collapsed={rightSidebarCollapsed} />}
-                </div>
+            <body>
+                <LayoutContent sessionStatus={sessionStatus}>
+                    {children}
+                </LayoutContent>
             </body>
         </html>
     );
