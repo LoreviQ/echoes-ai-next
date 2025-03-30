@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ActionButton } from "./ActionButton";
+import { CollapsableActionButton } from "./CollapsableActionButton";
 import { LoginIcon } from "@/assets/icons";
 import { createClient } from "@/utils/supabase.client";
 
@@ -61,7 +61,7 @@ function Button({ onClick, user }: { onClick: () => void, user: { avatar_url?: s
 function Dropdown() {
     return (
         <div className="absolute bottom-full mb-2 min-w-[100%] w-max bg-black border border-white rounded-xl p-4 text-white flex justify-center">
-            <ActionButton
+            <CollapsableActionButton
                 label="Logout"
                 icon={LoginIcon}
                 onClick={logout}
