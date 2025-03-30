@@ -2,11 +2,12 @@ import { createClient } from '@/utils/supabase.server';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
-export default async function CharacterPage({
-    params,
-}: {
-    params: { path: string };
-}) {
+export default async function CharacterPage(
+    props: {
+        params: Promise<{ path: string }>;
+    }
+) {
+    const params = await props.params;
     const supabase = await createClient();
 
     // Fetch character data
