@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { type SessionStatus } from '@/types/session';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase.client';
 
 const SessionContext = createContext<SessionStatus>({
     active: false,
@@ -18,7 +18,7 @@ export function SessionProvider({
     initialSession: SessionStatus;
 }) {
     const [sessionStatus, setSessionStatus] = useState<SessionStatus>(initialSession);
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
 
     useEffect(() => {
         const {

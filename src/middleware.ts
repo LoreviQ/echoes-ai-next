@@ -1,8 +1,12 @@
-import { NextResponse } from 'next/server'
+
 import type { NextRequest } from 'next/server'
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+import { updateSession } from '@/utils/supabase.middleware'
 
+export async function middleware(request: NextRequest) {
+    return await updateSession(request)
+}
 
+/*
 export async function middleware(req: NextRequest) {
     const res = NextResponse.next();
     const path = req.nextUrl.pathname
@@ -28,6 +32,7 @@ export async function middleware(req: NextRequest) {
     // Continue with the request for all other paths
     return res;
 }
+*/
 
 // Configure which paths the middleware will run on
 export const config = {
