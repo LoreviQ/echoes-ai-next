@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { SearchIcon, PlusIcon } from "@/assets/icons";
 import { ActionButton } from "@/components/buttons/ActionButton";
 import { Modal } from "@/components/Modal";
-import { CreateCharacterForm } from "@/components/CreateCharacterForm";
+import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
 
 export default function RightSidebar() {
     const [isModalOpen, setIsModalOpen] = useState(false);
