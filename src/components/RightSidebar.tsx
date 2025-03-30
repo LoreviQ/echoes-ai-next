@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { SearchIcon, PlusIcon } from "@/assets/icons";
 import { ActionButton } from "@/components/buttons/ActionButton";
-import { Modal } from "@/components/Modal";
+import { useModal } from "@/hooks/useModal";
 import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
 import { useSession } from "@/contexts/session.client";
 
 export default function RightSidebar() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { Modal, setIsOpen } = useModal();
     const { active: isLoggedIn } = useSession();
 
     const handleCreateClick = () => {
@@ -17,7 +17,7 @@ export default function RightSidebar() {
             return;
         }
 
-        setIsModalOpen(true);
+        setIsOpen(true);
     };
 
     return (
@@ -32,12 +32,8 @@ export default function RightSidebar() {
                 />
             </div>
 
-            <Modal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Create a New Character"
-            >
-                <CreateCharacterForm setIsModalOpen={setIsModalOpen} />
+            <Modal title="Create a New Character">
+                <CreateCharacterForm setIsModalOpen={setIsOpen} />
             </Modal>
         </div>
     );
