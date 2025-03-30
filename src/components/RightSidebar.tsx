@@ -9,12 +9,6 @@ import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
 export default function RightSidebar() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleCreateCharacter = (data: { name: string; description: string }) => {
-        console.log('Character data:', data);
-        // TODO: Handle character creation
-        setIsModalOpen(false);
-    };
-
     return (
         <div className="pt-4 pl-10 bg-black text-white w-340px h-screen transition-all duration-300 border-l border-gray-600">
             <div className="space-y-4">
@@ -32,7 +26,7 @@ export default function RightSidebar() {
                 onClose={() => setIsModalOpen(false)}
                 title="Create a New Character"
             >
-                <CreateCharacterForm onSubmit={handleCreateCharacter} />
+                <CreateCharacterForm setIsModalOpen={setIsModalOpen} />
             </Modal>
         </div>
     );

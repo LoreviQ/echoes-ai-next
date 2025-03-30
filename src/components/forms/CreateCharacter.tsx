@@ -1,26 +1,56 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
+import { Switch } from '@/components/ui/switch';
 
-interface CreateCharacterFormProps {
-    onSubmit: (data: { name: string; description: string }) => void;
+export interface CharacterFormData {
+    name: string;
+    path: string;
+    bio: string;
+    public: boolean;
+    nsfw: boolean;
 }
 
-export function CreateCharacterForm({ onSubmit }: CreateCharacterFormProps) {
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        const formData = new FormData(form);
+interface CreateCharacterFormProps {
+    setIsModalOpen: (isOpen: boolean) => void;
+}
 
-        onSubmit({
-            name: formData.get('name') as string,
-            description: formData.get('description') as string,
-        });
+export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps) {
+    const [name, setName] = useState('');
+    const [path, setPath] = useState('');
+    const [bio, setBio] = useState('');
+    const [isPublic, setIsPublic] = useState(true);
+    const [isNsfw, setIsNsfw] = useState(false);
+
+    useEffect(() => {
+        setPath(nameToPath(name));
+    }, [name]);
+
+    const handleCreateCharacter = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            const characterData: CharacterFormData = {
+                name,
+                path,
+                bio,
+                public: isPublic,
+                nsfw: isNsfw,
+            };
+
+            // TODO: Add your API call here to create the character
+            // await createCharacter(characterData);
+
+            setIsModalOpen(false); // Close the modal after successful creation
+        } catch (error) {
+            console.error('Error creating character:', error);
+            // TODO: Add error handling
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleCreateCharacter} className="space-y-4">
             <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-1">
                     Character Name
@@ -28,28 +58,66 @@ export function CreateCharacterForm({ onSubmit }: CreateCharacterFormProps) {
                 <input
                     type="text"
                     id="name"
-                    name="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                     className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
                     placeholder="Enter character name"
                 />
             </div>
             <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-200 mb-1">
-                    Description
+                <label htmlFor="path" className="block text-sm font-medium text-gray-200 mb-1">
+                    URL Path
+                </label>
+                <input
+                    type="text"
+                    id="path"
+                    value={path}
+                    onChange={(e) => setPath(e.target.value)}
+                    required
+                    className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
+                    placeholder="url-friendly-path"
+                />
+            </div>
+            <div>
+                <label htmlFor="bio" className="block text-sm font-medium text-gray-200 mb-1">
+                    Bio
                 </label>
                 <textarea
-                    id="description"
-                    name="description"
+                    id="bio"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
                     required
                     rows={4}
                     className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
-                    placeholder="Enter character description"
+                    placeholder="Enter character bio"
                 />
+            </div>
+            <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                    <Switch
+                        id="public"
+                        checked={isPublic}
+                        onCheckedChange={setIsPublic}
+                    />
+                    <label className="text-sm font-medium text-gray-200" htmlFor="public">Public</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Switch
+                        id="nsfw"
+                        checked={isNsfw}
+                        onCheckedChange={setIsNsfw}
+                    />
+                    <label className="text-sm font-medium text-gray-200" htmlFor="nsfw">NSFW</label>
+                </div>
             </div>
             <div className="flex justify-end">
                 <SubmitButton label="Create Character" />
             </div>
         </form>
     );
-} 
+}
+
+function nameToPath(name: string) {
+    return name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9-]/g, '');
+}
