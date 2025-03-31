@@ -136,6 +136,23 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
         }
     };
 
+    const generateCharacter = async () => {
+        const prompt = `Generate a character name and biography based on the following ten words:
+${tags}
+Remember to provide the output strictly in the specified JSON format: {"name": "character name", "bio": "2-3 paragraph description here"}.
+`
+
+        const systemInstruction = `You are an expert character creator and writer. Your task is to generate a character name and biography based on a list of ten descriptive words provided by the user.
+You MUST analyze the provided words, even if they seem contradictory, and synthesize them into a coherent and intriguing character concept.
+
+The output MUST be a single, valid JSON object. This JSON object must contain exactly two keys:
+1.  \`name\`: A string containing a plausible and fitting name for the character.
+2.  \`bio\`: A string containing a compelling character biography of 2-3 paragraphs, reflecting the essence, personality, potential appearance, and backstory hinted at by the provided descriptive words.
+
+Do NOT include any introductory text, explanations, markdown formatting codes (like \`\`\`json), or conversational filler before or after the JSON object.Your entire response must be ONLY the JSON object itself.
+`
+    }
+
     return (
         <form onSubmit={handleCreateCharacter} className="space-y-4">
             <div className="relative w-full mb-4">
@@ -179,7 +196,7 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
                     placeholder={`Generate character from tags\n(e.g. 'cat, magic, funny')`}
                 />
                 <CircleActionButton
-                    onClick={() => { }}
+                    onClick={generateCharacter}
                     icon={RightArrowIcon}
                     className="border border-gray-600 hover:bg-gray-600"
                 />
@@ -272,7 +289,7 @@ function nameToPath(name: string): string {
 
     // If the path matches a protected route, append a random string
     if (PROTECTED_ROUTES.includes(path as any)) {
-        return `${path}-${Math.random().toString(36).substring(2, 8)}`;
+        return `${path} -${Math.random().toString(36).substring(2, 8)} `;
     }
 
     return path || 'unnamed-character';  // Fallback if empty
