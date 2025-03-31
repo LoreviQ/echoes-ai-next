@@ -134,40 +134,29 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
 
     return (
         <form onSubmit={handleCreateCharacter} className="space-y-4">
-            <div className="flex flex-col md:flex-row gap-4 mb-6">
-                <div className="flex-1">
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-200 mb-1">
-                            Character Avatar
-                        </label>
-                        <div className="relative w-32 h-32 mx-auto">
-                            <SelectImage
-                                src="/images/avatar-placeholder.jpg"
-                                alt="Character avatar"
-                                fill
-                                className="rounded-full object-cover"
-                                onFileSelected={setAvatarFile}
-                            />
-                        </div>
-                    </div>
+            <div className="relative w-full mb-24">
+                <div className="relative w-full aspect-[3/1]">
+                    <SelectImage
+                        src="/images/banner-placeholder.jpg"
+                        alt="Character banner"
+                        fill
+                        className="object-contain"
+                        onFileSelected={setBannerFile}
+                    />
                 </div>
-                <div className="flex-1">
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-200 mb-1">
-                            Character Banner
-                        </label>
-                        <div className="relative w-full h-32">
-                            <SelectImage
-                                src="/images/banner-placeholder.jpg"
-                                alt="Character banner"
-                                fill
-                                className="object-cover rounded-md"
-                                onFileSelected={setBannerFile}
-                            />
-                        </div>
+                <div className="absolute bottom-0 translate-y-1/2 left-4 w-full">
+                    <div className="relative w-[25%] aspect-square rounded-full border-4 border-black min-w-[80px]">
+                        <SelectImage
+                            src="/images/avatar-placeholder.jpg"
+                            alt="Character avatar"
+                            fill
+                            className="rounded-full object-cover"
+                            onFileSelected={setAvatarFile}
+                        />
                     </div>
                 </div>
             </div>
+
             <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-1">
                     Character Name
