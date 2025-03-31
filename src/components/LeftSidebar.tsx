@@ -29,14 +29,15 @@ const navigationItems = [
 ];
 
 export default function LeftSidebar() {
-    const { Modal, setIsOpen } = useModal();
+    const { getModal, setIsOpen } = useModal();
+    const { Modal } = getModal("Create a New Character");
     const { active: isLoggedIn } = useSession();
+
     const handleCreateClick = () => {
         if (!isLoggedIn) {
             alert('You must be logged in to create a character');
             return;
         }
-
         setIsOpen(true);
     };
 
@@ -77,8 +78,8 @@ export default function LeftSidebar() {
                 </div>
             </div>
             <UserSection />
-            <Modal title="Create a New Character">
-                <CreateCharacterForm setIsModalOpen={setIsOpen} />
+            <Modal>
+                <CreateCharacterForm onSuccess={() => setIsOpen(false)} />
             </Modal>
         </div>
     );

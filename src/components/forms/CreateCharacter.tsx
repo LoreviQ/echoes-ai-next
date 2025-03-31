@@ -15,44 +15,61 @@ export interface CharacterFormData {
 }
 
 interface CreateCharacterFormProps {
-    setIsModalOpen: (isOpen: boolean) => void;
+    onSuccess?: () => void;
 }
 
-export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps) {
+export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
     const [name, setName] = useState('');
     const [path, setPath] = useState('');
     const [bio, setBio] = useState('');
     const [isPublic, setIsPublic] = useState(true);
     const [isNsfw, setIsNsfw] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const supabase = createClient();
 
     useEffect(() => {
         setPath(nameToPath(name));
     }, [name]);
 
-    const handleCreateCharacter = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-
+    const validateForm = (): boolean => {
         // Validate path format
         const pathRegex = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/;
         if (!pathRegex.test(path)) {
             setError('Path must start and end with a letter or number, and can only contain lowercase letters, numbers, and hyphens');
-            return;
+            return false;
         }
 
         // Check path length
         if (path.length < 1 || path.length > 255) {
             setError('Path must be between 1 and 255 characters');
-            return;
+            return false;
         }
 
         // Check for protected routes
         if (PROTECTED_ROUTES.includes(path as any)) {
             setError('This path name is reserved. Please choose a different name.');
+            return false;
+        }
+
+        return true;
+    };
+
+    const handleCreateCharacter = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Prevent submission if already submitting
+        if (isSubmitting) {
             return;
         }
+
+        setError(null);
+
+        if (!validateForm()) {
+            return;
+        }
+
+        setIsSubmitting(true);
 
         try {
             const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -78,10 +95,15 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
                 throw insertError;
             }
 
-            setIsModalOpen(false); // Close the modal after successful creation
+            // Call onSuccess callback if provided
+            if (onSuccess) {
+                onSuccess();
+            }
         } catch (error) {
             console.error('Error creating character:', error);
             setError('Failed to create character. Please try again.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -97,6 +119,7 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    disabled={isSubmitting}
                     className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
                     placeholder="Enter character name"
                 />
@@ -111,6 +134,7 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
                     value={path}
                     onChange={(e) => setPath(e.target.value)}
                     required
+                    disabled={isSubmitting}
                     className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
                     placeholder="url-friendly-path"
                 />
@@ -124,6 +148,7 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                     rows={4}
+                    disabled={isSubmitting}
                     className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
                     placeholder="Enter character bio (optional)"
                 />
@@ -133,7 +158,12 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
                     <Switch
                         id="public"
                         checked={isPublic}
-                        onCheckedChange={setIsPublic}
+                        onCheckedChange={(checked) => {
+                            if (!isSubmitting) {
+                                setIsPublic(checked);
+                            }
+                        }}
+                        className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
                     />
                     <label className="text-sm font-medium text-gray-200" htmlFor="public">Public</label>
                 </div>
@@ -141,7 +171,12 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
                     <Switch
                         id="nsfw"
                         checked={isNsfw}
-                        onCheckedChange={setIsNsfw}
+                        onCheckedChange={(checked) => {
+                            if (!isSubmitting) {
+                                setIsNsfw(checked);
+                            }
+                        }}
+                        className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
                     />
                     <label className="text-sm font-medium text-gray-200" htmlFor="nsfw">NSFW</label>
                 </div>
@@ -150,7 +185,10 @@ export function CreateCharacterForm({ setIsModalOpen }: CreateCharacterFormProps
                 {error && (
                     <div className="text-red-500 text-sm mr-4 self-center">{error}</div>
                 )}
-                <SubmitButton label="Create Character" />
+                <SubmitButton
+                    label="Create Character"
+                    className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
+                />
             </div>
         </form>
     );
