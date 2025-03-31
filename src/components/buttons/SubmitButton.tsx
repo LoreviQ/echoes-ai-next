@@ -13,8 +13,8 @@ export function SubmitButton({ label, className }: SubmitButtonProps) {
             type="submit"
             className={`
                 inline-flex items-center p-2 rounded-xl transition-colors
-                bg-black text-white border border-gray-600
-                hover:bg-gray-600
+                bg-black text-white border border-zinc-600
+                hover:bg-zinc-600
                 ${className || ''}
             `}
         >

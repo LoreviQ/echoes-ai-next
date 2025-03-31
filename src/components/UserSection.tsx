@@ -8,7 +8,7 @@ import { LoginIcon } from "@/assets/icons";
 export default function UserSection() {
     const sessionStatus = useSession();
     return (
-        <div className="mt-auto border-t border-gray-600 h-[84px] flex items-center justify-center p-2">
+        <div className="mt-auto border-t border-zinc-600 h-[84px] flex items-center justify-center p-2">
             {sessionStatus.active && sessionStatus.user ? (
                 <UserButton user={sessionStatus.user} />
             ) : (

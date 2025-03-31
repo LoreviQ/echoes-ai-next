@@ -22,7 +22,7 @@ export function NavButton({ label, path, icon: Icon, className }: NavButtonProps
             className={`
         inline-flex items-center p-2 rounded-xl transition-colors
         bg-black text-white
-        hover:bg-gray-600
+        hover:bg-zinc-600
         ${isActive ? "font-bold" : "font-normal"}
         ${className}
       `}

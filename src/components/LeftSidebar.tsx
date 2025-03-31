@@ -42,7 +42,7 @@ export default function LeftSidebar() {
     };
 
     return (
-        <div className={`bg-black text-white w-[84px] xl:w-[280px] h-screen transition-all duration-300 border-r border-gray-600 flex flex-col`}>
+        <div className={`bg-black text-white w-[84px] xl:w-[280px] h-screen transition-all duration-300 border-r border-zinc-600 flex flex-col`}>
             <div className="p-4 flex-1 overflow-y-auto">
                 <div className="space-y-4">
                     <TypefaceOutlined

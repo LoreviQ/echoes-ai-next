@@ -184,7 +184,7 @@ Do NOT include any introductory text, explanations, markdown formatting codes (l
                         setTags(randomTags.join(', '));
                     }}
                     icon={DiceIcon}
-                    className="border border-gray-600 hover:bg-gray-600"
+                    className="border border-zinc-600 hover:bg-zinc-600"
                 />
                 <textarea
                     id="tags"
@@ -192,13 +192,13 @@ Do NOT include any introductory text, explanations, markdown formatting codes (l
                     onChange={(e) => setTags(e.target.value)}
                     disabled={isSubmitting}
                     rows={2}
-                    className="w-[55%] bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
+                    className="w-[55%] bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
                     placeholder={`Generate character from tags\n(e.g. 'cat, magic, funny')`}
                 />
                 <CircleActionButton
                     onClick={generateCharacter}
                     icon={RightArrowIcon}
-                    className="border border-gray-600 hover:bg-gray-600"
+                    className="border border-zinc-600 hover:bg-zinc-600"
                 />
             </div>
             <div>
@@ -209,7 +209,7 @@ Do NOT include any introductory text, explanations, markdown formatting codes (l
                     onChange={(e) => setName(e.target.value)}
                     required
                     disabled={isSubmitting}
-                    className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
+                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
                     placeholder="Character name"
                 />
             </div>
@@ -221,7 +221,7 @@ Do NOT include any introductory text, explanations, markdown formatting codes (l
                     onChange={(e) => setPath(e.target.value)}
                     required
                     disabled={isSubmitting}
-                    className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
+                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
                     placeholder="url-friendly-path"
                 />
             </div>
@@ -232,7 +232,7 @@ Do NOT include any introductory text, explanations, markdown formatting codes (l
                     onChange={(e) => setBio(e.target.value)}
                     rows={4}
                     disabled={isSubmitting}
-                    className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
+                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
                     placeholder="Enter character bio (optional)"
                 />
             </div>
@@ -248,7 +248,7 @@ Do NOT include any introductory text, explanations, markdown formatting codes (l
                         }}
                         className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
                     />
-                    <label className="text-sm font-medium text-gray-200" htmlFor="public">Public</label>
+                    <label className="text-sm font-medium text-zinc-200" htmlFor="public">Public</label>
                 </div>
                 <div className="flex items-center space-x-2">
                     <Switch
@@ -261,7 +261,7 @@ Do NOT include any introductory text, explanations, markdown formatting codes (l
                         }}
                         className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
                     />
-                    <label className="text-sm font-medium text-gray-200" htmlFor="nsfw">NSFW</label>
+                    <label className="text-sm font-medium text-zinc-200" htmlFor="nsfw">NSFW</label>
                 </div>
             </div>
             <div className="flex justify-end">

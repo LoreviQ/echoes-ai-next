@@ -17,7 +17,7 @@ export function ActionButton({ label, onClick, icon: Icon, className }: ActionBu
             className={`
         inline-flex items-center p-2 rounded-xl transition-colors
         bg-black text-white
-        hover:bg-gray-600
+        hover:bg-zinc-600
         ${className || ''}
       `}
         >
