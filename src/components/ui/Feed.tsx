@@ -49,7 +49,7 @@ export function GeneralFeed({ feedTypes, character }: GeneralFeedProps) {
                     <button
                         key={type}
                         onClick={() => setActiveTab(type)}
-                        className={`w-full h-full flex items-center justify-center text-lg bg-black hover:bg-zinc-800 transition-colors relative
+                        className={`w-full h-full flex items-center justify-center text-lg bg-black hover:bg-zinc-800/50 transition-colors relative
                             ${activeTab === type ? 'font-bold' : 'font-medium'}`}
                     >
                         <div className="relative">
