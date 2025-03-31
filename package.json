@@ -7,12 +7,12 @@
         "backend"
     ],
     "scripts": {
-        "front:dev": "pnpm --filter frontend dev",
-        "front:build": "pnpm --filter frontend build",
-        "front:start": "pnpm --filter frontend start",
-        "back:dev": "pnpm --filter backend dev",
-        "back:build": "pnpm --filter backend build",
-        "back:start": "pnpm --filter backend start",
+        "front:dev": "pnpm --filter echoes-ai-frontend dev",
+        "front:build": "pnpm --filter echoes-ai-frontend build",
+        "front:start": "pnpm --filter echoes-ai-frontend start",
+        "back:dev": "pnpm --filter echoes-ai-backend dev",
+        "back:build": "pnpm --filter echoes-ai-backend build",
+        "back:start": "pnpm --filter echoes-ai-backend start",
         "dev": "pnpm run --parallel front:dev back:dev"
     }
 }
