@@ -1,10 +1,11 @@
-import { createClient } from '@/utils/supabase.client';
+import { createClient } from '@/utils/supabase.server';
 import { notFound } from 'next/navigation';
 import PreviewImage from '@/components/images/PreviewImage';
 import UploadImage from '@/components/images/UploadImage';
 import { DocumentIcon, SettingsIcon, SearchIcon } from '@/assets/icons';
 import { BackButton } from '@/components/buttons/BackButton';
 import { Character } from '@/types/character';
+import type { SupabaseCellReference } from '@/types/supabase';
 
 export default async function CharacterPage(
     props: {
@@ -12,7 +13,7 @@ export default async function CharacterPage(
     }
 ) {
     const params = await props.params;
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Fetch character data
     const { data: character, error } = await supabase
@@ -25,14 +26,18 @@ export default async function CharacterPage(
         notFound();
     }
 
+    // Get current user
+    const { data: { user } } = await supabase.auth.getUser();
+    const isOwner = user?.id === character.user_id;
+
     return (
         <main className="flex flex-col">
-            <CharacterInfo character={character} />
+            <CharacterInfo character={character} isOwner={isOwner} />
         </main>
     );
 }
 
-function CharacterInfo({ character }: { character: Character }) {
+function CharacterInfo({ character, isOwner }: { character: Character, isOwner: boolean }) {
     return (
         <>
             <div className="relative w-full max-w-[600px]">
@@ -46,7 +51,12 @@ function CharacterInfo({ character }: { character: Character }) {
                         placeholderSrc="/images/banner-placeholder.jpg"
                         alt="Character banner"
                         bucketName="character-banners"
-                        reference={character.id}
+                        cellReference={{
+                            tableName: "characters",
+                            columnName: "banner_url",
+                            id: character.id
+                        }}
+                        upload={isOwner}
                         className="object-contain"
                     />
                 </div>
@@ -57,7 +67,12 @@ function CharacterInfo({ character }: { character: Character }) {
                             placeholderSrc="/images/avatar-placeholder.jpg"
                             alt="Character avatar"
                             bucketName="character-avatars"
-                            reference={character.id}
+                            cellReference={{
+                                tableName: "characters",
+                                columnName: "avatar_url",
+                                id: character.id
+                            }}
+                            upload={isOwner}
                             className="rounded-full object-cover"
                         />
                     </div>
@@ -89,12 +104,18 @@ interface DynamicImageProps {
     src: string | null;
     placeholderSrc: string;
     alt: string;
-    bucketName: string | null;
-    reference: string | null;
+    upload?: boolean;
+    bucketName?: string;
+    cellReference?: SupabaseCellReference;
     className?: string;
 }
-function DynamicImage({ src, placeholderSrc, alt, bucketName, reference, className }: DynamicImageProps) {
-    if (src) {
+
+function DynamicImage({ src, placeholderSrc, alt, bucketName, cellReference, className, upload = false }: DynamicImageProps) {
+    if (!src) {
+        src = placeholderSrc;
+    }
+
+    if (!upload) {
         return (
             <PreviewImage
                 src={src}
@@ -105,17 +126,19 @@ function DynamicImage({ src, placeholderSrc, alt, bucketName, reference, classNa
             />
         );
     }
-    if (bucketName && reference) {
+    if (bucketName && cellReference) {
         return (
             <UploadImage
-                src={placeholderSrc}
+                src={src}
                 alt={alt}
                 fill
                 className={className}
                 priority
+                bucketName={bucketName}
+                reference={cellReference}
             />
         );
     }
-    // SRC is null and required info for upload is missing
+    // Set to upload, but required info for upload is missing
     return null;
 }
