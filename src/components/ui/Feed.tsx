@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FeedType } from '@/types/feed';
+import { Posts } from '@/components/content/Posts';
 
 interface GeneralFeedProps {
     feedTypes: FeedType[];
@@ -27,6 +28,15 @@ export function CharacterFeed() {
 export function GeneralFeed({ feedTypes }: GeneralFeedProps) {
     const [activeTab, setActiveTab] = useState<FeedType>(feedTypes[0]);
 
+    const renderContent = () => {
+        switch (activeTab) {
+            case FeedType.POSTS:
+                return <Posts />;
+            default:
+                return <p className="p-8">TODO: Implement {activeTab}</p>;
+        }
+    };
+
     return (
         <div className="w-full">
             <div className={`w-full h-[60px] border-b border-zinc-600`} style={{ gridTemplateColumns: `repeat(${feedTypes.length}, minmax(0, 1fr))`, display: 'grid' }}>
@@ -45,8 +55,8 @@ export function GeneralFeed({ feedTypes }: GeneralFeedProps) {
                     </button>
                 ))}
             </div>
-            <div className="p-8">
-                <h2 className="font-bold text-2xl">{activeTab} Feed</h2>
+            <div className="">
+                {renderContent()}
             </div>
         </div>
     );
