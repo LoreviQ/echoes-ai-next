@@ -1,7 +1,10 @@
+'use client';
+
 import { Character } from "@/types/character";
 import { Post } from "@/types/post";
 import { createClient } from "@/utils/supabase.client";
 import { useEffect, useState } from "react";
+import { PostCard } from "@/components/content/PostCard";
 
 export function Posts({ character }: { character: Character }) {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -58,12 +61,7 @@ export function Posts({ character }: { character: Character }) {
     return (
         <div className="w-full space-y-4">
             {posts.map((post) => (
-                <div key={post.id} className="p-4 border border-zinc-800 rounded-xl">
-                    <p className="text-white whitespace-pre-wrap">{post.content}</p>
-                    <p className="text-sm text-zinc-400 mt-2">
-                        {new Date(post.created_at).toLocaleDateString()}
-                    </p>
-                </div>
+                <PostCard key={post.id} post={post} />
             ))}
         </div>
     );

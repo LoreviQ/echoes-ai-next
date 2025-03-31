@@ -7,7 +7,6 @@ import { BackButton } from '@/components/buttons/BackButton';
 import { Character } from '@/types/character';
 import type { SupabaseCellReference } from '@/types/supabase';
 import { CharacterFeed } from '@/components/ui/Feed';
-import { FeedType } from '@/types/feed';
 
 export default async function CharacterPage(
     props: {
