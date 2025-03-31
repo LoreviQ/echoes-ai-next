@@ -9,6 +9,7 @@ import SelectImage from '@/components/images/SelectImage';
 import { uploadImage } from '@/utils/imageUpload';
 import { CircleActionButton } from '@/components/buttons/CircleActionButton';
 import { DiceIcon, RightArrowIcon } from '@/assets/icons';
+import { getRandomWords } from '@/config/randomValues';
 
 export interface CharacterFormData {
     name: string;
@@ -161,7 +162,10 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
             </div>
             <div className="flex justify-end space-x-2 items-center">
                 <CircleActionButton
-                    onClick={() => { }}
+                    onClick={() => {
+                        const randomTags = getRandomWords(10);
+                        setTags(randomTags.join(', '));
+                    }}
                     icon={DiceIcon}
                     className="border border-gray-600 hover:bg-gray-600"
                 />

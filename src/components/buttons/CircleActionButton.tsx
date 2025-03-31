@@ -12,7 +12,10 @@ export interface CircleActionButtonProps {
 export function CircleActionButton({ onClick, icon: Icon, className }: CircleActionButtonProps) {
     return (
         <button
-            onClick={onClick}
+            onClick={(e) => {
+                e.preventDefault();
+                onClick();
+            }}
             className={`
                 w-10 h-10 rounded-full transition-colors
                 flex items-center justify-center
