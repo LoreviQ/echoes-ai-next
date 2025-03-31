@@ -34,9 +34,14 @@ export function GeneralFeed({ feedTypes }: GeneralFeedProps) {
                     <button
                         key={type}
                         onClick={() => setActiveTab(type)}
-                        className={`w-full h-full flex items-center justify-center text-lg font-medium bg-black hover:bg-zinc-800 transition-colors ${activeTab === type ? 'bg-zinc-800' : ''}`}
+                        className={`w-full h-full flex items-center justify-center text-lg bg-black hover:bg-zinc-800 transition-colors relative
+                            ${activeTab === type ? 'font-bold' : 'font-medium'}`}
                     >
-                        {type}
+                        <div className="relative">
+                            {type}
+                            <div className={`absolute -bottom-[16px] left-1/2 -translate-x-1/2 h-[3px] transition-all duration-200 rounded-full
+                                ${activeTab === type ? 'w-[calc(100%+20px)] bg-sky-500' : 'w-0 bg-transparent'}`} />
+                        </div>
                     </button>
                 ))}
             </div>
