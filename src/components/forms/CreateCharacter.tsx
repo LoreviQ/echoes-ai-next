@@ -5,6 +5,8 @@ import { SubmitButton } from '@/components/buttons/SubmitButton';
 import { Switch } from '@/components/ui/switch';
 import { createClient } from '@/utils/supabase.client';
 import { PROTECTED_ROUTES } from '@/config/routes';
+import SelectImage from '@/components/images/SelectImage';
+import { uploadImage } from '@/utils/imageUpload';
 
 export interface CharacterFormData {
     name: string;
@@ -12,6 +14,8 @@ export interface CharacterFormData {
     bio: string;
     public: boolean;
     nsfw: boolean;
+    avatar_url?: string | null;
+    banner_url?: string | null;
 }
 
 interface CreateCharacterFormProps {
@@ -26,6 +30,8 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
     const [isNsfw, setIsNsfw] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [bannerFile, setBannerFile] = useState<File | null>(null);
     const supabase = createClient();
 
     useEffect(() => {
@@ -78,6 +84,24 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
                 throw new Error('Authentication error');
             }
 
+            // Upload images if provided
+            let avatarUrl = null;
+            let bannerUrl = null;
+
+            if (avatarFile) {
+                avatarUrl = await uploadImage(avatarFile, 'character-avatars');
+                if (!avatarUrl) {
+                    throw new Error('Failed to upload avatar image');
+                }
+            }
+
+            if (bannerFile) {
+                bannerUrl = await uploadImage(bannerFile, 'character-banners');
+                if (!bannerUrl) {
+                    throw new Error('Failed to upload banner image');
+                }
+            }
+
             const { error: insertError } = await supabase
                 .from('characters')
                 .insert({
@@ -87,7 +111,8 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
                     bio: bio || null,
                     public: isPublic,
                     nsfw: isNsfw,
-                    avatar_url: null
+                    avatar_url: avatarUrl,
+                    banner_url: bannerUrl
                 });
 
             if (insertError) {
@@ -109,6 +134,40 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
 
     return (
         <form onSubmit={handleCreateCharacter} className="space-y-4">
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="flex-1">
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-200 mb-1">
+                            Character Avatar
+                        </label>
+                        <div className="relative w-32 h-32 mx-auto">
+                            <SelectImage
+                                src="/images/avatar-placeholder.jpg"
+                                alt="Character avatar"
+                                fill
+                                className="rounded-full object-cover"
+                                onFileSelected={setAvatarFile}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="flex-1">
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-200 mb-1">
+                            Character Banner
+                        </label>
+                        <div className="relative w-full h-32">
+                            <SelectImage
+                                src="/images/banner-placeholder.jpg"
+                                alt="Character banner"
+                                fill
+                                className="object-cover rounded-md"
+                                onFileSelected={setBannerFile}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-1">
                     Character Name
