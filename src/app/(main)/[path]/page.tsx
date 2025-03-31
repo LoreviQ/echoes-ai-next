@@ -1,6 +1,7 @@
-import { createClient } from '@/utils/supabase.server';
+import { createClient } from '@/utils/supabase.client';
 import { notFound } from 'next/navigation';
-import ClickableImage from '@/components/ClickableImage';
+import PreviewImage from '@/components/images/PreviewImage';
+import UploadImage from '@/components/images/UploadImage';
 import { DocumentIcon, SettingsIcon, SearchIcon } from '@/assets/icons';
 import { BackButton } from '@/components/buttons/BackButton';
 import { Character } from '@/types/character';
@@ -11,7 +12,7 @@ export default async function CharacterPage(
     }
 ) {
     const params = await props.params;
-    const supabase = await createClient();
+    const supabase = createClient();
 
     // Fetch character data
     const { data: character, error } = await supabase
@@ -40,22 +41,24 @@ function CharacterInfo({ character }: { character: Character }) {
                     <h2 className="font-bold text-2xl ml-3">{character.name}</h2>
                 </div>
                 <div className="relative w-full aspect-[3/1]">
-                    <ClickableImage
-                        src="/images/banner-placeholder.jpg"
-                        alt="Character banner placeholder"
-                        fill
+                    <DynamicImage
+                        src={character.banner_url}
+                        placeholderSrc="/images/banner-placeholder.jpg"
+                        alt="Character banner"
+                        bucketName="character-banners"
+                        reference={character.id}
                         className="object-contain"
-                        priority
                     />
                 </div>
                 <div className="absolute bottom-0 translate-y-1/2 left-4">
                     <div className="relative w-[150px] h-[150px] rounded-full border-4 border-black">
-                        <ClickableImage
-                            src="/images/avatar-placeholder.jpg"
+                        <DynamicImage
+                            src={character.avatar_url}
+                            placeholderSrc="/images/avatar-placeholder.jpg"
                             alt="Character avatar"
-                            fill
+                            bucketName="character-avatars"
+                            reference={character.id}
                             className="rounded-full object-cover"
-                            priority
                         />
                     </div>
                 </div>
@@ -79,5 +82,40 @@ function CharacterInfo({ character }: { character: Character }) {
                 <p className="mt-4">{character.bio || "This character doesn't have a bio yet!"}</p>
             </div>
         </>
-    )
+    );
+}
+
+interface DynamicImageProps {
+    src: string | null;
+    placeholderSrc: string;
+    alt: string;
+    bucketName: string | null;
+    reference: string | null;
+    className?: string;
+}
+function DynamicImage({ src, placeholderSrc, alt, bucketName, reference, className }: DynamicImageProps) {
+    if (src) {
+        return (
+            <PreviewImage
+                src={src}
+                alt={alt}
+                fill
+                className={className}
+                priority
+            />
+        );
+    }
+    if (bucketName && reference) {
+        return (
+            <UploadImage
+                src={placeholderSrc}
+                alt={alt}
+                fill
+                className={className}
+                priority
+            />
+        );
+    }
+    // SRC is null and required info for upload is missing
+    return null;
 }

@@ -10,7 +10,9 @@ export function BackButton() {
     return (
         <CircleActionButton
             icon={LeftArrowIcon}
-            onClick={() => router.back()}
+            onClick={() => {
+                router.back();
+            }}
             className="hover:bg-white/20"
         />
     );

@@ -4,6 +4,7 @@ export type Character = {
     name: string;
     bio: string | null;
     avatar_url: string | null;
+    banner_url: string | null;
     public: boolean;
     created_at: string;
     updated_at: string;
