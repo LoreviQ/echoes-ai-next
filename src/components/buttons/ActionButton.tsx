@@ -8,13 +8,11 @@ export interface ActionButtonProps {
     onClick: () => void;
     icon: IconComponent;
     className?: string;
-    type?: 'button' | 'submit' | 'reset';
 }
 
-export function ActionButton({ label, onClick, icon: Icon, className, type = 'button' }: ActionButtonProps) {
+export function ActionButton({ label, onClick, icon: Icon, className }: ActionButtonProps) {
     return (
         <button
-            type={type}
             onClick={onClick}
             className={`
         inline-flex items-center p-2 rounded-xl transition-colors

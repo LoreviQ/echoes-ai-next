@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase.server';
 import { notFound } from 'next/navigation';
 import ClickableImage from '@/components/ClickableImage';
 import { DocumentIcon, SettingsIcon, SearchIcon } from '@/assets/icons';
+import { BackButton } from '@/components/buttons/BackButton';
 
 export default async function CharacterPage(
     props: {
@@ -25,6 +26,10 @@ export default async function CharacterPage(
     return (
         <main className="flex flex-col">
             <div className="relative w-full max-w-[600px]">
+                <div className="sticky top-0 left-0 right-0 h-[53px] bg-black/60 backdrop-blur-md text-white z-10 flex items-center px-4">
+                    <BackButton />
+                    <h2 className="font-bold text-2xl ml-3">{character.name}</h2>
+                </div>
                 <div className="relative w-full aspect-[3/1]">
                     <ClickableImage
                         src="/images/banner-placeholder.jpg"
