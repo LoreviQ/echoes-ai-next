@@ -1,40 +1,13 @@
-"use client";
-
 import React from "react";
-import { SearchIcon, PlusIcon } from "@/assets/icons";
-import { ActionButton } from "@/components/buttons/ActionButton";
-import { useModal } from "@/hooks/useModal";
-import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
-import { useSession } from "@/contexts/session.client";
+import { SearchIcon } from "@/assets/icons";
+
 
 export default function RightSidebar() {
-    const { Modal, setIsOpen } = useModal();
-    const { active: isLoggedIn } = useSession();
-
-    const handleCreateClick = () => {
-        if (!isLoggedIn) {
-            alert('You must be logged in to create a character');
-            return;
-        }
-
-        setIsOpen(true);
-    };
-
     return (
         <div className="pt-4 pl-10 bg-black text-white w-340px h-screen transition-all duration-300 border-l border-gray-600">
             <div className="space-y-4">
                 <Search />
-                <ActionButton
-                    label="Create a Character"
-                    icon={PlusIcon}
-                    onClick={handleCreateClick}
-                    className="w-full"
-                />
             </div>
-
-            <Modal title="Create a New Character">
-                <CreateCharacterForm setIsModalOpen={setIsOpen} />
-            </Modal>
         </div>
     );
 }

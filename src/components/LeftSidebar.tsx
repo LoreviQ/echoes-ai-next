@@ -1,7 +1,13 @@
+'use client';
+
 import { NavButton } from "@/components/buttons/NavButton";
+import { ActionButton } from "@/components/buttons/ActionButton";
 import { TypefaceOutlined } from "@/components/branding";
 import UserSection from "@/components/UserSection";
-import { HomeIcon, DocumentIcon, SettingsIcon } from "@/assets/icons";
+import { HomeIcon, DocumentIcon, SettingsIcon, PlusIcon } from "@/assets/icons";
+import { useModal } from "@/hooks/useModal";
+import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
+import { useSession } from "@/contexts/session.client";
 
 
 const navigationItems = [
@@ -23,6 +29,17 @@ const navigationItems = [
 ];
 
 export default function LeftSidebar() {
+    const { Modal, setIsOpen } = useModal();
+    const { active: isLoggedIn } = useSession();
+    const handleCreateClick = () => {
+        if (!isLoggedIn) {
+            alert('You must be logged in to create a character');
+            return;
+        }
+
+        setIsOpen(true);
+    };
+
     return (
         <div className={`bg-black text-white w-[84px] xl:w-[280px] h-screen transition-all duration-300 border-r border-gray-600 flex flex-col`}>
             <div className="p-4 flex-1 overflow-y-auto">
@@ -50,10 +67,19 @@ export default function LeftSidebar() {
                                 />
                             </div>
                         ))}
+                        <ActionButton
+                            label="Create a Character"
+                            icon={PlusIcon}
+                            onClick={handleCreateClick}
+                            className="w-full"
+                        />
                     </div>
                 </div>
             </div>
             <UserSection />
+            <Modal title="Create a New Character">
+                <CreateCharacterForm setIsModalOpen={setIsOpen} />
+            </Modal>
         </div>
     );
 } 
