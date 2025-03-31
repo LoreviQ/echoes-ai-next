@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import ClickableImage from '@/components/ClickableImage';
 import { DocumentIcon, SettingsIcon, SearchIcon } from '@/assets/icons';
 import { BackButton } from '@/components/buttons/BackButton';
+import { Character } from '@/types/character';
 
 export default async function CharacterPage(
     props: {
@@ -17,7 +18,7 @@ export default async function CharacterPage(
         .from('characters')
         .select('*')
         .eq('path', params.path)
-        .single();
+        .single() as { data: Character | null, error: any };
 
     if (error || !character) {
         notFound();
@@ -25,6 +26,14 @@ export default async function CharacterPage(
 
     return (
         <main className="flex flex-col">
+            <CharacterInfo character={character} />
+        </main>
+    );
+}
+
+function CharacterInfo({ character }: { character: Character }) {
+    return (
+        <>
             <div className="relative w-full max-w-[600px]">
                 <div className="sticky top-0 left-0 right-0 h-[53px] bg-black/60 backdrop-blur-md text-white z-10 flex items-center px-4">
                     <BackButton />
@@ -69,6 +78,6 @@ export default async function CharacterPage(
                 <p className="text-gray-500">@{character.path}</p>
                 <p className="mt-4">{character.bio || "This character doesn't have a bio yet!"}</p>
             </div>
-        </main>
-    );
-} 
+        </>
+    )
+}
