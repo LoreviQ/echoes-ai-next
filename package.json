@@ -1,18 +1,27 @@
 {
-    "name": "echoes-ai",
-    "version": "0.1.0",
-    "private": true,
-    "workspaces": [
-        "frontend",
-        "backend"
-    ],
-    "scripts": {
-        "front:dev": "pnpm --filter echoes-ai-frontend dev",
-        "front:build": "pnpm --filter echoes-ai-frontend build",
-        "front:start": "pnpm --filter echoes-ai-frontend start",
-        "back:dev": "pnpm --filter echoes-ai-backend dev",
-        "back:build": "pnpm --filter echoes-ai-backend build",
-        "back:start": "pnpm --filter echoes-ai-backend start",
-        "dev": "pnpm run --parallel front:dev back:dev"
-    }
+  "name": "echoes-ai-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.6.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "next": "15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "supabase": "^2.20.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
 }
