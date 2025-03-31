@@ -1,0 +1,9 @@
+{
+    "build": {
+        "builder": "NIXPACKS",
+        "buildCommand": "pnpm back:build"
+    },
+    "start": {
+        "command": "pnpm back:start"
+    }
+}

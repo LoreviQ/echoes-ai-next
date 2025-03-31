@@ -1,0 +1,1 @@
+web: pnpm back:build && pnpm back:start 
