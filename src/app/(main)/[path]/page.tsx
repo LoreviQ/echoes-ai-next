@@ -6,7 +6,8 @@ import { DocumentIcon, SettingsIcon, SearchIcon } from '@/assets/icons';
 import { BackButton } from '@/components/buttons/BackButton';
 import { Character } from '@/types/character';
 import type { SupabaseCellReference } from '@/types/supabase';
-import { CharacterFeed } from '@/components/ui/CharacterFeed';
+import { CharacterFeed } from '@/components/ui/Feed';
+import { FeedType } from '@/types/feed';
 
 export default async function CharacterPage(
     props: {
@@ -34,7 +35,7 @@ export default async function CharacterPage(
     return (
         <main className="flex flex-col space-y-4">
             <CharacterInfo character={character} isOwner={isOwner} />
-            <CharacterFeed character={character} />
+            <CharacterFeed />
         </main>
     );
 }
