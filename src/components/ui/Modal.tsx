@@ -7,7 +7,6 @@ export interface ModalProps {
     onClose: () => void;
     title: string;
     children: React.ReactNode;
-    maxWidth?: string; // Optional prop for custom max width
 }
 
 export function Modal({
@@ -15,13 +14,12 @@ export function Modal({
     onClose,
     title,
     children,
-    maxWidth = 'max-w-md'
 }: ModalProps) {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className={`bg-black rounded-xl p-6 w-full ${maxWidth} relative border border-gray-600`}>
+            <div className={`bg-black rounded-xl p-6 w-full max-w-[660px] relative border border-gray-600`}>
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-gray-400 hover:text-white"
