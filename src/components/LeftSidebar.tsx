@@ -46,6 +46,7 @@ export default function LeftSidebar() {
                                     label={item.label}
                                     path={item.path}
                                     icon={item.icon}
+                                    className="w-full"
                                 />
                             </div>
                         ))}

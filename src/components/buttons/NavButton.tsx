@@ -9,9 +9,10 @@ export interface NavButtonProps {
     label: string;
     path: string;
     icon: IconComponent;
+    className?: string;
 }
 
-export function NavButton({ label, path, icon: Icon }: NavButtonProps) {
+export function NavButton({ label, path, icon: Icon, className }: NavButtonProps) {
     const pathname = usePathname();
     const isActive = pathname === path;
 
@@ -23,6 +24,7 @@ export function NavButton({ label, path, icon: Icon }: NavButtonProps) {
         bg-black text-white
         hover:bg-gray-600
         ${isActive ? "font-bold" : "font-normal"}
+        ${className}
       `}
         >
             <div className="w-8 h-8 flex items-center justify-center">
