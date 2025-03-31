@@ -1,9 +1,9 @@
 {
     "build": {
         "builder": "NIXPACKS",
-        "buildCommand": "pnpm build"
+        "buildCommand": "npm run build"
     },
     "start": {
-        "command": "pnpm start"
+        "command": "npm run start"
     }
 }
