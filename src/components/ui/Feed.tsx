@@ -3,19 +3,21 @@
 import { useState } from 'react';
 import { FeedType } from '@/types/feed';
 import { Posts } from '@/components/content/Posts';
+import { Character } from '@/types/character';
 
 interface GeneralFeedProps {
     feedTypes: FeedType[];
+    character?: Character;
 }
 
 /**
  * Character feed component that displays a list of feed types and allows the user to switch between them.
  * @returns A component that displays a list of feed types and allows the user to switch between them.
  */
-export function CharacterFeed() {
+export function CharacterFeed({ character }: { character: Character }) {
     const feedTypes = [FeedType.POSTS, FeedType.REPLIES, FeedType.MEDIA];
     return (
-        <GeneralFeed feedTypes={feedTypes} />
+        <GeneralFeed feedTypes={feedTypes} character={character} />
     );
 }
 
@@ -25,13 +27,16 @@ export function CharacterFeed() {
  * @param feedTypes - The list of feed types to display.
  * @returns A component that displays a list of feed types and allows the user to switch between them.
  */
-export function GeneralFeed({ feedTypes }: GeneralFeedProps) {
+export function GeneralFeed({ feedTypes, character }: GeneralFeedProps) {
     const [activeTab, setActiveTab] = useState<FeedType>(feedTypes[0]);
 
     const renderContent = () => {
         switch (activeTab) {
             case FeedType.POSTS:
-                return <Posts />;
+                if (!character) {
+                    throw new Error('Character is required for posts feed');
+                }
+                return <Posts character={character} />;
             default:
                 return <p className="p-8">TODO: Implement {activeTab}</p>;
         }

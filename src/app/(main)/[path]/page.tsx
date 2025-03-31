@@ -35,7 +35,7 @@ export default async function CharacterPage(
     return (
         <main className="flex flex-col space-y-4">
             <CharacterInfo character={character} isOwner={isOwner} />
-            <CharacterFeed />
+            <CharacterFeed character={character} />
         </main>
     );
 }
