@@ -7,6 +7,8 @@ import { createClient } from '@/utils/supabase.client';
 import { PROTECTED_ROUTES } from '@/config/routes';
 import SelectImage from '@/components/images/SelectImage';
 import { uploadImage } from '@/utils/imageUpload';
+import { CircleActionButton } from '@/components/buttons/CircleActionButton';
+import { DiceIcon, RightArrowIcon } from '@/assets/icons';
 
 export interface CharacterFormData {
     name: string;
@@ -23,6 +25,7 @@ interface CreateCharacterFormProps {
 }
 
 export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
+    const [tags, setTags] = useState('');
     const [name, setName] = useState('');
     const [path, setPath] = useState('');
     const [bio, setBio] = useState('');
@@ -134,7 +137,7 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
 
     return (
         <form onSubmit={handleCreateCharacter} className="space-y-4">
-            <div className="relative w-full mb-24">
+            <div className="relative w-full mb-4">
                 <div className="relative w-full aspect-[3/1]">
                     <SelectImage
                         src="/images/banner-placeholder.jpg"
@@ -144,8 +147,8 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
                         onFileSelected={setBannerFile}
                     />
                 </div>
-                <div className="absolute bottom-0 translate-y-1/2 left-4 w-full">
-                    <div className="relative w-[25%] aspect-square rounded-full border-4 border-black min-w-[80px]">
+                <div className="absolute bottom-0 translate-y-1/2 left-4 w-full pointer-events-none">
+                    <div className="relative w-[25%] aspect-square rounded-full border-4 border-black min-w-[80px] pointer-events-auto">
                         <SelectImage
                             src="/images/avatar-placeholder.jpg"
                             alt="Character avatar"
@@ -156,11 +159,28 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
                     </div>
                 </div>
             </div>
-
+            <div className="flex justify-end space-x-2 items-center">
+                <CircleActionButton
+                    onClick={() => { }}
+                    icon={DiceIcon}
+                    className="border border-gray-600 hover:bg-gray-600"
+                />
+                <textarea
+                    id="tags"
+                    value={tags}
+                    onChange={(e) => setTags(e.target.value)}
+                    disabled={isSubmitting}
+                    rows={2}
+                    className="w-[55%] bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
+                    placeholder={`Generate character from tags\n(e.g. 'cat, magic, funny')`}
+                />
+                <CircleActionButton
+                    onClick={() => { }}
+                    icon={RightArrowIcon}
+                    className="border border-gray-600 hover:bg-gray-600"
+                />
+            </div>
             <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-1">
-                    Character Name
-                </label>
                 <input
                     type="text"
                     id="name"
@@ -169,13 +189,10 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
                     required
                     disabled={isSubmitting}
                     className="w-full bg-black border border-gray-600 rounded-xl py-2 px-4 text-white placeholder-gray-400 focus:border-white focus:outline-none transition-colors duration-200"
-                    placeholder="Enter character name"
+                    placeholder="Character name"
                 />
             </div>
             <div>
-                <label htmlFor="path" className="block text-sm font-medium text-gray-200 mb-1">
-                    URL Path
-                </label>
                 <input
                     type="text"
                     id="path"
@@ -188,9 +205,6 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
                 />
             </div>
             <div>
-                <label htmlFor="bio" className="block text-sm font-medium text-gray-200 mb-1">
-                    Bio
-                </label>
                 <textarea
                     id="bio"
                     value={bio}

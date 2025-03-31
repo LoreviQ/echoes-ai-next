@@ -60,8 +60,8 @@ function CharacterInfo({ character, isOwner }: { character: Character, isOwner: 
                         className="object-contain"
                     />
                 </div>
-                <div className="absolute bottom-0 translate-y-1/2 left-4 w-full">
-                    <div className="relative w-[25%] aspect-square rounded-full border-4 border-black min-w-[80px]">
+                <div className="absolute bottom-0 translate-y-1/2 left-4 w-full pointer-events-none">
+                    <div className="relative w-[25%] aspect-square rounded-full border-4 border-black min-w-[80px] pointer-events-auto">
                         <DynamicImage
                             src={character.avatar_url}
                             placeholderSrc="/images/avatar-placeholder.jpg"

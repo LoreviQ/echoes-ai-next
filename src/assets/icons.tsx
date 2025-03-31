@@ -80,3 +80,24 @@ export function LeftArrowIcon({ className }: IconProps) {
         </svg>
     );
 }
+
+export function RightArrowIcon({ className }: IconProps) {
+    return (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+    );
+}
+
+export function DiceIcon({ className }: IconProps) {
+    return (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="16" height="16" rx="2" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+            <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+            <circle cx="16" cy="8" r="1.5" fill="currentColor" />
+            <circle cx="8" cy="16" r="1.5" fill="currentColor" />
+            <circle cx="16" cy="16" r="1.5" fill="currentColor" />
+            <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+        </svg>
+    );
+}
