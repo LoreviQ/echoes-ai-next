@@ -62,22 +62,24 @@ function CharacterInfo({ character, isOwner }: { character: Character, isOwner: 
                         className="object-contain"
                     />
                 </div>
-                <div className="absolute bottom-0 translate-y-1/2 left-4 w-full pointer-events-none">
-                    <div className="relative w-[25%] aspect-square rounded-full border-4 border-black min-w-[80px] pointer-events-auto">
-                        <DynamicImage
-                            src={character.avatar_url}
-                            placeholderSrc="/images/avatar-placeholder.jpg"
-                            alt="Character avatar"
-                            bucketName="character-avatars"
-                            cellReference={{
-                                tableName: "characters",
-                                columnName: "avatar_url",
-                                id: character.id
-                            }}
-                            upload={isOwner}
-                            className="rounded-full object-cover"
-                        />
-                    </div>
+
+                {/* Avatar positioned relative to the container */}
+                <div
+                    className="absolute left-4 bottom-0 translate-y-1/2 w-[25%] max-w-[150px] min-w-[80px] aspect-square rounded-full border-4 border-black overflow-hidden"
+                >
+                    <DynamicImage
+                        src={character.avatar_url}
+                        placeholderSrc="/images/avatar-placeholder.jpg"
+                        alt="Character avatar"
+                        bucketName="character-avatars"
+                        cellReference={{
+                            tableName: "characters",
+                            columnName: "avatar_url",
+                            id: character.id
+                        }}
+                        upload={isOwner}
+                        className="rounded-full object-cover"
+                    />
                 </div>
             </div>
             <CharacterActions characterId={character.id} />

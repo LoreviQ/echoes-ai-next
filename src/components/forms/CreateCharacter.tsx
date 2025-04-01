@@ -165,16 +165,16 @@ Do NOT include any introductory text, explanations, markdown formatting codes (l
                         onFileSelected={setBannerFile}
                     />
                 </div>
-                <div className="absolute bottom-0 translate-y-1/2 left-4 w-full pointer-events-none">
-                    <div className="relative w-[25%] aspect-square rounded-full border-4 border-black min-w-[80px] pointer-events-auto">
-                        <SelectImage
-                            src="/images/avatar-placeholder.jpg"
-                            alt="Character avatar"
-                            fill
-                            className="rounded-full object-cover"
-                            onFileSelected={setAvatarFile}
-                        />
-                    </div>
+                <div
+                    className="absolute left-4 bottom-0 translate-y-1/2 w-[25%] max-w-[150px] min-w-[80px] aspect-square rounded-full border-4 border-black overflow-hidden pointer-events-auto"
+                >
+                    <SelectImage
+                        src="/images/avatar-placeholder.jpg"
+                        alt="Character avatar"
+                        fill
+                        className="rounded-full object-cover"
+                        onFileSelected={setAvatarFile}
+                    />
                 </div>
             </div>
             <div className="flex justify-end space-x-2 items-center">
