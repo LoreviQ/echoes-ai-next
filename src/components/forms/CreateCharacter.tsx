@@ -12,6 +12,8 @@ import { CircleActionButton } from '@/components/buttons/CircleActionButton';
 import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets/icons';
 import { getRandomWords } from '@/config/randomValues';
 import { api, endpoints } from '@/utils/api';
+import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
+import { useDropdown } from '@/hooks/useDropdown';
 
 enum Gender {
     MALE = 'Male',
@@ -354,6 +356,8 @@ interface CharacterHeroProps {
 }
 
 function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCharacter, isSubmitting, isGenerating }: CharacterHeroProps) {
+    const { isOpen, toggle, close, dropdownRef } = useDropdown();
+
     return (
         <div>
             <div className="relative w-full mb-4">
@@ -367,13 +371,29 @@ function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCh
                         disabled={isSubmitting || isGenerating}
                     />
                 </div>
-                <div className="absolute bottom-2 right-2">
+                <div className="absolute bottom-2 right-2" ref={dropdownRef}>
                     <CircleActionButton
-                        onClick={() => console.log('generate clicked')}
+                        onClick={toggle}
                         icon={GenerateIcon}
                         className="text-zinc-400 hover:text-white"
                         disabled={isSubmitting || isGenerating}
                     />
+                    {isOpen && (
+                        <Dropdown className="w-50">
+                            <DropdownItem onClick={() => {
+                                console.log('Generate Avatar clicked');
+                                close();
+                            }}>
+                                Generate Avatar
+                            </DropdownItem>
+                            <DropdownItem onClick={() => {
+                                console.log('Generate Banner clicked');
+                                close();
+                            }}>
+                                Generate Banner
+                            </DropdownItem>
+                        </Dropdown>
+                    )}
                 </div>
                 <div
                     className="absolute left-4 bottom-0 translate-y-1/2 w-[25%] max-w-[150px] min-w-[80px] aspect-square rounded-full border-4 border-black overflow-hidden pointer-events-auto"
