@@ -8,19 +8,24 @@ export interface CircleActionButtonProps {
     icon: IconComponent;
     className?: string;
     tooltip?: string;
+    disabled?: boolean;
 }
 
-export function CircleActionButton({ onClick, icon: Icon, className, tooltip }: CircleActionButtonProps) {
+export function CircleActionButton({ onClick, icon: Icon, className, tooltip, disabled }: CircleActionButtonProps) {
     return (
         <button
             onClick={(e) => {
                 e.preventDefault();
-                onClick();
+                if (!disabled) {
+                    onClick();
+                }
             }}
             title={tooltip}
+            disabled={disabled}
             className={`
                 w-10 h-10 rounded-full transition-colors
                 flex items-center justify-center
+                ${disabled ? 'cursor-not-allowed opacity-50' : ''}
                 ${className || ''}
             `}
         >

@@ -9,7 +9,7 @@ import { PROTECTED_ROUTES } from '@/config/routes';
 import SelectImage from '@/components/images/SelectImage';
 import { uploadImage } from '@/utils/imageUpload';
 import { CircleActionButton } from '@/components/buttons/CircleActionButton';
-import { DiceIcon, RightArrowIcon } from '@/assets/icons';
+import { DiceIcon, RightArrowIcon, LoadingSpinner } from '@/assets/icons';
 import { getRandomWords } from '@/config/randomValues';
 import { api, endpoints } from '@/utils/api';
 
@@ -64,6 +64,7 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
     const [isNsfw, setIsNsfw] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
     const [bannerFile, setBannerFile] = useState<File | null>(null);
     const supabase = createClient();
@@ -172,17 +173,25 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
     };
 
     const generateCharacter = async () => {
-        const { data } = await api.post(endpoints.characters.generate, {
-            tags: tags,
-        });
-        if (data.success && data.content) {
-            setName(data.content.name);
-            setBio(data.content.bio);
-            const parsedGender = parseGender(data.content.gender);
-            setGender(parsedGender.gender);
-            if (parsedGender.customValue) {
-                setCustomGender(parsedGender.customValue);
+        setIsGenerating(true);
+        try {
+            const { data } = await api.post(endpoints.characters.generate, {
+                tags: tags,
+            });
+            if (data.success && data.content) {
+                setName(data.content.name);
+                setBio(data.content.bio);
+                const parsedGender = parseGender(data.content.gender);
+                setGender(parsedGender.gender);
+                if (parsedGender.customValue) {
+                    setCustomGender(parsedGender.customValue);
+                }
             }
+        } catch (error) {
+            console.error('Error generating character:', error);
+            setError('Failed to generate character. Please try again.');
+        } finally {
+            setIsGenerating(false);
         }
     }
 
@@ -195,6 +204,7 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                 setTags={setTags}
                 generateCharacter={generateCharacter}
                 isSubmitting={isSubmitting}
+                isGenerating={isGenerating}
             />
             <div className="p-4 flex flex-col space-y-4">
                 <div className="flex items-center">
@@ -205,8 +215,8 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
-                        disabled={isSubmitting}
-                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                        disabled={isSubmitting || isGenerating}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
                         placeholder="Character name"
                     />
                 </div>
@@ -218,8 +228,8 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                         value={path}
                         onChange={(e) => setPath(e.target.value)}
                         required
-                        disabled={isSubmitting}
-                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                        disabled={isSubmitting || isGenerating}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
                         placeholder="url-friendly-path"
                     />
                 </div>
@@ -230,8 +240,8 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                             id="gender"
                             value={gender}
                             onChange={(e) => setGender(e.target.value as Gender)}
-                            disabled={isSubmitting}
-                            className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                            disabled={isSubmitting || isGenerating}
+                            className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
                         >
                             {Object.values(Gender).map((genderValue) => (
                                 <option key={genderValue} value={genderValue}>
@@ -244,8 +254,8 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                                 type="text"
                                 value={customGender}
                                 onChange={(e) => setCustomGender(e.target.value)}
-                                disabled={isSubmitting}
-                                className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                                disabled={isSubmitting || isGenerating}
+                                className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
                                 placeholder="Enter custom gender"
                             />
                         )}
@@ -258,8 +268,8 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
                         rows={4}
-                        disabled={isSubmitting}
-                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                        disabled={isSubmitting || isGenerating}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
                         placeholder="Enter character bio (optional)"
                     />
                 </div>
@@ -269,11 +279,11 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                             id="public"
                             checked={isPublic}
                             onCheckedChange={(checked) => {
-                                if (!isSubmitting) {
+                                if (!isSubmitting && !isGenerating) {
                                     setIsPublic(checked);
                                 }
                             }}
-                            className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
+                            className={(isSubmitting || isGenerating) ? "opacity-50 cursor-not-allowed" : ""}
                         />
                         <label className="text-sm font-medium text-zinc-200" htmlFor="public">Public</label>
                     </div>
@@ -282,11 +292,11 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                             id="nsfw"
                             checked={isNsfw}
                             onCheckedChange={(checked) => {
-                                if (!isSubmitting) {
+                                if (!isSubmitting && !isGenerating) {
                                     setIsNsfw(checked);
                                 }
                             }}
-                            className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
+                            className={(isSubmitting || isGenerating) ? "opacity-50 cursor-not-allowed" : ""}
                         />
                         <label className="text-sm font-medium text-zinc-200" htmlFor="nsfw">NSFW</label>
                     </div>
@@ -312,9 +322,10 @@ interface CharacterHeroProps {
     setTags: (tags: string) => void;
     generateCharacter: () => void;
     isSubmitting: boolean;
+    isGenerating: boolean;
 }
 
-function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCharacter, isSubmitting }: CharacterHeroProps) {
+function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCharacter, isSubmitting, isGenerating }: CharacterHeroProps) {
     return (
         <div>
             <div className="relative w-full mb-4">
@@ -325,6 +336,7 @@ function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCh
                         fill
                         className="object-contain"
                         onFileSelected={setBannerFile}
+                        disabled={isSubmitting || isGenerating}
                     />
                 </div>
                 <div
@@ -336,31 +348,36 @@ function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCh
                         fill
                         className="rounded-full object-cover"
                         onFileSelected={setAvatarFile}
+                        disabled={isSubmitting || isGenerating}
                     />
                 </div>
             </div>
             <div className="flex justify-end space-x-2 items-center pr-4">
                 <CircleActionButton
                     onClick={() => {
-                        const randomTags = getRandomWords(10);
-                        setTags(randomTags.join(', '));
+                        if (!isSubmitting && !isGenerating) {
+                            const randomTags = getRandomWords(10);
+                            setTags(randomTags.join(', '));
+                        }
                     }}
                     icon={DiceIcon}
                     className="border border-zinc-600 hover:bg-zinc-600"
+                    disabled={isSubmitting || isGenerating}
                 />
                 <textarea
                     id="tags"
                     value={tags}
                     onChange={(e) => setTags(e.target.value)}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isGenerating}
                     rows={2}
-                    className="w-[55%] bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                    className="w-[55%] bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
                     placeholder={`Generate character from tags\n(e.g. 'cat, magic, funny')`}
                 />
                 <CircleActionButton
                     onClick={generateCharacter}
-                    icon={RightArrowIcon}
+                    icon={isGenerating ? LoadingSpinner : RightArrowIcon}
                     className="border border-zinc-600 hover:bg-zinc-600"
+                    disabled={isSubmitting || isGenerating}
                 />
             </div>
         </div>

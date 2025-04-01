@@ -10,6 +10,7 @@ interface SelectImageProps {
     className?: string;
     priority?: boolean;
     onFileSelected?: (file: File) => void;
+    disabled?: boolean;
 }
 
 export default function SelectImage({
@@ -18,17 +19,22 @@ export default function SelectImage({
     fill,
     className,
     priority,
-    onFileSelected
+    onFileSelected,
+    disabled
 }: SelectImageProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [previewSrc, setPreviewSrc] = useState(src);
 
     const handleClick = () => {
-        fileInputRef.current?.click();
+        if (!disabled) {
+            fileInputRef.current?.click();
+        }
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (disabled) return;
+
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -44,10 +50,10 @@ export default function SelectImage({
 
     return (
         <div
-            className="cursor-pointer"
+            className={`${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
             onClick={handleClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={() => !disabled && setIsHovered(true)}
+            onMouseLeave={() => !disabled && setIsHovered(false)}
         >
             <Image
                 src={previewSrc}
@@ -56,7 +62,7 @@ export default function SelectImage({
                 className={`${className}`}
                 priority={priority}
             />
-            {isHovered && (
+            {isHovered && !disabled && (
                 <div className={`absolute inset-0 bg-black/50 flex items-center justify-center ${className}`}>
                     <span className="text-white text-center px-2 break-words w-full">
                         {'Click to select an image'}
@@ -69,6 +75,7 @@ export default function SelectImage({
                 className="hidden"
                 accept="image/*"
                 onChange={handleFileChange}
+                disabled={disabled}
             />
         </div>
     );
