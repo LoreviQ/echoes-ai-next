@@ -10,6 +10,7 @@ import { uploadImage } from '@/utils/imageUpload';
 import { CircleActionButton } from '@/components/buttons/CircleActionButton';
 import { DiceIcon, RightArrowIcon } from '@/assets/icons';
 import { getRandomWords } from '@/config/randomValues';
+import { api, endpoints } from '@/utils/api';
 
 export interface CharacterFormData {
     name: string;
@@ -137,20 +138,23 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
     };
 
     const generateCharacter = async () => {
-        const prompt = `Generate a character name and biography based on the following ten words:
-${tags}
-Remember to provide the output strictly in the specified JSON format: {"name": "character name", "bio": "2-3 paragraph description here"}.
-`
+        const { data } = await api.post(endpoints.characters.generate, {
+            tags: tags,
+        });
 
-        const systemInstruction = `You are an expert character creator and writer. Your task is to generate a character name and biography based on a list of ten descriptive words provided by the user.
-You MUST analyze the provided words, even if they seem contradictory, and synthesize them into a coherent and intriguing character concept.
+        if (data.success && data.content) {
+            try {
+                // Extract JSON from markdown code block
+                const jsonString = data.content.replace(/```json\n|\n```/g, '');
+                const parsedData = JSON.parse(jsonString);
 
-The output MUST be a single, valid JSON object. This JSON object must contain exactly two keys:
-1.  \`name\`: A string containing a plausible and fitting name for the character.
-2.  \`bio\`: A string containing a compelling character biography of 2-3 paragraphs, reflecting the essence, personality, potential appearance, and backstory hinted at by the provided descriptive words.
-
-Do NOT include any introductory text, explanations, markdown formatting codes (like \`\`\`json), or conversational filler before or after the JSON object.Your entire response must be ONLY the JSON object itself.
-`
+                if (parsedData.name) setName(parsedData.name);
+                if (parsedData.bio) setBio(parsedData.bio);
+            } catch (error) {
+                console.error('Error parsing character data:', error);
+                setError('Failed to parse character data');
+            }
+        }
     }
 
     return (

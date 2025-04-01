@@ -13,5 +13,6 @@ export const api = axios.create({
 export const endpoints = {
     characters: {
         posts: (characterId: string) => `/${API_VERSION}/characters/${characterId}/posts`,
+        generate: `/${API_VERSION}/generations/character`,
     },
 }
