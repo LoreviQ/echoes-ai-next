@@ -170,8 +170,8 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                 isSubmitting={isSubmitting}
             />
             <div className="p-4 flex flex-col space-y-4">
-                <div className="flex flex-col space-y-2">
-                    <label htmlFor="name" className="px-4 text-sm font-medium text-zinc-200">Name</label>
+                <div className="flex items-center">
+                    <label htmlFor="name" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Name</label>
                     <input
                         type="text"
                         id="name"
@@ -183,8 +183,8 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                         placeholder="Character name"
                     />
                 </div>
-                <div className="flex flex-col space-y-2">
-                    <label htmlFor="path" className="px-4 text-sm font-medium text-zinc-200">Path</label>
+                <div className="flex items-center">
+                    <label htmlFor="path" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Path</label>
                     <input
                         type="text"
                         id="path"
