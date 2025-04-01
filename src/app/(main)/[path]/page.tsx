@@ -2,11 +2,11 @@ import { createClient } from '@/utils/supabase.server';
 import { notFound } from 'next/navigation';
 import PreviewImage from '@/components/images/PreviewImage';
 import UploadImage from '@/components/images/UploadImage';
-import { DocumentIcon, SettingsIcon, SearchIcon } from '@/assets/icons';
 import { BackButton } from '@/components/buttons/BackButton';
 import { Character } from '@/types/character';
 import type { SupabaseCellReference } from '@/types/supabase';
 import { CharacterFeed } from '@/components/ui/Feed';
+import { CharacterActions } from '@/components/character/CharacterActions';
 
 export default async function CharacterPage(
     props: {
@@ -80,19 +80,7 @@ function CharacterInfo({ character, isOwner }: { character: Character, isOwner: 
                     </div>
                 </div>
             </div>
-            <div className="w-full h-[75px] flex justify-end items-center px-4">
-                <div className="flex gap-2">
-                    <button className="w-10 h-10 rounded-full bg-black border border-white text-white flex items-center justify-center hover:bg-zinc-900">
-                        <DocumentIcon className="w-5 h-5" />
-                    </button>
-                    <button className="w-10 h-10 rounded-full bg-black border border-white text-white flex items-center justify-center hover:bg-zinc-900">
-                        <SettingsIcon className="w-5 h-5" />
-                    </button>
-                    <button className="w-10 h-10 rounded-full bg-black border border-white text-white flex items-center justify-center hover:bg-zinc-900">
-                        <SearchIcon className="w-5 h-5" />
-                    </button>
-                </div>
-            </div>
+            <CharacterActions />
             <div className="px-4 mt-4">
                 <h1 className="font-bold text-2xl">{character.name}</h1>
                 <p className="text-zinc-500">@{character.path}</p>
