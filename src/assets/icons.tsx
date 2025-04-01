@@ -149,3 +149,15 @@ export function MiniBarChartIcon({ className }: IconProps) {
         </svg>
     );
 }
+
+export function GenerateIcon({ className }: IconProps) {
+    return (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            {/* Simple image frame with mountain */}
+            <rect x="4" y="4" width="16" height="16" rx="2" strokeWidth={2} />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4-4 4 4 8-8" />
+            {/* AI dot */}
+            <circle cx="8" cy="8" r="1" fill="currentColor" />
+        </svg>
+    );
+}

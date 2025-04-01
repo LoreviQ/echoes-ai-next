@@ -9,7 +9,7 @@ import { PROTECTED_ROUTES } from '@/config/routes';
 import SelectImage from '@/components/images/SelectImage';
 import { uploadImage } from '@/utils/imageUpload';
 import { CircleActionButton } from '@/components/buttons/CircleActionButton';
-import { DiceIcon, RightArrowIcon, LoadingSpinner } from '@/assets/icons';
+import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets/icons';
 import { getRandomWords } from '@/config/randomValues';
 import { api, endpoints } from '@/utils/api';
 
@@ -364,6 +364,14 @@ function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCh
                         fill
                         className="object-contain"
                         onFileSelected={setBannerFile}
+                        disabled={isSubmitting || isGenerating}
+                    />
+                </div>
+                <div className="absolute bottom-2 right-2">
+                    <CircleActionButton
+                        onClick={() => console.log('generate clicked')}
+                        icon={GenerateIcon}
+                        className="text-zinc-400 hover:text-white"
                         disabled={isSubmitting || isGenerating}
                     />
                 </div>
