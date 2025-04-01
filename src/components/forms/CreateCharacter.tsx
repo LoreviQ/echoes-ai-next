@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { SubmitButton } from '@/components/buttons/SubmitButton';
 import { Switch } from '@/components/ui/switch';
 import { createClient } from '@/utils/supabase.client';
@@ -11,6 +12,29 @@ import { CircleActionButton } from '@/components/buttons/CircleActionButton';
 import { DiceIcon, RightArrowIcon } from '@/assets/icons';
 import { getRandomWords } from '@/config/randomValues';
 import { api, endpoints } from '@/utils/api';
+
+enum Gender {
+    MALE = 'Male',
+    FEMALE = 'Female',
+    NA = 'Not Applicable',
+    CUSTOM = 'Custom'
+}
+
+const parseGender = (input: string): { gender: Gender; customValue?: string } => {
+    const normalized = input.trim().toLowerCase();
+
+    if (normalized.includes('female')) {
+        return { gender: Gender.FEMALE };
+    }
+    if (normalized.includes('male')) {
+        return { gender: Gender.MALE };
+    }
+    if (normalized.includes('n/a') || normalized.includes('not applicable') || normalized.includes('not-applicable') || normalized === 'na') {
+        return { gender: Gender.NA };
+    }
+
+    return { gender: Gender.CUSTOM, customValue: input.trim() };
+};
 
 export interface CharacterFormData {
     name: string;
@@ -29,11 +53,12 @@ interface CreateCharacterFormProps {
 }
 
 export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacterFormProps) {
+    const router = useRouter();
     const [tags, setTags] = useState('');
     const [name, setName] = useState('');
     const [path, setPath] = useState('');
     const [bio, setBio] = useState('');
-    const [gender, setGender] = useState('Not Applicable');
+    const [gender, setGender] = useState<Gender>(Gender.NA);
     const [customGender, setCustomGender] = useState('');
     const [isPublic, setIsPublic] = useState(true);
     const [isNsfw, setIsNsfw] = useState(false);
@@ -123,7 +148,7 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                     avatar_url: avatarUrl,
                     banner_url: bannerUrl,
                     tags: tags,
-                    gender: gender === 'Custom' ? customGender : gender
+                    gender: gender === Gender.CUSTOM ? customGender : gender
                 });
 
             if (insertError) {
@@ -135,6 +160,9 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
             if (onSuccess) {
                 onSuccess();
             }
+
+            // Redirect to the character's path
+            router.push(`/${path}`);
         } catch (error) {
             console.error('Error creating character:', error);
             setError('Failed to create character. Please try again.');
@@ -147,18 +175,13 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
         const { data } = await api.post(endpoints.characters.generate, {
             tags: tags,
         });
-
         if (data.success && data.content) {
-            try {
-                // Extract JSON from markdown code block
-                const jsonString = data.content.replace(/```json\n|\n```/g, '');
-                const parsedData = JSON.parse(jsonString);
-
-                if (parsedData.name) setName(parsedData.name);
-                if (parsedData.bio) setBio(parsedData.bio);
-            } catch (error) {
-                console.error('Error parsing character data:', error);
-                setError('Failed to parse character data');
+            setName(data.content.name);
+            setBio(data.content.bio);
+            const parsedGender = parseGender(data.content.gender);
+            setGender(parsedGender.gender);
+            if (parsedGender.customValue) {
+                setCustomGender(parsedGender.customValue);
             }
         }
     }
@@ -206,16 +229,17 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                         <select
                             id="gender"
                             value={gender}
-                            onChange={(e) => setGender(e.target.value)}
+                            onChange={(e) => setGender(e.target.value as Gender)}
                             disabled={isSubmitting}
                             className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
                         >
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Not Applicable">Not Applicable</option>
-                            <option value="Custom">Custom</option>
+                            {Object.values(Gender).map((genderValue) => (
+                                <option key={genderValue} value={genderValue}>
+                                    {genderValue}
+                                </option>
+                            ))}
                         </select>
-                        {gender === 'Custom' && (
+                        {gender === Gender.CUSTOM && (
                             <input
                                 type="text"
                                 value={customGender}
@@ -315,7 +339,7 @@ function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCh
                     />
                 </div>
             </div>
-            <div className="flex justify-end space-x-2 items-center">
+            <div className="flex justify-end space-x-2 items-center pr-4">
                 <CircleActionButton
                     onClick={() => {
                         const randomTags = getRandomWords(10);
