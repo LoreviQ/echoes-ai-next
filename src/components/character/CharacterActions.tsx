@@ -2,9 +2,8 @@
 
 import { DocumentIcon, SettingsIcon, SearchIcon } from '@/assets/icons';
 import { CircleActionButton } from '@/components/buttons/CircleActionButton';
-import { generateCharacterPost } from '@/utils/api';
 import { useState } from 'react';
-
+import { api, endpoints } from '@/utils/api';
 interface CharacterActionsProps {
     characterId: string;
 }
@@ -17,7 +16,7 @@ export function CharacterActions({ characterId }: CharacterActionsProps) {
 
         try {
             setIsGenerating(true);
-            await generateCharacterPost(characterId);
+            await api.post(endpoints.characters.posts(characterId));
             // Could add success notification here
         } catch (error) {
             console.error('Failed to generate post:', error);
