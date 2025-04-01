@@ -11,10 +11,14 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
+    const apiDestination = process.env.NODE_ENV === 'production'
+      ? 'https://echoesapi.oliver.tj'
+      : 'http://localhost:3001';
+
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:3001/:path*',
+        destination: `${apiDestination}/:path*`,
       },
     ];
   },
