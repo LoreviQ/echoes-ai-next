@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { CollapsableActionButton } from "./CollapsableActionButton";
 import { LoginIcon } from "@/assets/icons";
 import { createClient } from "@/utils/supabase.client";
+import { useDropdown } from "@/hooks/useDropdown";
+import { Dropdown } from "@/components/ui/Dropdown";
 
 interface UserButtonProps {
     user: {
@@ -15,12 +17,20 @@ interface UserButtonProps {
 }
 
 export function UserButton({ user }: UserButtonProps) {
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const { isOpen, toggle, dropdownRef } = useDropdown();
+
     return (
-        <div className="relative">
-            <Button onClick={() => setIsDropdownOpen(!isDropdownOpen)} user={user} />
-            {isDropdownOpen && (
-                <Dropdown />
+        <div className="relative" ref={dropdownRef}>
+            <Button onClick={toggle} user={user} />
+            {isOpen && (
+                <Dropdown align="left" className="mb-2 bottom-full w-full">
+                    <CollapsableActionButton
+                        label="Logout"
+                        icon={LoginIcon}
+                        onClick={logout}
+                        className="w-full"
+                    />
+                </Dropdown>
             )}
         </div>
     );
@@ -55,18 +65,6 @@ function Button({ onClick, user }: { onClick: () => void, user: { avatar_url?: s
                 <div className="text-sm text-zinc-300">{user.email || ''}</div>
             </div>
         </button>
-    );
-}
-
-function Dropdown() {
-    return (
-        <div className="absolute bottom-full mb-2 min-w-[100%] w-max bg-black border border-white rounded-xl p-4 text-white flex justify-center">
-            <CollapsableActionButton
-                label="Logout"
-                icon={LoginIcon}
-                onClick={logout}
-            />
-        </div>
     );
 }
 
