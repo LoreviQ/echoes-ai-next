@@ -3,6 +3,7 @@ export type Character = {
     user_id: string;
     name: string;
     bio: string | null;
+    description: string | null;
     avatar_url: string | null;
     banner_url: string | null;
     public: boolean;
@@ -10,4 +11,6 @@ export type Character = {
     updated_at: string;
     path: string;
     nsfw: boolean;
+    tags: string;
+    gender: string;
 } 
