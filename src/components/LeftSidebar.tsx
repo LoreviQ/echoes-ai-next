@@ -79,7 +79,7 @@ export default function LeftSidebar() {
             </div>
             <UserSection />
             <Modal>
-                <CreateCharacterForm onSuccess={() => setIsOpen(false)} />
+                <CreateCharacterForm onSuccess={() => setIsOpen(false)} modal={true} />
             </Modal>
         </div>
     );

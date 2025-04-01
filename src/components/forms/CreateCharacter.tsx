@@ -23,10 +23,11 @@ export interface CharacterFormData {
 }
 
 interface CreateCharacterFormProps {
+    modal?: boolean;
     onSuccess?: () => void;
 }
 
-export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
+export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacterFormProps) {
     const [tags, setTags] = useState('');
     const [name, setName] = useState('');
     const [path, setPath] = useState('');
@@ -117,7 +118,8 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
                     public: isPublic,
                     nsfw: isNsfw,
                     avatar_url: avatarUrl,
-                    banner_url: bannerUrl
+                    banner_url: bannerUrl,
+                    tags: tags
                 });
 
             if (insertError) {
@@ -158,7 +160,108 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
     }
 
     return (
-        <form onSubmit={handleCreateCharacter} className="space-y-4">
+        <form onSubmit={handleCreateCharacter}>
+            <CharacterHero
+                setBannerFile={setBannerFile}
+                setAvatarFile={setAvatarFile}
+                tags={tags}
+                setTags={setTags}
+                generateCharacter={generateCharacter}
+                isSubmitting={isSubmitting}
+            />
+            <div className="p-4 flex flex-col space-y-4">
+                <div className="flex flex-col space-y-2">
+                    <label htmlFor="name" className="px-4 text-sm font-medium text-zinc-200">Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        disabled={isSubmitting}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                        placeholder="Character name"
+                    />
+                </div>
+                <div className="flex flex-col space-y-2">
+                    <label htmlFor="path" className="px-4 text-sm font-medium text-zinc-200">Path</label>
+                    <input
+                        type="text"
+                        id="path"
+                        value={path}
+                        onChange={(e) => setPath(e.target.value)}
+                        required
+                        disabled={isSubmitting}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                        placeholder="url-friendly-path"
+                    />
+                </div>
+                <div className="flex flex-col space-y-2">
+                    <label htmlFor="bio" className="px-4 text-sm font-medium text-zinc-200">Bio</label>
+                    <textarea
+                        id="bio"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                        rows={4}
+                        disabled={isSubmitting}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                        placeholder="Enter character bio (optional)"
+                    />
+                </div>
+                <div className="flex items-center justify-center space-x-12">
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="public"
+                            checked={isPublic}
+                            onCheckedChange={(checked) => {
+                                if (!isSubmitting) {
+                                    setIsPublic(checked);
+                                }
+                            }}
+                            className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
+                        />
+                        <label className="text-sm font-medium text-zinc-200" htmlFor="public">Public</label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="nsfw"
+                            checked={isNsfw}
+                            onCheckedChange={(checked) => {
+                                if (!isSubmitting) {
+                                    setIsNsfw(checked);
+                                }
+                            }}
+                            className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
+                        />
+                        <label className="text-sm font-medium text-zinc-200" htmlFor="nsfw">NSFW</label>
+                    </div>
+                </div>
+                <div className="flex justify-end">
+                    {error && (
+                        <div className="text-red-500 text-sm mr-4 self-center">{error}</div>
+                    )}
+                    <SubmitButton
+                        label="Create Character"
+                        className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
+                    />
+                </div>
+            </div>
+        </form>
+    );
+}
+
+interface CharacterHeroProps {
+    setBannerFile: (file: File) => void;
+    setAvatarFile: (file: File) => void;
+    tags: string;
+    setTags: (tags: string) => void;
+    generateCharacter: () => void;
+    isSubmitting: boolean;
+}
+
+function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCharacter, isSubmitting }: CharacterHeroProps) {
+    return (
+        <div>
             <div className="relative w-full mb-4">
                 <div className="relative w-full aspect-[3/1]">
                     <SelectImage
@@ -205,79 +308,7 @@ export function CreateCharacterForm({ onSuccess }: CreateCharacterFormProps) {
                     className="border border-zinc-600 hover:bg-zinc-600"
                 />
             </div>
-            <div>
-                <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    disabled={isSubmitting}
-                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
-                    placeholder="Character name"
-                />
-            </div>
-            <div>
-                <input
-                    type="text"
-                    id="path"
-                    value={path}
-                    onChange={(e) => setPath(e.target.value)}
-                    required
-                    disabled={isSubmitting}
-                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
-                    placeholder="url-friendly-path"
-                />
-            </div>
-            <div>
-                <textarea
-                    id="bio"
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                    rows={4}
-                    disabled={isSubmitting}
-                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
-                    placeholder="Enter character bio (optional)"
-                />
-            </div>
-            <div className="flex items-center justify-center space-x-12">
-                <div className="flex items-center space-x-2">
-                    <Switch
-                        id="public"
-                        checked={isPublic}
-                        onCheckedChange={(checked) => {
-                            if (!isSubmitting) {
-                                setIsPublic(checked);
-                            }
-                        }}
-                        className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
-                    />
-                    <label className="text-sm font-medium text-zinc-200" htmlFor="public">Public</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Switch
-                        id="nsfw"
-                        checked={isNsfw}
-                        onCheckedChange={(checked) => {
-                            if (!isSubmitting) {
-                                setIsNsfw(checked);
-                            }
-                        }}
-                        className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
-                    />
-                    <label className="text-sm font-medium text-zinc-200" htmlFor="nsfw">NSFW</label>
-                </div>
-            </div>
-            <div className="flex justify-end">
-                {error && (
-                    <div className="text-red-500 text-sm mr-4 self-center">{error}</div>
-                )}
-                <SubmitButton
-                    label="Create Character"
-                    className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
-                />
-            </div>
-        </form>
+        </div>
     );
 }
 
