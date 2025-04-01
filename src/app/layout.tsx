@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Providers } from "./providers";
 
 export const metadata: Metadata = {
     title: "EchoesAI",
@@ -24,9 +23,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${inter.className} ${cyberwayRiders.variable}`}>
-                <Providers>
-                    {children}
-                </Providers>
+                {children}
             </body>
         </html>
     );
