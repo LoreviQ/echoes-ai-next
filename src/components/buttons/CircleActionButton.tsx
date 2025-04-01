@@ -7,15 +7,17 @@ export interface CircleActionButtonProps {
     onClick: () => void;
     icon: IconComponent;
     className?: string;
+    tooltip?: string;
 }
 
-export function CircleActionButton({ onClick, icon: Icon, className }: CircleActionButtonProps) {
+export function CircleActionButton({ onClick, icon: Icon, className, tooltip }: CircleActionButtonProps) {
     return (
         <button
             onClick={(e) => {
                 e.preventDefault();
                 onClick();
             }}
+            title={tooltip}
             className={`
                 w-10 h-10 rounded-full transition-colors
                 flex items-center justify-center

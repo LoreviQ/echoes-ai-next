@@ -80,7 +80,7 @@ function CharacterInfo({ character, isOwner }: { character: Character, isOwner: 
                     </div>
                 </div>
             </div>
-            <CharacterActions />
+            <CharacterActions characterId={character.id} />
             <div className="px-4 mt-4">
                 <h1 className="font-bold text-2xl">{character.name}</h1>
                 <p className="text-zinc-500">@{character.path}</p>
