@@ -20,6 +20,7 @@ export interface CharacterFormData {
     nsfw: boolean;
     avatar_url?: string | null;
     banner_url?: string | null;
+    gender: string;
 }
 
 interface CreateCharacterFormProps {
@@ -32,6 +33,8 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
     const [name, setName] = useState('');
     const [path, setPath] = useState('');
     const [bio, setBio] = useState('');
+    const [gender, setGender] = useState('Not Applicable');
+    const [customGender, setCustomGender] = useState('');
     const [isPublic, setIsPublic] = useState(true);
     const [isNsfw, setIsNsfw] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -119,7 +122,8 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                     nsfw: isNsfw,
                     avatar_url: avatarUrl,
                     banner_url: bannerUrl,
-                    tags: tags
+                    tags: tags,
+                    gender: gender === 'Custom' ? customGender : gender
                 });
 
             if (insertError) {
@@ -195,6 +199,33 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                         className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
                         placeholder="url-friendly-path"
                     />
+                </div>
+                <div className="flex items-center">
+                    <label htmlFor="gender" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Gender</label>
+                    <div className="flex w-full space-x-2">
+                        <select
+                            id="gender"
+                            value={gender}
+                            onChange={(e) => setGender(e.target.value)}
+                            disabled={isSubmitting}
+                            className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                        >
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Not Applicable">Not Applicable</option>
+                            <option value="Custom">Custom</option>
+                        </select>
+                        {gender === 'Custom' && (
+                            <input
+                                type="text"
+                                value={customGender}
+                                onChange={(e) => setCustomGender(e.target.value)}
+                                disabled={isSubmitting}
+                                className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                                placeholder="Enter custom gender"
+                            />
+                        )}
+                    </div>
                 </div>
                 <div className="flex flex-col space-y-2">
                     <label htmlFor="bio" className="px-4 text-sm font-medium text-zinc-200">Bio</label>
