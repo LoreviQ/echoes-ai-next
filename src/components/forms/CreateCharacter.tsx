@@ -58,6 +58,7 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
     const [name, setName] = useState('');
     const [path, setPath] = useState('');
     const [bio, setBio] = useState('');
+    const [description, setDescription] = useState('');
     const [gender, setGender] = useState<Gender>(Gender.NA);
     const [customGender, setCustomGender] = useState('');
     const [isPublic, setIsPublic] = useState(true);
@@ -144,6 +145,7 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                     name,
                     path,
                     bio: bio || null,
+                    description: description || null,
                     public: isPublic,
                     nsfw: isNsfw,
                     avatar_url: avatarUrl,
@@ -181,11 +183,13 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
             if (data.success && data.content) {
                 setName(data.content.name);
                 setBio(data.content.bio);
+                setDescription(data.content.description);
                 const parsedGender = parseGender(data.content.gender);
                 setGender(parsedGender.gender);
                 if (parsedGender.customValue) {
                     setCustomGender(parsedGender.customValue);
                 }
+                setIsNsfw(data.content.nsfw === 'true' || data.content.nsfw === true);
             }
         } catch (error) {
             console.error('Error generating character:', error);
@@ -262,15 +266,39 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                     </div>
                 </div>
                 <div className="flex flex-col space-y-2">
-                    <label htmlFor="bio" className="px-4 text-sm font-medium text-zinc-200">Bio</label>
+                    <div className="flex items-center px-2 space-x-2">
+                        <label htmlFor="bio" className="text-sm font-medium text-zinc-200">Bio</label>
+                        <span className="text-xs text-zinc-400">Appears on your characters profile</span>
+                    </div>
                     <textarea
                         id="bio"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
-                        rows={4}
+                        rows={3}
+                        maxLength={200}
                         disabled={isSubmitting || isGenerating}
-                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50 resize-none"
                         placeholder="Enter character bio (optional)"
+                    />
+                </div>
+                <div className="flex flex-col space-y-2">
+                    <div className="flex items-center px-2 space-x-2">
+                        <label htmlFor="description" className="text-sm font-medium text-zinc-200">Description</label>
+                        <span className="text-xs text-zinc-400">A general description of your character</span>
+                    </div>
+                    <textarea
+                        id="description"
+                        value={description}
+                        onChange={(e) => {
+                            setDescription(e.target.value);
+                            // Auto-grow functionality
+                            e.target.style.height = 'auto';
+                            e.target.style.height = `${e.target.scrollHeight}px`;
+                        }}
+                        rows={3}
+                        disabled={isSubmitting || isGenerating}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50 min-h-[72px] overflow-hidden"
+                        placeholder="Enter character description (optional)"
                     />
                 </div>
                 <div className="flex items-center justify-center space-x-12">
