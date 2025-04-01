@@ -2,28 +2,18 @@
 
 import { DocumentIcon, SettingsIcon, SearchIcon } from '@/assets/icons';
 import { CircleActionButton } from '@/components/buttons/CircleActionButton';
-import { useState } from 'react';
-import { api, endpoints } from '@/utils/api';
+import { useCreatePost } from '@/hooks/usePosts';
+
 interface CharacterActionsProps {
     characterId: string;
 }
 
 export function CharacterActions({ characterId }: CharacterActionsProps) {
-    const [isGenerating, setIsGenerating] = useState(false);
+    const { mutate: createPost, isPending } = useCreatePost();
 
-    const handleGeneratePost = async () => {
-        if (isGenerating) return;
-
-        try {
-            setIsGenerating(true);
-            await api.post(endpoints.characters.posts(characterId));
-            // Could add success notification here
-        } catch (error) {
-            console.error('Failed to generate post:', error);
-            // Could add error notification here
-        } finally {
-            setIsGenerating(false);
-        }
+    const handleGeneratePost = () => {
+        if (isPending) return;
+        createPost(characterId);
     };
 
     return (
@@ -33,7 +23,7 @@ export function CharacterActions({ characterId }: CharacterActionsProps) {
                     onClick={handleGeneratePost}
                     icon={DocumentIcon}
                     tooltip="Generate a Post"
-                    className={`bg-black border border-white text-white ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-zinc-900'}`}
+                    className={`bg-black border border-white text-white ${isPending ? 'opacity-50 cursor-not-allowed' : 'hover:bg-zinc-900'}`}
                 />
                 <CircleActionButton
                     onClick={() => { }}
