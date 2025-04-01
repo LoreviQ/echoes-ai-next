@@ -24,7 +24,7 @@ export function ActionButton({ label, onClick, icon: Icon, className }: ActionBu
             <div className="w-8 h-8 flex items-center justify-center">
                 <Icon />
             </div>
-            <span className="ml-3">
+            <span className="ml-3 md:hidden xl:block">
                 {label}
             </span>
         </button>
