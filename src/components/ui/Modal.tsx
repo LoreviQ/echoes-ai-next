@@ -18,8 +18,8 @@ export function Modal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className={`bg-black rounded-xl p-6 w-full max-w-[660px] relative border border-zinc-600`}>
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className={`bg-black rounded-xl p-6 w-full max-w-[660px] relative border border-zinc-600 max-h-[calc(100vh-2rem)] overflow-y-auto`}>
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-zinc-400 hover:text-white"
