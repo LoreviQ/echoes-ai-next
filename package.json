@@ -16,6 +16,7 @@
     "@tanstack/react-query-devtools": "^5.71.3",
     "axios": "^1.8.4",
     "next": "15.2.4",
+    "nookies": "^2.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0"

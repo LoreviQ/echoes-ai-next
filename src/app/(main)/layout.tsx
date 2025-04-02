@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cookies } from "next/headers";
 import LeftSidebar from "@/components/LeftSidebar";
 import RightSidebar from "@/components/RightSidebar";
 import { getInitialSession } from "@/contexts/session.server";
@@ -10,6 +11,12 @@ export default async function MainLayout({
     children: ReactNode;
 }>) {
     const initialSession = await getInitialSession();
+
+    // Read right sidebar preference from cookies server-side
+    const cookieStore = await cookies();
+    const rightSidebarCookie = cookieStore.get('right_sidebar_expanded');
+    const isRightSidebarExpanded = rightSidebarCookie?.value === 'true' || false;
+
     return (
         <Providers initialSession={initialSession}>
             <div className="flex w-full bg-black text-white min-h-screen">
@@ -25,7 +32,7 @@ export default async function MainLayout({
 
                 <div className="flex flex-1 justify-start">
                     <div className="hidden lg:block w-full">
-                        <RightSidebar />
+                        <RightSidebar initialExpanded={isRightSidebarExpanded} />
                     </div>
                 </div>
             </div>

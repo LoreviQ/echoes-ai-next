@@ -12,7 +12,16 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
-    return await updateSession(request, publicUrls)
+    // Get the response from the authentication middleware
+    const response = await updateSession(request, publicUrls)
+
+    // Read sidebar preference from cookies or use default value
+    const rightSidebarExpanded = request.cookies.get('right_sidebar_expanded')?.value === 'true' || false
+
+    // Add user preference to response headers so client components can access it
+    response.headers.set('x-right-sidebar-expanded', String(rightSidebarExpanded))
+
+    return response
 }
 
 // Configure which paths the middleware will run on

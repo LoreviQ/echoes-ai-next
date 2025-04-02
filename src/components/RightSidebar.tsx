@@ -3,19 +3,36 @@
 import React, { useState } from "react";
 import { SearchIcon, HamburgerIcon } from "@/assets/icons";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
+import { setCookie } from 'nookies';
 
-export default function RightSidebar() {
-    const [isExpanded, setIsExpanded] = useState(false);
+interface RightSidebarProps {
+    initialExpanded?: boolean;
+}
+
+export default function RightSidebar({ initialExpanded = false }: RightSidebarProps) {
+    // Use the server-provided initial state
+    const [isExpanded, setIsExpanded] = useState(initialExpanded);
+
+    // Update the cookie when the state changes
+    const toggleSidebar = () => {
+        const newExpandedState = !isExpanded;
+
+        // Update local state
+        setIsExpanded(newExpandedState);
+
+        // Save to cookie - 30 days expiry
+        setCookie(null, 'right_sidebar_expanded', String(newExpandedState), {
+            maxAge: 30 * 24 * 60 * 60,
+            path: '/',
+        });
+    };
 
     return (
         <div className={`pt-4 pl-4 bg-black text-white ${isExpanded ? 'w-full pr-10' : 'w-[340px]'} h-screen transition-all duration-300 border-l border-zinc-600`}>
             <div className="flex items-center gap-2 w-full">
                 <CircleActionButton
                     icon={HamburgerIcon}
-                    onClick={() => {
-                        console.log('Expanding sidebar:', !isExpanded);
-                        setIsExpanded(!isExpanded);
-                    }}
+                    onClick={toggleSidebar}
                     className="text-zinc-400 hover:bg-zinc-800/50"
                     size="lg"
                 />

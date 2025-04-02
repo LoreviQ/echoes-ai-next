@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { headers } from "next/headers";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -15,13 +16,19 @@ const cyberwayRiders = localFont({
     variable: "--font-cyberway",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const headersList = await headers();
+    const rightSidebarExpanded = headersList.get('x-right-sidebar-expanded') || 'false';
+
     return (
         <html lang="en">
+            <head>
+                <meta name="x-right-sidebar-expanded" content={rightSidebarExpanded} />
+            </head>
             <body className={`${inter.className} ${cyberwayRiders.variable}`}>
                 {children}
             </body>
