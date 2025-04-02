@@ -38,19 +38,28 @@ export function CharacterActions({ character }: CharacterActionsProps) {
                         className="bg-black border border-white text-white hover:bg-zinc-900"
                     />
                     <CircleActionButton
-                        onClick={() => setContentType(SidebarContentType.THOUGHTS)}
+                        onClick={() => {
+                            setCurrentCharacter(character);
+                            setContentType(SidebarContentType.THOUGHTS);
+                        }}
                         icon={ThoughtBubbleIcon}
                         tooltip="Show Thoughts"
                         className="bg-black border border-white text-white hover:bg-zinc-900"
                     />
                     <CircleActionButton
-                        onClick={() => setContentType(SidebarContentType.EVENTS)}
+                        onClick={() => {
+                            setCurrentCharacter(character);
+                            setContentType(SidebarContentType.EVENTS);
+                        }}
                         icon={ExclamationIcon}
                         tooltip="Show Events"
                         className="bg-black border border-white text-white hover:bg-zinc-900"
                     />
                     <CircleActionButton
-                        onClick={() => setContentType(SidebarContentType.MESSAGES)}
+                        onClick={() => {
+                            setCurrentCharacter(character);
+                            setContentType(SidebarContentType.MESSAGES);
+                        }}
                         icon={SpeechBubbleIcon}
                         tooltip="Show Messages"
                         className="bg-black border border-white text-white hover:bg-zinc-900"
