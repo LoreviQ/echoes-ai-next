@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { FeedType } from '@/types/feed';
 import { Posts } from '@/components/content/Posts';
+import { Characters } from '@/components/content/Characters';
 import { Character } from '@/types/character';
 
 
@@ -48,6 +49,8 @@ export function GeneralFeed({ feedTypes, character }: GeneralFeedProps) {
                     throw new Error('Character is required for posts feed');
                 }
                 return <Posts character={character} />;
+            case FeedType.CHARACTERS:
+                return <Characters />;
             default:
                 return <p className="p-8">TODO: Implement {activeTab}</p>;
         }
