@@ -154,12 +154,17 @@ function ChatWindow({ messages, isLoading }: ChatWindowProps) {
 
             {/* Input field */}
             <div className="p-4 border-t border-zinc-700">
-                <input
-                    type="text"
+                <textarea
                     value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    onChange={(e) => {
+                        setInputValue(e.target.value);
+                        // Auto-resize the textarea
+                        e.target.style.height = 'auto';
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
                     placeholder="Type a message..."
-                    className="w-full px-4 py-2 bg-zinc-800 border border-zinc-600 rounded-lg focus:outline-none focus:border-blue-500"
+                    rows={1}
+                    className="w-full px-4 py-2 bg-zinc-800 border border-zinc-600 rounded-lg focus:outline-none focus:border-white resize-none overflow-hidden"
                 />
             </div>
         </div>
