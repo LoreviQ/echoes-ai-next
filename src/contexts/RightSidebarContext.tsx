@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Character } from '@/types/character';
+import { useCharacter } from '@/hooks/useCharacters';
 
 // Define possible content types for the sidebar
 export enum SidebarContentType {
@@ -22,18 +23,35 @@ const RightSidebarContext = createContext<RightSidebarContextType | undefined>(u
 
 export function RightSidebarProvider({
     children,
-    initialContentType = SidebarContentType.THOUGHTS
+    initialContentType = SidebarContentType.THOUGHTS,
+    initialCharacterId = ''
 }: {
     children: ReactNode;
     initialContentType?: SidebarContentType;
+    initialCharacterId?: string;
 }) {
     const [contentType, setContentType] = useState<SidebarContentType>(initialContentType);
     const [currentCharacter, setCurrentCharacter] = useState<Character | null>(null);
 
-    // Update cookie when content type changes
+    // Use the useCharacter hook to fetch the initial character
+    const { data: initialCharacter } = useCharacter(initialCharacterId);
+
+    // Initialize character from the fetched data
+    useEffect(() => {
+        if (initialCharacter && !currentCharacter) {
+            setCurrentCharacter(initialCharacter);
+        }
+    }, [initialCharacter]);
+
+    // Update cookies when content type or character changes
     useEffect(() => {
         document.cookie = `sidebar_content_type=${contentType};path=/;max-age=31536000`;
-    }, [contentType]);
+        if (currentCharacter) {
+            document.cookie = `current_character=${currentCharacter.id};path=/;max-age=31536000`;
+        } else {
+            document.cookie = `current_character=;path=/;max-age=0`;
+        }
+    }, [contentType, currentCharacter]);
 
     return (
         <RightSidebarContext.Provider value={{

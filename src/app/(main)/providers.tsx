@@ -18,9 +18,10 @@ interface ClientProvidersProps {
     children: React.ReactNode;
     initialSession: Session;
     initialContentType?: SidebarContentType;
+    initialCharacterId?: string;
 }
 
-export function Providers({ children, initialSession, initialContentType }: ClientProvidersProps) {
+export function Providers({ children, initialSession, initialContentType, initialCharacterId }: ClientProvidersProps) {
     const [queryClient] = useState(() => new QueryClient({
         defaultOptions: {
             queries: {
@@ -33,7 +34,10 @@ export function Providers({ children, initialSession, initialContentType }: Clie
         <QueryClientProvider client={queryClient}>
             <SessionProvider initialSession={initialSession}>
                 <ImagePreviewProvider>
-                    <RightSidebarProvider initialContentType={initialContentType}>
+                    <RightSidebarProvider
+                        initialContentType={initialContentType}
+                        initialCharacterId={initialCharacterId}
+                    >
                         {children}
                     </RightSidebarProvider>
                 </ImagePreviewProvider>

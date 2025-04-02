@@ -21,10 +21,14 @@ export default async function MainLayout({
     const contentTypeCookie = cookieStore.get('sidebar_content_type');
     const initialContentType = contentTypeCookie?.value as SidebarContentType || SidebarContentType.THOUGHTS;
 
+    const currentCharacterCookie = cookieStore.get('current_character');
+    const initialCharacterId = currentCharacterCookie?.value || '';
+
     return (
         <Providers
             initialSession={initialSession}
             initialContentType={initialContentType}
+            initialCharacterId={initialCharacterId}
         >
             <div className="flex w-full bg-black text-white min-h-screen">
                 <div className="flex flex-1 justify-end">

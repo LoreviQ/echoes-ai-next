@@ -24,12 +24,14 @@ export default async function RootLayout({
     const headersList = await headers();
     const rightSidebarExpanded = headersList.get('x-right-sidebar-expanded') || 'false';
     const sidebarContentType = headersList.get('x-sidebar-content-type') || 'thoughts';
+    const currentCharacter = headersList.get('x-current-character') || '';
 
     return (
         <html lang="en">
             <head>
                 <meta name="x-right-sidebar-expanded" content={rightSidebarExpanded} />
                 <meta name="x-sidebar-content-type" content={sidebarContentType} />
+                <meta name="x-current-character" content={currentCharacter} />
             </head>
             <body className={`${inter.className} ${cyberwayRiders.variable}`}>
                 {children}
