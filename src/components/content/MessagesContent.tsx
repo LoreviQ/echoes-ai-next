@@ -1,6 +1,24 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import { useRightSidebar } from "@/contexts/RightSidebarContext";
+import { useThreads, useThreadMessages } from '@/hooks/useThreads';
+import { Thread } from '@/types/thread';
 
 export function MessagesContent() {
+    const { currentCharacter } = useRightSidebar();
+    const [selectedThreadId, setSelectedThreadId] = useState<string>();
+
+    const { data: threads, isLoading: threadsLoading } = useThreads(currentCharacter?.id);
+    const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
+
+    // When threads load or change, select the most recent thread
+    React.useEffect(() => {
+        if (threads && threads.length > 0 && !selectedThreadId) {
+            setSelectedThreadId(threads[0].id);
+        }
+    }, [threads, selectedThreadId]);
+
     return (
         <div className="p-4 border border-zinc-700 rounded-lg">
             <h3 className="text-xl font-bold mb-3">Messages</h3>
