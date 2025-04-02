@@ -1,9 +1,6 @@
 import { Character } from "@/types/character";
 import Link from "next/link";
-import { CircleActionButton } from "@/components/buttons/CircleActionButton";
-import { DotsMenuIcon } from "@/assets/icons";
 import PreviewImage from "@/components/images/PreviewImage";
-import { ActionButton } from "@/components/buttons/ActionButton";
 
 interface CharacterCardProps {
     character: Character;
