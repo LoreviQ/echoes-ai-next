@@ -6,6 +6,7 @@ import { useThreads, useThreadMessages } from '@/hooks/useThreads';
 import { Thread, Message } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
 import { Character } from '@/types/character';
+import { RightArrowIcon } from '@/assets/icons';
 
 export function MessagesContent() {
     const { currentCharacter } = useRightSidebar();
@@ -154,18 +155,21 @@ function ChatWindow({ messages, isLoading }: ChatWindowProps) {
 
             {/* Input field */}
             <div className="p-4 border-t border-zinc-700">
-                <textarea
-                    value={inputValue}
-                    onChange={(e) => {
-                        setInputValue(e.target.value);
-                        // Auto-resize the textarea
-                        e.target.style.height = 'auto';
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                    }}
-                    placeholder="Type a message..."
-                    rows={1}
-                    className="w-full px-4 py-2 bg-zinc-800 border border-zinc-600 rounded-lg focus:outline-none focus:border-white resize-none overflow-hidden"
-                />
+                <div className="relative group w-full">
+                    <textarea
+                        value={inputValue}
+                        onChange={(e) => {
+                            setInputValue(e.target.value);
+                            // Auto-resize the textarea
+                            e.target.style.height = 'auto';
+                            e.target.style.height = `${e.target.scrollHeight}px`;
+                        }}
+                        placeholder="Type a message..."
+                        rows={1}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 pr-10 pl-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 resize-none overflow-hidden"
+                    />
+                    <RightArrowIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zinc-400 transition-colors duration-200 group-focus-within:text-white" />
+                </div>
             </div>
         </div>
     );
