@@ -2,25 +2,38 @@
 
 import React, { useState } from 'react';
 import { useRightSidebar } from "@/contexts/RightSidebarContext";
-import { useThreads, useThreadMessages } from '@/hooks/useThreads';
+import { useThreads, useThreadMessages, useCreateThread } from '@/hooks/useThreads';
 import { Thread } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
 import { Character } from '@/types/character';
 
-
 export function MessagesContent() {
     const { currentCharacter } = useRightSidebar();
     const [selectedThreadId, setSelectedThreadId] = useState<string>();
+    const { mutateAsync: createThread } = useCreateThread();
 
     const { data: threads, isLoading: threadsLoading } = useThreads(currentCharacter?.id);
     const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
 
-    // When threads load or change, select the most recent thread
+    // When threads load or change, select the most recent thread or create a new one if none exist
     React.useEffect(() => {
-        if (threads && threads.length > 0 && !selectedThreadId) {
-            setSelectedThreadId(threads[0].id);
+        if (!threadsLoading && currentCharacter) {
+            if (threads && threads.length > 0) {
+                if (!selectedThreadId) {
+                    setSelectedThreadId(threads[0].id);
+                }
+            } else {
+                // No threads exist, create a new one
+                createThread({ characterId: currentCharacter.id })
+                    .then((thread: Thread) => {
+                        setSelectedThreadId(thread.id);
+                    })
+                    .catch((error: Error) => {
+                        console.error('Error creating thread:', error);
+                    });
+            }
         }
-    }, [threads, selectedThreadId]);
+    }, [threads, threadsLoading, currentCharacter, selectedThreadId, createThread]);
 
     if (!currentCharacter) {
         return null;

@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase.client';
 import { Thread, Message } from '@/types/thread';
 
@@ -63,4 +63,39 @@ export function useThreadsInvalidation() {
             queryClient.invalidateQueries({ queryKey: ['messages', threadId] });
         }
     };
+}
+
+export function useCreateThread() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ characterId }: { characterId: string }) => {
+            const supabase = createClient();
+
+            // Get the actual user from Supabase auth
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
+            if (userError || !user) throw new Error('Authentication error');
+
+            const { data: thread, error } = await supabase
+                .from('threads')
+                .insert({
+                    user_id: user.id,
+                    character_id: characterId,
+                    title: 'New Thread',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                })
+                .select()
+                .single();
+
+            if (error) throw error;
+            return thread;
+        },
+        onSuccess: (thread) => {
+            // Invalidate the threads query for this character
+            queryClient.invalidateQueries({
+                queryKey: ['threads', thread.character_id]
+            });
+        }
+    });
 } 
