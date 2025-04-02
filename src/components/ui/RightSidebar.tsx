@@ -5,10 +5,10 @@ import { SearchIcon, HamburgerIcon } from "@/assets/icons";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { setCookie } from 'nookies';
 import { useRightSidebar, SidebarContentType } from "@/contexts/RightSidebarContext";
-import { ThoughtsContent } from "@/components/content/ThoughtsContent";
-import { EventsContent } from "@/components/content/EventsContent";
-import { MessagesContent } from "@/components/content/MessagesContent";
-import { DescriptionContent } from "@/components/content/DescriptionContent";
+import { ThoughtsContent } from "@/components/content/Thoughts";
+import { EventsContent } from "@/components/content/Events";
+import { MessagesContent } from "@/components/content/Messages";
+import { DescriptionContent } from "@/components/content/CharacterDescription";
 
 interface RightSidebarProps {
     initialExpanded?: boolean;

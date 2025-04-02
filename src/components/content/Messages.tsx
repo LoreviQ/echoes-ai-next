@@ -5,6 +5,8 @@ import { useRightSidebar } from "@/contexts/RightSidebarContext";
 import { useThreads, useThreadMessages } from '@/hooks/useThreads';
 import { Thread } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
+import { Character } from '@/types/character';
+
 
 export function MessagesContent() {
     const { currentCharacter } = useRightSidebar();
@@ -26,27 +28,56 @@ export function MessagesContent() {
 
     return (
         <div className="flex flex-col h-full">
-            {/* Top Bar */}
-            <div className="flex items-center justify-between p-4 border-b border-zinc-700">
-                <div className="flex items-center space-x-3">
+            <MessagesHeader
+                character={currentCharacter}
+                selectedThreadId={selectedThreadId}
+                onThreadSelect={setSelectedThreadId}
+                threads={threads}
+                threadsLoading={threadsLoading}
+            />
+
+            {/* Messages Content */}
+            <div className="flex-1 p-4">
+                <p className="text-zinc-400">Messages will be displayed here...</p>
+            </div>
+        </div>
+    );
+}
+
+
+interface MessagesHeaderProps {
+    character: Character;
+    selectedThreadId?: string;
+    onThreadSelect: (threadId: string) => void;
+    threads?: Thread[];
+    threadsLoading: boolean;
+}
+
+function MessagesHeader({ character, selectedThreadId, onThreadSelect, threads, threadsLoading }: MessagesHeaderProps) {
+    return (
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 border-b border-zinc-700">
+            <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center justify-center w-full sm:w-auto">
                     <div className="w-10 h-10 relative">
                         <PreviewImage
-                            src={currentCharacter.avatar_url || '/default-avatar.png'}
-                            alt={`${currentCharacter.name}'s avatar`}
+                            src={character.avatar_url || '/default-avatar.png'}
+                            alt={`${character.name}'s avatar`}
                             fill
                             className="rounded-full object-cover"
                         />
                     </div>
-                    <div className="flex flex-col">
-                        <span className="font-bold text-lg">{currentCharacter.name}</span>
-                        <span className="text-sm text-zinc-400">@{currentCharacter.path}</span>
-                    </div>
                 </div>
+                <div className="flex flex-col items-center sm:items-start w-full sm:w-auto">
+                    <span className="font-bold text-lg">{character.name}</span>
+                    <span className="text-sm text-zinc-400">@{character.path}</span>
+                </div>
+            </div>
 
+            <div className="w-full sm:w-auto ml-auto">
                 <select
-                    className="bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-sm"
+                    className="w-full bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-sm"
                     value={selectedThreadId}
-                    onChange={(e) => setSelectedThreadId(e.target.value)}
+                    onChange={(e) => onThreadSelect(e.target.value)}
                 >
                     {threadsLoading ? (
                         <option>Loading threads...</option>
@@ -61,11 +92,7 @@ export function MessagesContent() {
                     )}
                 </select>
             </div>
-
-            {/* Messages Content */}
-            <div className="flex-1 p-4">
-                <p className="text-zinc-400">Messages will be displayed here...</p>
-            </div>
         </div>
     );
-} 
+}
+
