@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SessionProvider } from "@/contexts/session.client";
 import { ImagePreviewProvider } from "@/contexts/imagePreview";
 import { useState } from 'react'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 
 interface Session {
@@ -35,7 +34,6 @@ export function Providers({ children, initialSession }: ClientProvidersProps) {
                     {children}
                 </ImagePreviewProvider>
             </SessionProvider>
-            <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     )
 } 
