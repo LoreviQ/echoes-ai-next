@@ -5,6 +5,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SessionProvider } from "@/contexts/session.client";
 import { ImagePreviewProvider } from "@/contexts/imagePreview";
+import { RightSidebarProvider } from "@/contexts/RightSidebarContext";
 import { useState } from 'react'
 
 
@@ -31,7 +32,9 @@ export function Providers({ children, initialSession }: ClientProvidersProps) {
         <QueryClientProvider client={queryClient}>
             <SessionProvider initialSession={initialSession}>
                 <ImagePreviewProvider>
-                    {children}
+                    <RightSidebarProvider>
+                        {children}
+                    </RightSidebarProvider>
                 </ImagePreviewProvider>
             </SessionProvider>
         </QueryClientProvider>
