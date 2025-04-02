@@ -7,6 +7,7 @@ import { Character } from '@/types/character';
 import type { SupabaseCellReference } from '@/types/supabase';
 import { CharacterFeed } from '@/components/ui/Feed';
 import { CharacterActions } from '@/components/character/CharacterActions';
+import { BackHeader } from '@/components/ui/BackHeader';
 
 export default async function CharacterPage(
     props: {
@@ -43,10 +44,7 @@ function CharacterInfo({ character, isOwner }: { character: Character, isOwner: 
     return (
         <div>
             <div className="relative w-full max-w-[600px]">
-                <div className="sticky top-0 left-0 right-0 h-[53px] bg-black/60 backdrop-blur-md text-white z-10 flex items-center px-4">
-                    <BackButton />
-                    <h2 className="font-bold text-2xl ml-3">{character.name}</h2>
-                </div>
+                <BackHeader text={character.name} />
                 <div className="relative w-full aspect-[3/1]">
                     <DynamicImage
                         src={character.banner_url}

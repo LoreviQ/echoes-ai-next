@@ -4,7 +4,7 @@ import { NavButton } from "@/components/buttons/NavButton";
 import { ActionButton } from "@/components/buttons/ActionButton";
 import { TypefaceOutlined } from "@/components/branding";
 import UserSection from "@/components/UserSection";
-import { HomeIcon, DocumentIcon, SettingsIcon, PlusIcon } from "@/assets/icons";
+import { HomeIcon, DocumentIcon, SettingsIcon, PlusIcon, UserGroupIcon } from "@/assets/icons";
 import { useModal } from "@/hooks/useModal";
 import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
 import { useSession } from "@/contexts/session.client";
@@ -26,6 +26,11 @@ const navigationItems = [
         path: "/settings",
         icon: SettingsIcon,
     },
+    {
+        label: "Characters",
+        path: "/characters",
+        icon: UserGroupIcon,
+    }
 ];
 
 export default function LeftSidebar() {
