@@ -43,30 +43,30 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
     };
 
     return (
-        <div className={`pt-4 pl-4 bg-black text-white ${isExpanded ? 'w-full pr-10' : 'w-[340px]'} h-screen transition-all duration-300 border-l border-zinc-600 space-y-4`}>
-            <div className="flex items-center gap-2 w-full">
-                <CircleActionButton
-                    icon={HamburgerIcon}
-                    onClick={toggleSidebar}
-                    className="text-zinc-400 hover:bg-zinc-800/50"
-                    size="lg"
-                />
-                <Search />
-            </div>
+        <div className={`bg-black text-white ${isExpanded ? 'w-full' : 'w-[340px]'} h-screen transition-all duration-300 border-l border-zinc-600`}>
+            <SidebarHeader isExpanded={isExpanded} toggleSidebar={toggleSidebar} />
             {renderContent()}
         </div>
     );
 }
 
-function Search() {
+function SidebarHeader({ isExpanded, toggleSidebar }: { isExpanded: boolean, toggleSidebar: () => void }) {
     return (
-        <div className="relative group w-full">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zinc-400 transition-colors duration-200 group-focus-within:text-white" />
-            <input
-                type="text"
-                placeholder="Search..."
-                className="w-full bg-black border border-zinc-600 rounded-xl py-2 pl-10 pr-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+        <div className={`py-4 pl-4 ${isExpanded ? 'pr-10' : ''} flex items-center gap-2 w-full`}>
+            <CircleActionButton
+                icon={HamburgerIcon}
+                onClick={toggleSidebar}
+                className="text-zinc-400 hover:bg-zinc-800/50"
+                size="lg"
             />
+            <div className="relative group w-full">
+                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zinc-400 transition-colors duration-200 group-focus-within:text-white" />
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 pl-10 pr-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                />
+            </div>
         </div>
     );
 }
