@@ -70,13 +70,54 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
-    const [avatarFile, setAvatarFile] = useState<File | null>(null);
-    const [bannerFile, setBannerFile] = useState<File | null>(null);
+    const [avatarFile, setAvatarFile] = useState<File | string | null>(null);
+    const [bannerFile, setBannerFile] = useState<File | string | null>(null);
+    const [avatarPreviewUrl, setAvatarPreviewUrl] = useState('/images/avatar-placeholder.jpg');
+    const [bannerPreviewUrl, setBannerPreviewUrl] = useState('/images/banner-placeholder.jpg');
     const supabase = createClient();
 
     useEffect(() => {
         setPath(nameToPath(name));
     }, [name]);
+
+    // Update preview URLs when files or URLs change
+    useEffect(() => {
+        if (avatarFile) {
+            if (typeof avatarFile === 'string') {
+                setAvatarPreviewUrl(avatarFile);
+            } else {
+                // For File objects, create an object URL
+                const objectUrl = URL.createObjectURL(avatarFile);
+                setAvatarPreviewUrl(objectUrl);
+
+                // Clean up the URL when component unmounts or file changes
+                return () => {
+                    URL.revokeObjectURL(objectUrl);
+                };
+            }
+        } else {
+            setAvatarPreviewUrl('/images/avatar-placeholder.jpg');
+        }
+    }, [avatarFile]);
+
+    useEffect(() => {
+        if (bannerFile) {
+            if (typeof bannerFile === 'string') {
+                setBannerPreviewUrl(bannerFile);
+            } else {
+                // For File objects, create an object URL
+                const objectUrl = URL.createObjectURL(bannerFile);
+                setBannerPreviewUrl(objectUrl);
+
+                // Clean up the URL when component unmounts or file changes
+                return () => {
+                    URL.revokeObjectURL(objectUrl);
+                };
+            }
+        } else {
+            setBannerPreviewUrl('/images/banner-placeholder.jpg');
+        }
+    }, [bannerFile]);
 
     const validateForm = (): boolean => {
         // Validate path format
@@ -124,21 +165,33 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                 throw new Error('Authentication error');
             }
 
-            // Upload images if provided
+            // Upload images if provided as Files, use direct URLs if strings
             let avatarUrl = null;
             let bannerUrl = null;
 
             if (avatarFile) {
-                avatarUrl = await uploadImage(avatarFile, 'character-avatars');
-                if (!avatarUrl) {
-                    throw new Error('Failed to upload avatar image');
+                if (typeof avatarFile === 'string') {
+                    // If it's already a URL, use it directly
+                    avatarUrl = avatarFile;
+                } else {
+                    // If it's a File object, upload it
+                    avatarUrl = await uploadImage(avatarFile, 'character-avatars');
+                    if (!avatarUrl) {
+                        throw new Error('Failed to upload avatar image');
+                    }
                 }
             }
 
             if (bannerFile) {
-                bannerUrl = await uploadImage(bannerFile, 'character-banners');
-                if (!bannerUrl) {
-                    throw new Error('Failed to upload banner image');
+                if (typeof bannerFile === 'string') {
+                    // If it's already a URL, use it directly
+                    bannerUrl = bannerFile;
+                } else {
+                    // If it's a File object, upload it
+                    bannerUrl = await uploadImage(bannerFile, 'character-banners');
+                    if (!bannerUrl) {
+                        throw new Error('Failed to upload banner image');
+                    }
                 }
             }
 
@@ -221,17 +274,12 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
 
             const { data } = await api.post(endpoints.characters.generateAvatar, characterData);
 
-            /* no response yet
-            if (data.success && data.avatarUrl) {
-                // Convert the avatar URL to a File object
-                const response = await fetch(data.avatarUrl);
-                const blob = await response.blob();
-                const file = new File([blob], "generated-avatar.png", { type: "image/png" });
-                setAvatarFile(file);
+            if (data.success && data.content?.imageUrl) {
+                // Store the URL directly - don't convert to File
+                setAvatarFile(data.content.imageUrl);
             } else {
                 setError('Failed to generate avatar');
             }
-            */
         } catch (error) {
             console.error('Error generating avatar:', error);
             setError('Failed to generate avatar. Please try again.');
@@ -247,7 +295,7 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                 <div className="relative w-full mb-4">
                     <div className="relative w-full aspect-[3/1]">
                         <SelectImage
-                            src="/images/banner-placeholder.jpg"
+                            src={bannerPreviewUrl}
                             alt="Character banner"
                             fill
                             className="object-contain"
@@ -283,7 +331,7 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                         className="absolute left-4 bottom-0 translate-y-1/2 w-[25%] max-w-[150px] min-w-[80px] aspect-square rounded-full border-4 border-black overflow-hidden pointer-events-auto"
                     >
                         <SelectImage
-                            src="/images/avatar-placeholder.jpg"
+                            src={avatarPreviewUrl}
                             alt="Character avatar"
                             fill
                             className="rounded-full object-cover"

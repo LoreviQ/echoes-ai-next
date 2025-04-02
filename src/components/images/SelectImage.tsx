@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface SelectImageProps {
     src: string;
@@ -9,7 +9,7 @@ interface SelectImageProps {
     fill?: boolean;
     className?: string;
     priority?: boolean;
-    onFileSelected?: (file: File) => void;
+    onFileSelected?: (file: File | string) => void;
     disabled?: boolean;
 }
 
@@ -25,6 +25,11 @@ export default function SelectImage({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [previewSrc, setPreviewSrc] = useState(src);
+
+    // Update preview when src prop changes (for generated images)
+    useEffect(() => {
+        setPreviewSrc(src);
+    }, [src]);
 
     const handleClick = () => {
         if (!disabled) {
