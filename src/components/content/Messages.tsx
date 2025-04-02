@@ -49,7 +49,7 @@ interface MessagesHeaderProps {
 
 function MessagesHeader({ character, selectedThreadId, onThreadSelect, threads, threadsLoading }: MessagesHeaderProps) {
     return (
-        <div className="flex flex-wrap items-center justify-between gap-4 p-4 border-b border-zinc-700">
+        <div className="sticky top-0 left-0 right-0 bg-black/60 backdrop-blur-md z-10 flex flex-wrap items-center justify-between gap-4 p-4 border-b border-zinc-700">
             <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center justify-center w-full sm:w-auto">
                     <div className="w-10 h-10 relative">
