@@ -17,7 +17,10 @@ export default function PreviewImage({ src, alt, fill, className, priority }: Pr
     return (
         <div
             className="cursor-pointer"
-            onClick={() => openPreview(src)}
+            onClick={(e) => {
+                e.preventDefault();
+                openPreview(src);
+            }}
         >
             <Image
                 src={src}

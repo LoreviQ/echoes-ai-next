@@ -1,8 +1,8 @@
 import { Character } from "@/types/character";
-import Image from "next/image";
 import Link from "next/link";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { DotsMenuIcon } from "@/assets/icons";
+import PreviewImage from "@/components/images/PreviewImage";
 
 interface CharacterCardProps {
     character: Character;
@@ -10,19 +10,24 @@ interface CharacterCardProps {
 
 export function CharacterCard({ character }: CharacterCardProps) {
     const avatarUrl = character.avatar_url || '/images/avatar-placeholder.jpg';
-    const characterUrl = `/characters/${character.path}`;
+    const characterUrl = `/${character.path}`;
+
+    // Process tags
+    const tags = character.tags ? character.tags.split(',').map(tag => tag.trim()) : [];
+    const visibleTags = tags.slice(0, 5);
+    const hiddenTags = tags.slice(5);
+    const hasHiddenTags = hiddenTags.length > 0;
 
     return (
         <div className="px-4 py-3 border-b border-zinc-600 hover:bg-zinc-900/30 transition-colors">
             <Link href={characterUrl} className="flex space-x-4">
                 {/* Avatar */}
-                <div className="flex-shrink-0">
-                    <Image
+                <div className="flex-shrink-0 relative w-[56px] h-[56px]">
+                    <PreviewImage
                         src={avatarUrl}
                         alt={`${character.name}'s avatar`}
-                        width={56}
-                        height={56}
-                        className="rounded-full"
+                        fill
+                        className="rounded-full object-cover"
                     />
                 </div>
 
@@ -54,11 +59,19 @@ export function CharacterCard({ character }: CharacterCardProps) {
                         {/* Tags if available */}
                         {character.tags && (
                             <div className="mt-2 flex flex-wrap gap-1">
-                                {character.tags.split(',').map((tag, index) => (
+                                {visibleTags.map((tag, index) => (
                                     <span key={index} className="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-full">
-                                        {tag.trim()}
+                                        {tag}
                                     </span>
                                 ))}
+                                {hasHiddenTags && (
+                                    <span
+                                        className="text-xs bg-zinc-700 text-zinc-300 px-2 py-0.5 rounded-full"
+                                        title={hiddenTags.join(', ')}
+                                    >
+                                        +{hiddenTags.length} more...
+                                    </span>
+                                )}
                             </div>
                         )}
                     </div>
