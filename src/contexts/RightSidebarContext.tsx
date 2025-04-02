@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Character } from '@/types/character';
 
 // Define possible content types for the sidebar
@@ -20,9 +20,20 @@ interface RightSidebarContextType {
 
 const RightSidebarContext = createContext<RightSidebarContextType | undefined>(undefined);
 
-export function RightSidebarProvider({ children }: { children: ReactNode }) {
-    const [contentType, setContentType] = useState<SidebarContentType>(SidebarContentType.THOUGHTS);
+export function RightSidebarProvider({
+    children,
+    initialContentType = SidebarContentType.THOUGHTS
+}: {
+    children: ReactNode;
+    initialContentType?: SidebarContentType;
+}) {
+    const [contentType, setContentType] = useState<SidebarContentType>(initialContentType);
     const [currentCharacter, setCurrentCharacter] = useState<Character | null>(null);
+
+    // Update cookie when content type changes
+    useEffect(() => {
+        document.cookie = `sidebar_content_type=${contentType};path=/;max-age=31536000`;
+    }, [contentType]);
 
     return (
         <RightSidebarContext.Provider value={{

@@ -4,6 +4,7 @@ import LeftSidebar from "@/components/LeftSidebar";
 import RightSidebar from "@/components/RightSidebar";
 import { getInitialSession } from "@/contexts/session.server";
 import { Providers } from "./providers";
+import { SidebarContentType } from "@/contexts/RightSidebarContext";
 
 export default async function MainLayout({
     children,
@@ -12,13 +13,19 @@ export default async function MainLayout({
 }>) {
     const initialSession = await getInitialSession();
 
-    // Read right sidebar preference from cookies server-side
+    // Read right sidebar preferences from cookies server-side
     const cookieStore = await cookies();
     const rightSidebarCookie = cookieStore.get('right_sidebar_expanded');
     const isRightSidebarExpanded = rightSidebarCookie?.value === 'true' || false;
 
+    const contentTypeCookie = cookieStore.get('sidebar_content_type');
+    const initialContentType = contentTypeCookie?.value as SidebarContentType || SidebarContentType.THOUGHTS;
+
     return (
-        <Providers initialSession={initialSession}>
+        <Providers
+            initialSession={initialSession}
+            initialContentType={initialContentType}
+        >
             <div className="flex w-full bg-black text-white min-h-screen">
                 <div className="flex flex-1 justify-end">
                     <div className="hidden md:block">

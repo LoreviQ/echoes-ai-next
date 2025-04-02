@@ -5,7 +5,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SessionProvider } from "@/contexts/session.client";
 import { ImagePreviewProvider } from "@/contexts/imagePreview";
-import { RightSidebarProvider } from "@/contexts/RightSidebarContext";
+import { RightSidebarProvider, SidebarContentType } from "@/contexts/RightSidebarContext";
 import { useState } from 'react'
 
 
@@ -17,9 +17,10 @@ interface Session {
 interface ClientProvidersProps {
     children: React.ReactNode;
     initialSession: Session;
+    initialContentType?: SidebarContentType;
 }
 
-export function Providers({ children, initialSession }: ClientProvidersProps) {
+export function Providers({ children, initialSession, initialContentType }: ClientProvidersProps) {
     const [queryClient] = useState(() => new QueryClient({
         defaultOptions: {
             queries: {
@@ -32,7 +33,7 @@ export function Providers({ children, initialSession }: ClientProvidersProps) {
         <QueryClientProvider client={queryClient}>
             <SessionProvider initialSession={initialSession}>
                 <ImagePreviewProvider>
-                    <RightSidebarProvider>
+                    <RightSidebarProvider initialContentType={initialContentType}>
                         {children}
                     </RightSidebarProvider>
                 </ImagePreviewProvider>

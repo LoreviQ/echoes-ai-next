@@ -15,11 +15,13 @@ export async function middleware(request: NextRequest) {
     // Get the response from the authentication middleware
     const response = await updateSession(request, publicUrls)
 
-    // Read sidebar preference from cookies or use default value
+    // Read sidebar preferences from cookies or use default values
     const rightSidebarExpanded = request.cookies.get('right_sidebar_expanded')?.value === 'true' || false
+    const sidebarContentType = request.cookies.get('sidebar_content_type')?.value || 'thoughts'
 
-    // Add user preference to response headers so client components can access it
+    // Add user preferences to response headers so client components can access them
     response.headers.set('x-right-sidebar-expanded', String(rightSidebarExpanded))
+    response.headers.set('x-sidebar-content-type', sidebarContentType)
 
     return response
 }
