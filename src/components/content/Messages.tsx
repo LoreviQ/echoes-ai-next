@@ -7,6 +7,7 @@ import { Thread, Message } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
 import { Character } from '@/types/character';
 import { RightArrowIcon } from '@/assets/icons';
+import { MarkdownContent } from '@/components/ui/MarkdownContent';
 
 export function MessagesContent() {
     const { currentCharacter } = useRightSidebar();
@@ -104,7 +105,7 @@ function ChatMessage({ message }: ChatMessageProps) {
                     : 'bg-blue-600 text-white'
                     }`}
             >
-                <p className="break-words">{message.content}</p>
+                <MarkdownContent content={message.content} className="break-words" />
             </div>
         </div>
     );
