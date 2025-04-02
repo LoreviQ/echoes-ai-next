@@ -113,9 +113,77 @@ export function useCreateThread() {
     });
 }
 
+export function useCreateMessage() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ threadId, content }: { threadId: string; content: string }) => {
+            const supabase = createClient();
+
+            // Get the actual user from Supabase auth
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
+            if (userError || !user) throw new Error('Authentication error');
+
+            const { data: message, error } = await supabase
+                .from('messages')
+                .insert({
+                    thread_id: threadId,
+                    sender_type: 'user',
+                    content,
+                    created_at: new Date().toISOString(),
+                })
+                .select()
+                .single();
+
+            if (error) throw error;
+            return message;
+        },
+        onMutate: async ({ threadId, content }) => {
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['messages', threadId] });
+
+            // Snapshot the previous value
+            const previousMessages = queryClient.getQueryData(['messages', threadId]);
+
+            // Create a temporary ID that we can reference later
+            const tempId = `temp-${Date.now()}`;
+
+            // Optimistically update to the new value
+            queryClient.setQueryData(['messages', threadId], (old: Message[] = []) => {
+                const optimisticMessage: Message = {
+                    id: tempId,
+                    thread_id: threadId,
+                    content,
+                    sender_type: 'user',
+                    created_at: new Date().toISOString(),
+                };
+                return [...old, optimisticMessage];
+            });
+
+            // Return a context object with the snapshotted value and tempId
+            return { previousMessages, tempId };
+        },
+        onError: (err, variables, context) => {
+            // If the mutation fails, use the context returned from onMutate to roll back
+            if (context?.previousMessages) {
+                queryClient.setQueryData(['messages', variables.threadId], context.previousMessages);
+            }
+        },
+        onSuccess: (newMessage, variables, context) => {
+            // Update the messages cache with the actual server response
+            queryClient.setQueryData(['messages', newMessage.thread_id], (old: Message[] = []) => {
+                // Filter out the optimistic message using the stored tempId
+                const filtered = old.filter(message => message.id !== context?.tempId);
+                return [...filtered, newMessage];
+            });
+        },
+    });
+}
+
 export function useSelectedThread(characterId: string | undefined) {
     const [selectedThreadId, setSelectedThreadId] = React.useState<string>();
     const { data: threads, isLoading } = useThreads(characterId);
+    const createMessageMutation = useCreateMessage();
 
     // When threads load or change, select the most recent thread
     React.useEffect(() => {
@@ -124,10 +192,19 @@ export function useSelectedThread(characterId: string | undefined) {
         }
     }, [threads, isLoading, selectedThreadId]);
 
+    const sendMessage = React.useCallback(async (content: string) => {
+        if (!selectedThreadId) {
+            throw new Error('No thread selected');
+        }
+        return createMessageMutation.mutateAsync({ threadId: selectedThreadId, content });
+    }, [selectedThreadId, createMessageMutation]);
+
     return {
         selectedThreadId,
         setSelectedThreadId,
         threads,
-        isLoading
+        isLoading,
+        sendMessage,
+        isSending: createMessageMutation.isPending
     };
 } 

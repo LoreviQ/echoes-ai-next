@@ -10,7 +10,7 @@ import { RightArrowIcon } from '@/assets/icons';
 
 export function MessagesContent() {
     const { currentCharacter } = useRightSidebar();
-    const { selectedThreadId, setSelectedThreadId, threads, isLoading: threadsLoading } = useSelectedThread(currentCharacter?.id);
+    const { selectedThreadId, setSelectedThreadId, threads, isLoading: threadsLoading, sendMessage, isSending } = useSelectedThread(currentCharacter?.id);
     const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
 
     if (!currentCharacter) {
@@ -30,6 +30,8 @@ export function MessagesContent() {
             <ChatWindow
                 messages={messages || []}
                 isLoading={messagesLoading}
+                onSendMessage={sendMessage}
+                isSending={isSending}
             />
         </div>
     );
@@ -111,9 +113,11 @@ function ChatMessage({ message }: ChatMessageProps) {
 interface ChatWindowProps {
     messages: Message[];
     isLoading: boolean;
+    onSendMessage: (content: string) => Promise<void>;
+    isSending?: boolean;
 }
 
-function ChatWindow({ messages, isLoading }: ChatWindowProps) {
+function ChatWindow({ messages, isLoading, onSendMessage, isSending }: ChatWindowProps) {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [inputValue, setInputValue] = useState('');
 
@@ -121,6 +125,27 @@ function ChatWindow({ messages, isLoading }: ChatWindowProps) {
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
+
+    const handleSendMessage = async () => {
+        const trimmedContent = inputValue.trim();
+        if (trimmedContent && !isSending) {
+            try {
+                setInputValue('');
+                await onSendMessage(trimmedContent);
+            } catch (error) {
+                console.error('Failed to send message:', error);
+                // Optionally restore the input value on error
+                setInputValue(trimmedContent);
+            }
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    };
 
     if (isLoading) {
         return <div className="flex-1 p-4 overflow-y-auto"><p>Loading messages...</p></div>;
@@ -155,11 +180,19 @@ function ChatWindow({ messages, isLoading }: ChatWindowProps) {
                             e.target.style.height = 'auto';
                             e.target.style.height = `${e.target.scrollHeight}px`;
                         }}
+                        onKeyDown={handleKeyDown}
                         placeholder="Type a message..."
                         rows={1}
-                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 pr-10 pl-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 resize-none overflow-hidden"
+                        disabled={isSending}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 pr-10 pl-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 resize-none overflow-hidden disabled:opacity-50"
                     />
-                    <RightArrowIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zinc-400 transition-colors duration-200 group-focus-within:text-white" />
+                    <button
+                        onClick={handleSendMessage}
+                        disabled={!inputValue.trim() || isSending}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 disabled:opacity-50"
+                    >
+                        <RightArrowIcon className="w-5 h-5 text-zinc-400 transition-colors duration-200 group-focus-within:text-white" />
+                    </button>
                 </div>
             </div>
         </div>
