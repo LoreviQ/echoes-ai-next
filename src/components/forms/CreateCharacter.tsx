@@ -56,6 +56,7 @@ interface CreateCharacterFormProps {
 
 export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacterFormProps) {
     const router = useRouter();
+    const { isOpen, toggle, close, dropdownRef } = useDropdown();
     const [tags, setTags] = useState('');
     const [name, setName] = useState('');
     const [path, setPath] = useState('');
@@ -68,6 +69,7 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
     const [bannerFile, setBannerFile] = useState<File | null>(null);
     const supabase = createClient();
@@ -201,17 +203,127 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
         }
     }
 
+    const generateAvatar = async () => {
+        if (isGeneratingAvatar) return;
+
+        setIsGeneratingAvatar(true);
+        setError(null);
+
+        try {
+            // Get the current character data
+            const characterData = {
+                name: name,
+                gender: gender === Gender.CUSTOM ? customGender : gender,
+                description: description,
+                bio: bio,
+                nsfw: isNsfw
+            };
+
+            const { data } = await api.post(endpoints.characters.generateAvatar, characterData);
+
+            /* no response yet
+            if (data.success && data.avatarUrl) {
+                // Convert the avatar URL to a File object
+                const response = await fetch(data.avatarUrl);
+                const blob = await response.blob();
+                const file = new File([blob], "generated-avatar.png", { type: "image/png" });
+                setAvatarFile(file);
+            } else {
+                setError('Failed to generate avatar');
+            }
+            */
+        } catch (error) {
+            console.error('Error generating avatar:', error);
+            setError('Failed to generate avatar. Please try again.');
+        } finally {
+            setIsGeneratingAvatar(false);
+            close();
+        }
+    };
+
     return (
         <form onSubmit={handleCreateCharacter}>
-            <CharacterHero
-                setBannerFile={setBannerFile}
-                setAvatarFile={setAvatarFile}
-                tags={tags}
-                setTags={setTags}
-                generateCharacter={generateCharacter}
-                isSubmitting={isSubmitting}
-                isGenerating={isGenerating}
-            />
+            <div>
+                <div className="relative w-full mb-4">
+                    <div className="relative w-full aspect-[3/1]">
+                        <SelectImage
+                            src="/images/banner-placeholder.jpg"
+                            alt="Character banner"
+                            fill
+                            className="object-contain"
+                            onFileSelected={setBannerFile}
+                            disabled={isSubmitting || isGenerating}
+                        />
+                    </div>
+                    <div className="absolute bottom-2 right-2" ref={dropdownRef}>
+                        <CircleActionButton
+                            onClick={toggle}
+                            icon={GenerateIcon}
+                            className="text-zinc-400 hover:text-white"
+                            disabled={isSubmitting || isGenerating}
+                        />
+                        {isOpen && (
+                            <Dropdown className="w-50">
+                                <DropdownItem
+                                    onClick={generateAvatar}
+                                    className={isGeneratingAvatar ? "opacity-50 cursor-not-allowed" : ""}
+                                >
+                                    {isGeneratingAvatar ? 'Generating...' : 'Generate Avatar'}
+                                </DropdownItem>
+                                <DropdownItem onClick={() => {
+                                    console.log('Generate Banner clicked');
+                                    close();
+                                }}>
+                                    Generate Banner
+                                </DropdownItem>
+                            </Dropdown>
+                        )}
+                    </div>
+                    <div
+                        className="absolute left-4 bottom-0 translate-y-1/2 w-[25%] max-w-[150px] min-w-[80px] aspect-square rounded-full border-4 border-black overflow-hidden pointer-events-auto"
+                    >
+                        <SelectImage
+                            src="/images/avatar-placeholder.jpg"
+                            alt="Character avatar"
+                            fill
+                            className="rounded-full object-cover"
+                            onFileSelected={setAvatarFile}
+                            disabled={isSubmitting || isGenerating}
+                        />
+                    </div>
+                </div>
+                {error && (
+                    <div className="text-red-500 text-sm text-center mb-2">{error}</div>
+                )}
+                <div className="flex justify-end space-x-2 items-center pr-4">
+                    <CircleActionButton
+                        onClick={() => {
+                            if (!isSubmitting && !isGenerating) {
+                                const randomTags = getRandomWords(10);
+                                setTags(randomTags.join(', '));
+                            }
+                        }}
+                        icon={DiceIcon}
+                        className="border border-zinc-600 hover:bg-zinc-600"
+                        disabled={isSubmitting || isGenerating}
+                    />
+                    <textarea
+                        id="tags"
+                        value={tags}
+                        onChange={(e) => setTags(e.target.value)}
+                        disabled={isSubmitting || isGenerating}
+                        rows={2}
+                        className="w-[55%] bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
+                        placeholder={`Generate character from tags\n(e.g. 'cat, magic, funny')`}
+                    />
+                    <CircleActionButton
+                        onClick={generateCharacter}
+                        icon={isGenerating ? LoadingSpinner : RightArrowIcon}
+                        className="border border-zinc-600 hover:bg-zinc-600"
+                        disabled={isSubmitting || isGenerating}
+                    />
+                </div>
+            </div>
             <div className="p-4 flex flex-col space-y-4">
                 <div className="flex items-center">
                     <label htmlFor="name" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Name</label>
@@ -342,101 +454,6 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                 </div>
             </div>
         </form>
-    );
-}
-
-interface CharacterHeroProps {
-    setBannerFile: (file: File) => void;
-    setAvatarFile: (file: File) => void;
-    tags: string;
-    setTags: (tags: string) => void;
-    generateCharacter: () => void;
-    isSubmitting: boolean;
-    isGenerating: boolean;
-}
-
-function CharacterHero({ setBannerFile, setAvatarFile, tags, setTags, generateCharacter, isSubmitting, isGenerating }: CharacterHeroProps) {
-    const { isOpen, toggle, close, dropdownRef } = useDropdown();
-
-    return (
-        <div>
-            <div className="relative w-full mb-4">
-                <div className="relative w-full aspect-[3/1]">
-                    <SelectImage
-                        src="/images/banner-placeholder.jpg"
-                        alt="Character banner"
-                        fill
-                        className="object-contain"
-                        onFileSelected={setBannerFile}
-                        disabled={isSubmitting || isGenerating}
-                    />
-                </div>
-                <div className="absolute bottom-2 right-2" ref={dropdownRef}>
-                    <CircleActionButton
-                        onClick={toggle}
-                        icon={GenerateIcon}
-                        className="text-zinc-400 hover:text-white"
-                        disabled={isSubmitting || isGenerating}
-                    />
-                    {isOpen && (
-                        <Dropdown className="w-50">
-                            <DropdownItem onClick={() => {
-                                console.log('Generate Avatar clicked');
-                                close();
-                            }}>
-                                Generate Avatar
-                            </DropdownItem>
-                            <DropdownItem onClick={() => {
-                                console.log('Generate Banner clicked');
-                                close();
-                            }}>
-                                Generate Banner
-                            </DropdownItem>
-                        </Dropdown>
-                    )}
-                </div>
-                <div
-                    className="absolute left-4 bottom-0 translate-y-1/2 w-[25%] max-w-[150px] min-w-[80px] aspect-square rounded-full border-4 border-black overflow-hidden pointer-events-auto"
-                >
-                    <SelectImage
-                        src="/images/avatar-placeholder.jpg"
-                        alt="Character avatar"
-                        fill
-                        className="rounded-full object-cover"
-                        onFileSelected={setAvatarFile}
-                        disabled={isSubmitting || isGenerating}
-                    />
-                </div>
-            </div>
-            <div className="flex justify-end space-x-2 items-center pr-4">
-                <CircleActionButton
-                    onClick={() => {
-                        if (!isSubmitting && !isGenerating) {
-                            const randomTags = getRandomWords(10);
-                            setTags(randomTags.join(', '));
-                        }
-                    }}
-                    icon={DiceIcon}
-                    className="border border-zinc-600 hover:bg-zinc-600"
-                    disabled={isSubmitting || isGenerating}
-                />
-                <textarea
-                    id="tags"
-                    value={tags}
-                    onChange={(e) => setTags(e.target.value)}
-                    disabled={isSubmitting || isGenerating}
-                    rows={2}
-                    className="w-[55%] bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
-                    placeholder={`Generate character from tags\n(e.g. 'cat, magic, funny')`}
-                />
-                <CircleActionButton
-                    onClick={generateCharacter}
-                    icon={isGenerating ? LoadingSpinner : RightArrowIcon}
-                    className="border border-zinc-600 hover:bg-zinc-600"
-                    disabled={isSubmitting || isGenerating}
-                />
-            </div>
-        </div>
     );
 }
 

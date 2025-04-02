@@ -26,7 +26,10 @@ interface DropdownItemProps {
 export function DropdownItem({ onClick, children, className = '' }: DropdownItemProps) {
     return (
         <button
-            onClick={onClick}
+            onClick={(e) => {
+                e.preventDefault();
+                onClick();
+            }}
             className={`
                 w-full px-4 py-2 text-left 
                 hover:bg-zinc-900 rounded-lg transition-colors
