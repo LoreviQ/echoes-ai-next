@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { DotsMenuIcon } from "@/assets/icons";
 import PreviewImage from "@/components/images/PreviewImage";
+import { ActionButton } from "@/components/buttons/ActionButton";
 
 interface CharacterCardProps {
     character: Character;
@@ -33,22 +34,23 @@ export function CharacterCard({ character }: CharacterCardProps) {
 
                 {/* Content Section */}
                 <div className="flex-grow relative">
-                    {/* Menu Button - Top Right */}
-                    <div className="absolute right-0 top-0">
-                        <CircleActionButton
-                            onClick={() => {
-                                // Menu action
-                            }}
-                            icon={DotsMenuIcon}
-                            className="hover:bg-cyan-800/20 hover:text-cyan-800 text-zinc-400"
-                        />
-                    </div>
-
                     {/* Character Info */}
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2">
-                            <span className="text-white font-medium">{character.name}</span>
-                            <span className="text-zinc-500">@{character.path}</span>
+                            <div className="flex flex-col">
+                                <span className="text-white font-medium">{character.name}</span>
+                                <span className="text-zinc-500 text-sm">@{character.path}</span>
+                            </div>
+                            <div className="flex-grow"></div>
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                }}
+                                className={`inline-flex items-center px-4 py-1 rounded-full transition-colors
+                                            bg-white text-black hover:bg-zinc-200`}
+                            >
+                                <span className="font-bold">Subscribe</span>
+                            </button>
                         </div>
 
                         {/* Character Bio */}
@@ -77,6 +79,6 @@ export function CharacterCard({ character }: CharacterCardProps) {
                     </div>
                 </div>
             </Link>
-        </div>
+        </div >
     );
 } 
