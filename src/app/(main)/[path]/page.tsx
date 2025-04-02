@@ -40,8 +40,8 @@ export default async function CharacterPage(
 
 function CharacterInfo({ character, isOwner }: { character: Character, isOwner: boolean }) {
     return (
-        <div>
-            <div className="relative w-full max-w-[600px]">
+        <div className="w-full">
+            <div className="relative w-full">
                 <BackHeader text={character.name} />
                 <div className="relative w-full aspect-[3/1]">
                     <DynamicImage

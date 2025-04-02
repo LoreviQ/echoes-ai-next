@@ -1,12 +1,14 @@
 import { Character } from "@/types/character";
 import Link from "next/link";
 import PreviewImage from "@/components/images/PreviewImage";
+import { useRouter } from "next/navigation";
 
 interface CharacterCardProps {
     character: Character;
 }
 
 export function CharacterCard({ character }: CharacterCardProps) {
+    const router = useRouter();
     const avatarUrl = character.avatar_url || '/images/avatar-placeholder.jpg';
     const characterUrl = `/${character.path}`;
 
@@ -15,6 +17,12 @@ export function CharacterCard({ character }: CharacterCardProps) {
     const visibleTags = tags.slice(0, 5);
     const hiddenTags = tags.slice(5);
     const hasHiddenTags = hiddenTags.length > 0;
+
+    const handleTagClick = (e: React.MouseEvent, tag: string) => {
+        e.preventDefault();
+        e.stopPropagation();
+        router.push(`/search?charactertags=${encodeURIComponent(tag)}`);
+    };
 
     return (
         <div className="px-4 py-3 border-b border-zinc-600 hover:bg-zinc-900/30 transition-colors">
@@ -59,14 +67,13 @@ export function CharacterCard({ character }: CharacterCardProps) {
                         {character.tags && (
                             <div className="mt-2 flex flex-wrap gap-1">
                                 {visibleTags.map((tag, index) => (
-                                    <Link
+                                    <button
                                         key={index}
-                                        href={`/search?charactertags=${encodeURIComponent(tag)}`}
-                                        onClick={(e) => e.stopPropagation()}
+                                        onClick={(e) => handleTagClick(e, tag)}
                                         className="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-full hover:bg-zinc-700 transition-colors"
                                     >
                                         {tag}
-                                    </Link>
+                                    </button>
                                 ))}
                                 {hasHiddenTags && (
                                     <span

@@ -12,16 +12,21 @@ export default async function MainLayout({
     const initialSession = await getInitialSession();
     return (
         <Providers initialSession={initialSession}>
-            <div className="flex justify-center bg-black text-white min-h-screen">
-                <div className="hidden md:block">
-                    <LeftSidebar />
+            <div className="flex w-full bg-black text-white min-h-screen">
+                <div className="flex flex-1 justify-end">
+                    <div className="hidden md:block">
+                        <LeftSidebar />
+                    </div>
                 </div>
 
-                <main className="max-w-[600px] w-full h-screen overflow-y-auto">
+                <main className="w-[600px] flex-none h-screen overflow-y-auto">
                     {children}
                 </main>
-                <div className="hidden lg:block">
-                    <RightSidebar />
+
+                <div className="flex flex-1 justify-start">
+                    <div className="hidden lg:block">
+                        <RightSidebar />
+                    </div>
                 </div>
             </div>
         </Providers>
