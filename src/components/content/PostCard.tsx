@@ -35,6 +35,7 @@ export function PostCard({ character, post }: PostCardProps) {
                             onClick={() => { }}
                             icon={DotsMenuIcon}
                             className="hover:bg-cyan-800/20 hover:text-cyan-800 text-zinc-400"
+                            size="sm"
                         />
                     </div>
 
