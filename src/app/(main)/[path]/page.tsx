@@ -5,7 +5,7 @@ import { Character } from '@/types/character';
 import { CharacterFeed } from '@/components/ui/Feed';
 import { CharacterActions } from '@/components/character/CharacterActions';
 import { BackHeader } from '@/components/ui/BackHeader';
-import { MarkdownContent } from '@/components/content/MarkdownContent';
+import { MarkdownContent } from '@/components/ui/MarkdownContent';
 
 export default async function CharacterPage(
     props: {

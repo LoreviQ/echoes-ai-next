@@ -59,9 +59,14 @@ export function CharacterCard({ character }: CharacterCardProps) {
                         {character.tags && (
                             <div className="mt-2 flex flex-wrap gap-1">
                                 {visibleTags.map((tag, index) => (
-                                    <span key={index} className="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-full">
+                                    <Link
+                                        key={index}
+                                        href={`/search?charactertags=${encodeURIComponent(tag)}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-full hover:bg-zinc-700 transition-colors"
+                                    >
                                         {tag}
-                                    </span>
+                                    </Link>
                                 ))}
                                 {hasHiddenTags && (
                                     <span

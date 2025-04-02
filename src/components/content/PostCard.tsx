@@ -4,7 +4,7 @@ import Image from "next/image";
 import { formatPostDate } from "@/utils/dateFormat";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets/icons";
-import { MarkdownContent } from "./MarkdownContent";
+import { MarkdownContent } from "../ui/MarkdownContent";
 
 interface PostCardProps {
     character: Character;
