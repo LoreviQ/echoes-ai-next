@@ -58,6 +58,47 @@ export function useThreads(characterId: string | undefined) {
 }
 
 export function useThreadMessages(threadId: string | undefined) {
+    const queryClient = useQueryClient();
+
+    React.useEffect(() => {
+        if (!threadId) return;
+
+        const supabase = createClient();
+
+        // Create a subscription to the messages table
+        const subscription = supabase
+            .channel('messages_changes')
+            .on('postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'messages',
+                    filter: `thread_id=eq.${threadId}`
+                },
+                (payload) => {
+                    // When a new message is detected, update the cache
+                    const newMessage = payload.new as Message;
+
+                    queryClient.setQueryData(['messages', threadId], (old: Message[] = []) => {
+                        // Avoid duplicates by checking if message already exists
+                        if (old.some(msg => msg.id === newMessage.id)) {
+                            return old;
+                        }
+                        return [...old, newMessage];
+                    });
+
+                    // Also update the thread's updated_at timestamp in our cache
+                    queryClient.invalidateQueries({ queryKey: ['threads'] });
+                }
+            )
+            .subscribe();
+
+        // Clean up subscription when component unmounts or threadId changes
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, [threadId, queryClient]);
+
     return useQuery({
         queryKey: ['messages', threadId],
         queryFn: () => fetchThreadMessages(threadId!),
