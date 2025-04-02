@@ -1,11 +1,24 @@
-import React from "react";
-import { SearchIcon } from "@/assets/icons";
+'use client'
 
+import React, { useState } from "react";
+import { SearchIcon, HamburgerIcon } from "@/assets/icons";
+import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 
 export default function RightSidebar() {
+    const [isExpanded, setIsExpanded] = useState(false);
+
     return (
-        <div className="pt-4 pl-10 bg-black text-white w-340px h-screen transition-all duration-300 border-l border-zinc-600">
-            <div className="space-y-4">
+        <div className={`pt-4 pl-4 bg-black text-white ${isExpanded ? 'w-full pr-10' : 'w-[340px]'} h-screen transition-all duration-300 border-l border-zinc-600`}>
+            <div className="flex items-center gap-2 w-full">
+                <CircleActionButton
+                    icon={HamburgerIcon}
+                    onClick={() => {
+                        console.log('Expanding sidebar:', !isExpanded);
+                        setIsExpanded(!isExpanded);
+                    }}
+                    className="text-zinc-400 hover:bg-zinc-800/50"
+                    size="lg"
+                />
                 <Search />
             </div>
         </div>
@@ -14,7 +27,7 @@ export default function RightSidebar() {
 
 function Search() {
     return (
-        <div className="relative group">
+        <div className="relative group w-full">
             <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zinc-400 transition-colors duration-200 group-focus-within:text-white" />
             <input
                 type="text"

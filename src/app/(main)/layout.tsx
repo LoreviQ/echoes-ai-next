@@ -24,7 +24,7 @@ export default async function MainLayout({
                 </main>
 
                 <div className="flex flex-1 justify-start">
-                    <div className="hidden lg:block">
+                    <div className="hidden lg:block w-full">
                         <RightSidebar />
                     </div>
                 </div>
