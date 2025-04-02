@@ -43,7 +43,7 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
     };
 
     return (
-        <div className={`pt-4 pl-4 bg-black text-white ${isExpanded ? 'w-full pr-10' : 'w-[340px]'} h-screen transition-all duration-300 border-l border-zinc-600`}>
+        <div className={`pt-4 pl-4 bg-black text-white ${isExpanded ? 'w-full pr-10' : 'w-[340px]'} h-screen transition-all duration-300 border-l border-zinc-600 space-y-4`}>
             <div className="flex items-center gap-2 w-full">
                 <CircleActionButton
                     icon={HamburgerIcon}
@@ -53,10 +53,7 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
                 />
                 <Search />
             </div>
-
-            <div className="mt-6 px-2">
-                {renderContent()}
-            </div>
+            {renderContent()}
         </div>
     );
 }
