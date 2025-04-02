@@ -37,9 +37,21 @@ async function fetchThreadMessages(threadId: string): Promise<Message[]> {
 }
 
 export function useThreads(characterId: string | undefined) {
+    const createThreadMutation = useCreateThread();
+
     return useQuery({
         queryKey: ['threads', characterId],
-        queryFn: () => fetchThreads(characterId!),
+        queryFn: async () => {
+            const threads = await fetchThreads(characterId!);
+
+            // If no threads exist, create one automatically
+            if (threads.length === 0 && characterId) {
+                const newThread = await createThreadMutation.mutateAsync({ characterId });
+                return [newThread];
+            }
+
+            return threads;
+        },
         enabled: !!characterId,
     });
 }

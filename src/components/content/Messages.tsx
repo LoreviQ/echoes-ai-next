@@ -10,30 +10,16 @@ import { Character } from '@/types/character';
 export function MessagesContent() {
     const { currentCharacter } = useRightSidebar();
     const [selectedThreadId, setSelectedThreadId] = useState<string>();
-    const { mutateAsync: createThread } = useCreateThread();
 
     const { data: threads, isLoading: threadsLoading } = useThreads(currentCharacter?.id);
     const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
 
-    // When threads load or change, select the most recent thread or create a new one if none exist
+    // When threads load or change, select the most recent thread
     React.useEffect(() => {
-        if (!threadsLoading && currentCharacter) {
-            if (threads && threads.length > 0) {
-                if (!selectedThreadId) {
-                    setSelectedThreadId(threads[0].id);
-                }
-            } else {
-                // No threads exist, create a new one
-                createThread({ characterId: currentCharacter.id })
-                    .then((thread: Thread) => {
-                        setSelectedThreadId(thread.id);
-                    })
-                    .catch((error: Error) => {
-                        console.error('Error creating thread:', error);
-                    });
-            }
+        if (!threadsLoading && threads && threads.length > 0 && !selectedThreadId) {
+            setSelectedThreadId(threads[0].id);
         }
-    }, [threads, threadsLoading, currentCharacter, selectedThreadId, createThread]);
+    }, [threads, threadsLoading, selectedThreadId]);
 
     if (!currentCharacter) {
         return null;
