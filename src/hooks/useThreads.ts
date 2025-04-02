@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase.client';
 import { Thread, Message } from '@/types/thread';
+import React from 'react';
 
 async function fetchThreads(characterId: string): Promise<Thread[]> {
     try {
@@ -110,4 +111,23 @@ export function useCreateThread() {
             });
         }
     });
+}
+
+export function useSelectedThread(characterId: string | undefined) {
+    const [selectedThreadId, setSelectedThreadId] = React.useState<string>();
+    const { data: threads, isLoading } = useThreads(characterId);
+
+    // When threads load or change, select the most recent thread
+    React.useEffect(() => {
+        if (!isLoading && threads && threads.length > 0 && !selectedThreadId) {
+            setSelectedThreadId(threads[0].id);
+        }
+    }, [threads, isLoading, selectedThreadId]);
+
+    return {
+        selectedThreadId,
+        setSelectedThreadId,
+        threads,
+        isLoading
+    };
 } 

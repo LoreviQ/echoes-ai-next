@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRightSidebar } from "@/contexts/RightSidebarContext";
-import { useThreads, useThreadMessages } from '@/hooks/useThreads';
+import { useThreads, useThreadMessages, useSelectedThread } from '@/hooks/useThreads';
 import { Thread, Message } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
 import { Character } from '@/types/character';
@@ -10,17 +10,8 @@ import { RightArrowIcon } from '@/assets/icons';
 
 export function MessagesContent() {
     const { currentCharacter } = useRightSidebar();
-    const [selectedThreadId, setSelectedThreadId] = useState<string>();
-
-    const { data: threads, isLoading: threadsLoading } = useThreads(currentCharacter?.id);
+    const { selectedThreadId, setSelectedThreadId, threads, isLoading: threadsLoading } = useSelectedThread(currentCharacter?.id);
     const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
-
-    // When threads load or change, select the most recent thread
-    React.useEffect(() => {
-        if (!threadsLoading && threads && threads.length > 0 && !selectedThreadId) {
-            setSelectedThreadId(threads[0].id);
-        }
-    }, [threads, threadsLoading, selectedThreadId]);
 
     if (!currentCharacter) {
         return null;
