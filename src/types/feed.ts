@@ -3,5 +3,7 @@ export enum FeedType {
     REPLIES = 'Replies',
     MEDIA = 'Media',
     FOR_YOU = 'For You',
-    FOLLOWING = 'Following'
+    FOLLOWING = 'Following',
+    CHARACTERS = 'All Characters',
+    RECOMMENDED_CHARACTERS = 'Characters For You'
 } 

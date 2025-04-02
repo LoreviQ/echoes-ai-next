@@ -5,10 +5,7 @@ import { FeedType } from '@/types/feed';
 import { Posts } from '@/components/content/Posts';
 import { Character } from '@/types/character';
 
-interface GeneralFeedProps {
-    feedTypes: FeedType[];
-    character?: Character;
-}
+
 
 /**
  * Character feed component that displays a list of feed types and allows the user to switch between them.
@@ -21,7 +18,21 @@ export function CharacterFeed({ character }: { character: Character }) {
     );
 }
 
+/**
+ * Character feed component that displays a list of feed types and allows the user to switch between them.
+ * @returns A component that displays a list of feed types and allows the user to switch between them.
+ */
+export function CharacterRecommendationFeed() {
+    const feedTypes = [FeedType.CHARACTERS, FeedType.RECOMMENDED_CHARACTERS];
+    return (
+        <GeneralFeed feedTypes={feedTypes} />
+    );
+}
 
+interface GeneralFeedProps {
+    feedTypes: FeedType[];
+    character?: Character;
+}
 /**
  * General feed component that displays a list of feed types and allows the user to switch between them.
  * @param feedTypes - The list of feed types to display.
