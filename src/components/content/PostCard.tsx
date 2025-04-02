@@ -41,7 +41,7 @@ export function PostCard({ character, post }: PostCardProps) {
 
                     {/* Character Info */}
                     <div className="flex items-center gap-2">
-                        <span className="text-white font-medium">{character.name}</span>
+                        <span className="text-white font-bold">{character.name}</span>
                         <span className="text-zinc-500">@{character.path} · {formatPostDate(new Date(post.created_at))}</span>
                     </div>
 
