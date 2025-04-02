@@ -15,6 +15,7 @@ import { api, endpoints } from '@/utils/api';
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 import { useDropdown } from '@/hooks/useDropdown';
 import { useQueryClient } from '@tanstack/react-query';
+import { useCharactersInvalidation } from '@/hooks/useCharacters';
 
 // Character form query key - use array format for proper typing
 const CHARACTER_FORM_KEY = ['character-form-state'];
@@ -76,6 +77,7 @@ interface StoredFormState {
 export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacterFormProps) {
     const router = useRouter();
     const queryClient = useQueryClient();
+    const { invalidateCharacters } = useCharactersInvalidation();
     const { isOpen, toggle, close, dropdownRef } = useDropdown();
     const [tags, setTags] = useState('');
     const [name, setName] = useState('');
@@ -293,6 +295,9 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
 
             // Clear form state after successful creation
             clearFormState();
+
+            // Invalidate characters query to refresh the list
+            invalidateCharacters();
 
             // Call onSuccess callback if provided
             if (onSuccess) {

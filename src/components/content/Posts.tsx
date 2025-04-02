@@ -32,7 +32,7 @@ export function Posts({ character }: { character: Character }) {
     }
 
     return (
-        <div className="w-full space-y-4">
+        <div className="w-full">
             {posts.map((post) => (
                 <PostCard key={post.id} character={character} post={post} />
             ))}

@@ -31,7 +31,7 @@ export function Characters() {
     }
 
     return (
-        <div className="w-full space-y-4">
+        <div className="w-full">
             {characters.map((character) => (
                 <CharacterCard key={character.id} character={character} />
             ))}
