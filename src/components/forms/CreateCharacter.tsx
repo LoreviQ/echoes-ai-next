@@ -14,6 +14,10 @@ import { getRandomWords } from '@/config/randomValues';
 import { api, endpoints } from '@/utils/api';
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 import { useDropdown } from '@/hooks/useDropdown';
+import { useQueryClient } from '@tanstack/react-query';
+
+// Character form query key - use array format for proper typing
+const CHARACTER_FORM_KEY = ['character-form-state'];
 
 enum Gender {
     MALE = 'Male',
@@ -54,8 +58,24 @@ interface CreateCharacterFormProps {
     onSuccess?: () => void;
 }
 
+// Add a type for the form state that will be stored
+interface StoredFormState {
+    name: string;
+    path: string;
+    bio: string;
+    description: string;
+    gender: Gender;
+    customGender: string;
+    isPublic: boolean;
+    isNsfw: boolean;
+    tags: string;
+    avatarFile: string | null;
+    bannerFile: string | null;
+}
+
 export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacterFormProps) {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const { isOpen, toggle, close, dropdownRef } = useDropdown();
     const [tags, setTags] = useState('');
     const [name, setName] = useState('');
@@ -76,6 +96,60 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
     const [avatarPreviewUrl, setAvatarPreviewUrl] = useState('/images/avatar-placeholder.jpg');
     const [bannerPreviewUrl, setBannerPreviewUrl] = useState('/images/banner-placeholder.jpg');
     const supabase = createClient();
+
+    // Load form state from React Query cache on component mount
+    useEffect(() => {
+        console.log('loading form state');
+        const savedState = queryClient.getQueryData<StoredFormState>(CHARACTER_FORM_KEY);
+
+        if (savedState) {
+            setName(savedState.name || '');
+            setPath(savedState.path || '');
+            setBio(savedState.bio || '');
+            setDescription(savedState.description || '');
+            setGender(savedState.gender || Gender.NA);
+            setCustomGender(savedState.customGender || '');
+            setIsPublic(savedState.isPublic);
+            setIsNsfw(savedState.isNsfw);
+            setTags(savedState.tags || '');
+
+            // Only set file URLs, not File objects
+            if (savedState.avatarFile) {
+                setAvatarFile(savedState.avatarFile);
+            }
+
+            if (savedState.bannerFile) {
+                setBannerFile(savedState.bannerFile);
+            }
+        }
+    }, [queryClient]);
+
+    // Save form state to React Query cache when any field changes
+    useEffect(() => {
+        console.log('saving form state');
+        // Don't save if we're just loading the initial state or submitting
+        if (isSubmitting || isGenerating) return;
+        const formState: StoredFormState = {
+            name,
+            path,
+            bio,
+            description,
+            gender,
+            customGender,
+            isPublic,
+            isNsfw,
+            tags,
+            // Only save string URLs, not File objects
+            avatarFile: typeof avatarFile === 'string' ? avatarFile : null,
+            bannerFile: typeof bannerFile === 'string' ? bannerFile : null
+        };
+        queryClient.setQueryData(CHARACTER_FORM_KEY, formState);
+    }, [name, path, bio, description, gender, customGender, isPublic, isNsfw, tags, avatarFile, bannerFile, isSubmitting, isGenerating, queryClient]);
+
+    // Clear form state after successful submission
+    const clearFormState = () => {
+        queryClient.removeQueries({ queryKey: CHARACTER_FORM_KEY });
+    };
 
     useEffect(() => {
         setPath(nameToPath(name));
@@ -216,6 +290,9 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                 console.error('Error creating character:', insertError);
                 throw insertError;
             }
+
+            // Clear form state after successful creation
+            clearFormState();
 
             // Call onSuccess callback if provided
             if (onSuccess) {

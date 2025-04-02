@@ -30,7 +30,7 @@ const navigationItems = [
 
 export default function LeftSidebar() {
     const { getModal, setIsOpen } = useModal();
-    const { Modal } = getModal("Create a New Character");
+    const { Modal } = getModal("Create a New Character", "/create-character");
     const { active: isLoggedIn } = useSession();
 
     const handleCreateClick = () => {

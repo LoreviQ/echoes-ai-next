@@ -9,8 +9,9 @@ export function useModal() {
     /**
      * Returns a configured modal component and state controls
      * @param title Title of the modal
+     * @param redirectPath Optional path to redirect to when clicking the expand button
      */
-    const getModal = (title: string) => {
+    const getModal = (title: string, redirectPath?: string) => {
         return {
             isOpen,
             Modal: ({ children }: { children: React.ReactNode }) => (
@@ -18,6 +19,7 @@ export function useModal() {
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     title={title}
+                    redirectPath={redirectPath}
                 >
                     {children}
                 </Modal>
