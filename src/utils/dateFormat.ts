@@ -1,4 +1,4 @@
-export function formatPostDate(date: Date): string {
+export function formatFriendlyDate(date: Date): string {
     const now = new Date();
     const diffInMilliseconds = now.getTime() - date.getTime();
     const diffInHours = diffInMilliseconds / (1000 * 60 * 60);

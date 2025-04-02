@@ -8,6 +8,7 @@ import PreviewImage from '@/components/images/PreviewImage';
 import { Character } from '@/types/character';
 import { RightArrowIcon } from '@/assets/icons';
 import { MarkdownContent } from '@/components/ui/MarkdownContent';
+import { formatFriendlyDate } from '@/utils/dateFormat';
 
 export function MessagesContent() {
     const { currentCharacter } = useRightSidebar();
@@ -102,10 +103,13 @@ function ChatMessage({ message }: ChatMessageProps) {
             <div
                 className={`max-w-[75%] rounded-lg px-4 py-2 relative ${isCharacter
                     ? 'bg-zinc-700 text-white before:absolute before:content-[""] before:w-4 before:h-4 before:bg-zinc-700 before:-bottom-2 before:left-2 before:skew-x-[-35deg] before:rounded-br-lg'
-                    : 'bg-blue-600 text-white before:absolute before:content-[""] before:w-4 before:h-4 before:bg-blue-600 before:-bottom-2 before:right-2 before:skew-x-[35deg] before:rounded-bl-lg'
+                    : 'bg-blue-800 text-white before:absolute before:content-[""] before:w-4 before:h-4 before:bg-blue-800 before:-bottom-2 before:right-2 before:skew-x-[35deg] before:rounded-bl-lg'
                     }`}
             >
                 <MarkdownContent content={message.content} className="break-words" />
+                <div className={`text-xs text-zinc-400 mt-1 ${isCharacter ? 'text-left' : 'text-right'}`}>
+                    {formatFriendlyDate(new Date(message.created_at))}
+                </div>
             </div>
         </div>
     );

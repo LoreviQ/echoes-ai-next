@@ -3,7 +3,7 @@
 import { Post } from "@/types/post";
 import { Character } from "@/types/character";
 import Image from "next/image";
-import { formatPostDate } from "@/utils/dateFormat";
+import { formatFriendlyDate } from "@/utils/dateFormat";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets/icons";
 import { MarkdownContent } from "../ui/MarkdownContent";
@@ -81,7 +81,7 @@ export function PostCard({ character, post }: PostCardProps) {
                     {/* Character Info */}
                     <div className="flex items-center gap-2">
                         <span className="text-white font-bold">{character.name}</span>
-                        <span className="text-zinc-500">@{character.path} · {formatPostDate(new Date(post.created_at))}</span>
+                        <span className="text-zinc-500">@{character.path} · {formatFriendlyDate(new Date(post.created_at))}</span>
                     </div>
 
                     {/* Post Content */}
