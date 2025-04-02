@@ -4,6 +4,7 @@ import Image from "next/image";
 import { formatPostDate } from "@/utils/dateFormat";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets/icons";
+import { MarkdownContent } from "./MarkdownContent";
 
 interface PostCardProps {
     character: Character;
@@ -12,7 +13,6 @@ interface PostCardProps {
 
 export function PostCard({ character, post }: PostCardProps) {
     const avatarUrl = character.avatar_url || '/images/avatar-placeholder.jpg';
-
     return (
         <div className="px-4 py-2 border-b border-zinc-600">
             <div className="flex space-x-4">
@@ -46,7 +46,9 @@ export function PostCard({ character, post }: PostCardProps) {
                     </div>
 
                     {/* Post Content */}
-                    <p className="text-white whitespace-pre-wrap mt-1">{post.content}</p>
+                    <div className="text-white mt-1">
+                        <MarkdownContent content={post.content} />
+                    </div>
 
                     {/* Action Buttons */}
                     <div className="flex justify-between mt-2 max-w-md">

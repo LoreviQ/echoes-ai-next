@@ -1,13 +1,11 @@
 import { createClient } from '@/utils/supabase.server';
 import { notFound } from 'next/navigation';
-import PreviewImage from '@/components/images/PreviewImage';
-import UploadImage from '@/components/images/UploadImage';
-import { BackButton } from '@/components/buttons/BackButton';
+import { DynamicImage } from '@/components/images/DynamicImage';
 import { Character } from '@/types/character';
-import type { SupabaseCellReference } from '@/types/supabase';
 import { CharacterFeed } from '@/components/ui/Feed';
 import { CharacterActions } from '@/components/character/CharacterActions';
 import { BackHeader } from '@/components/ui/BackHeader';
+import { MarkdownContent } from '@/components/content/MarkdownContent';
 
 export default async function CharacterPage(
     props: {
@@ -84,51 +82,13 @@ function CharacterInfo({ character, isOwner }: { character: Character, isOwner: 
             <div className="px-4 mt-4">
                 <h1 className="font-bold text-2xl">{character.name}</h1>
                 <p className="text-zinc-500">@{character.path}</p>
-                <p className="mt-4">{character.bio || "This character doesn't have a bio yet!"}</p>
+                <div className="mt-4 text-white">
+                    <MarkdownContent
+                        content={character.bio || "This character doesn't have a bio yet!"}
+                    />
+                </div>
             </div>
         </div>
     );
 }
 
-interface DynamicImageProps {
-    src: string | null;
-    placeholderSrc: string;
-    alt: string;
-    upload?: boolean;
-    bucketName?: string;
-    cellReference?: SupabaseCellReference;
-    className?: string;
-}
-
-function DynamicImage({ src, placeholderSrc, alt, bucketName, cellReference, className, upload = false }: DynamicImageProps) {
-    if (!src) {
-        src = placeholderSrc;
-    }
-
-    if (!upload) {
-        return (
-            <PreviewImage
-                src={src}
-                alt={alt}
-                fill
-                className={className}
-                priority
-            />
-        );
-    }
-    if (bucketName && cellReference) {
-        return (
-            <UploadImage
-                src={src}
-                alt={alt}
-                fill
-                className={className}
-                priority
-                bucketName={bucketName}
-                reference={cellReference}
-            />
-        );
-    }
-    // Set to upload, but required info for upload is missing
-    return null;
-}
