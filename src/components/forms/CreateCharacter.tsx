@@ -70,6 +70,7 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
+    const [isGeneratingBanner, setIsGeneratingBanner] = useState(false);
     const [avatarFile, setAvatarFile] = useState<File | string | null>(null);
     const [bannerFile, setBannerFile] = useState<File | string | null>(null);
     const [avatarPreviewUrl, setAvatarPreviewUrl] = useState('/images/avatar-placeholder.jpg');
@@ -289,6 +290,39 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
         }
     };
 
+    const generateBanner = async () => {
+        if (isGeneratingBanner) return;
+
+        setIsGeneratingBanner(true);
+        setError(null);
+
+        try {
+            // Get the current character data
+            const characterData = {
+                name: name,
+                gender: gender === Gender.CUSTOM ? customGender : gender,
+                description: description,
+                bio: bio,
+                nsfw: isNsfw
+            };
+
+            const { data } = await api.post(endpoints.characters.generateBanner, characterData);
+
+            if (data.success && data.content?.imageUrl) {
+                // Store the URL directly - don't convert to File
+                setBannerFile(data.content.imageUrl);
+            } else {
+                setError('Failed to generate banner');
+            }
+        } catch (error) {
+            console.error('Error generating banner:', error);
+            setError('Failed to generate banner. Please try again.');
+        } finally {
+            setIsGeneratingBanner(false);
+            close();
+        }
+    };
+
     return (
         <form onSubmit={handleCreateCharacter}>
             <div>
@@ -318,11 +352,11 @@ export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacte
                                 >
                                     {isGeneratingAvatar ? 'Generating...' : 'Generate Avatar'}
                                 </DropdownItem>
-                                <DropdownItem onClick={() => {
-                                    console.log('Generate Banner clicked');
-                                    close();
-                                }}>
-                                    Generate Banner
+                                <DropdownItem
+                                    onClick={generateBanner}
+                                    className={isGeneratingBanner ? "opacity-50 cursor-not-allowed" : ""}
+                                >
+                                    {isGeneratingBanner ? 'Generating...' : 'Generate Banner'}
                                 </DropdownItem>
                             </Dropdown>
                         )}

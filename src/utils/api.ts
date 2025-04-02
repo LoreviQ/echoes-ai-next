@@ -15,5 +15,6 @@ export const endpoints = {
         posts: (characterId: string) => `/${API_VERSION}/characters/${characterId}/posts`,
         generate: `/${API_VERSION}/generations/character`,
         generateAvatar: `/${API_VERSION}/generations/character/avatar`,
+        generateBanner: `/${API_VERSION}/generations/character/banner`,
     },
 }
