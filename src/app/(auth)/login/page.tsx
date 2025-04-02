@@ -1,6 +1,6 @@
 'use client';
 
-import { TypefaceOutlined } from '@/components/branding';
+import { TypefaceOutlined } from '@/assets/branding';
 import { createClient } from '@/utils/supabase.client';
 
 

@@ -2,8 +2,8 @@
 
 import { NavButton } from "@/components/buttons/NavButton";
 import { ActionButton } from "@/components/buttons/ActionButton";
-import { TypefaceOutlined } from "@/components/branding";
-import UserSection from "@/components/UserSection";
+import { TypefaceOutlined } from "@/assets/branding";
+import UserSection from "@/components/ui/UserSection";
 import { HomeIcon, DocumentIcon, SettingsIcon, PlusIcon, UserGroupIcon } from "@/assets/icons";
 import { useModal } from "@/hooks/useModal";
 import { CreateCharacterForm } from "@/components/forms/CreateCharacter";

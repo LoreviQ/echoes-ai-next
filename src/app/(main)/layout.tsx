@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
-import LeftSidebar from "@/components/LeftSidebar";
-import RightSidebar from "@/components/RightSidebar";
+import LeftSidebar from "@/components/ui/LeftSidebar";
+import RightSidebar from "@/components/ui/RightSidebar";
 import { getInitialSession } from "@/contexts/session.server";
 import { Providers } from "./providers";
 import { SidebarContentType } from "@/contexts/RightSidebarContext";
