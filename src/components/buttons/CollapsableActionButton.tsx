@@ -8,12 +8,14 @@ export interface ActionButtonProps {
     onClick: () => void;
     icon: IconComponent;
     className?: string;
+    tooltip?: string;
 }
 
-export function CollapsableActionButton({ label, onClick, icon: Icon, className }: ActionButtonProps) {
+export function CollapsableActionButton({ label, onClick, icon: Icon, className, tooltip }: ActionButtonProps) {
     return (
         <button
             onClick={onClick}
+            title={tooltip}
             className={`
         inline-flex items-center p-2 rounded-xl transition-colors
         bg-black text-white

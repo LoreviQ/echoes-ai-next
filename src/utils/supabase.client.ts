@@ -6,3 +6,10 @@ export function createClient() {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
 }
+
+// Get authentication token from Supabase
+export async function getAuthToken(): Promise<string | null> {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token || null;
+}

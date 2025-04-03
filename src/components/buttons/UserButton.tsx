@@ -2,11 +2,11 @@
 
 import React from "react";
 import { CollapsableActionButton } from "./CollapsableActionButton";
-import { LoginIcon } from "@/assets/icons";
+import { LoginIcon, ExclamationIcon } from "@/assets/icons";
 import { useDropdown } from "@/hooks/ui/useDropdown";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { logout } from "@/utils/authUtils";
-
+import { debug } from "@/utils/debug";
 
 interface UserButtonProps {
     user: {
@@ -30,6 +30,13 @@ export function UserButton({ user }: UserButtonProps) {
                         icon={LoginIcon}
                         onClick={() => logout()}
                         className="w-full"
+                    />
+                    <CollapsableActionButton
+                        label="Debug"
+                        icon={ExclamationIcon}
+                        onClick={() => debug()}
+                        className="w-full hover:bg-red-900"
+                        tooltip="Does random things I'm implementing. Don't press if you're a user lol"
                     />
                 </Dropdown>
             )}
