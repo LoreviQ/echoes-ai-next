@@ -128,12 +128,7 @@ export function useCreatePost() {
         onSuccess: (data, characterId) => {
             // Add the new post to the cache
             queryClient.setQueryData(['post', data.id], data);
-
-            // Update the character's post list
-            queryClient.setQueryData<string[]>(['character_posts', characterId], (old) => {
-                if (!old) return [data.id];
-                return [data.id, ...old]; // Add to beginning since it's newest
-            });
+            queryClient.invalidateQueries({ queryKey: ['character_posts', characterId] });
         },
     });
 } 
