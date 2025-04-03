@@ -2,7 +2,6 @@
 
 import { ContentCard } from "../cards/content";
 import { ContentType, ContentItem } from "@/types/content";
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 /**

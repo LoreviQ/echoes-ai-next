@@ -25,6 +25,7 @@ export function usePosts(characterId: string) {
     return useQuery({
         queryKey: ['posts', characterId],
         queryFn: () => fetchPosts(characterId),
+        staleTime: 60 * 1000, // 1 minute stale time
     });
 }
 

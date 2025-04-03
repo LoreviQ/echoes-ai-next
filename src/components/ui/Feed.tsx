@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { FeedType } from '@/types/feed';
-import { Posts } from '@/components/content/feeds/Posts';
-import { Characters } from '@/components/content/feeds/Characters';
 import { Character } from '@/types/character';
 
+import { Posts } from '@/components/content/feeds/Posts';
+import { Characters } from '@/components/content/feeds/Characters';
+import { ForYouFeed } from '@/components/content/feeds/ForYouFeed';
 
 /**
  * Home feed component that displays a list of feed types and allows the user to switch between them.
@@ -62,6 +63,8 @@ export function GeneralFeed({ feedTypes, character }: GeneralFeedProps) {
                 return <Posts character={character} />;
             case FeedType.CHARACTERS:
                 return <Characters />;
+            case FeedType.FOR_YOU:
+                return <ForYouFeed />;
             default:
                 return <p className="p-8">TODO: Implement {activeTab}</p>;
         }

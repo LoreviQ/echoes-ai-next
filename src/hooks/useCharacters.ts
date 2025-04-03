@@ -42,9 +42,10 @@ async function fetchCharacterById(id: string): Promise<Character | null> {
 export function useCharacters() {
     const queryClient = useQueryClient();
 
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, error, refetch, isRefetching } = useQuery({
         queryKey: ['characters'],
         queryFn: () => fetchCharacters(),
+        staleTime: 60 * 1000, // 1 minute stale time
     });
 
     const getCharactersForUser = useCallback(async () => {
@@ -79,7 +80,9 @@ export function useCharacters() {
         data,
         isLoading,
         error,
-        getCharactersForUser
+        getCharactersForUser,
+        refetch,
+        isRefetching
     };
 }
 
@@ -111,6 +114,7 @@ export function useCharacter(id: string | undefined) {
             return character;
         },
         enabled: !!id,
+        staleTime: 5 * 60 * 1000, // 5 minutes stale time
     });
 }
 

@@ -6,9 +6,9 @@ import { usePosts } from "@/hooks/usePosts";
 import { ContentType } from "@/types/content";
 
 export function Posts({ character }: { character: Character }) {
-    const { data: posts, isLoading, error } = usePosts(character.id);
+    const { data: posts, isLoading, error, refetch, isRefetching } = usePosts(character.id);
 
-    if (isLoading) {
+    if (isLoading && !posts) {
         return (
             <div className="w-full p-4 text-center">
                 <p className="text-zinc-400">Loading posts...</p>
@@ -20,6 +20,12 @@ export function Posts({ character }: { character: Character }) {
         return (
             <div className="w-full p-4 text-center">
                 <p className="text-red-500">Failed to load posts</p>
+                <button
+                    onClick={() => refetch()}
+                    className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-white"
+                >
+                    Retry
+                </button>
             </div>
         );
     }
@@ -34,10 +40,21 @@ export function Posts({ character }: { character: Character }) {
 
     return (
         <div className="w-full">
+            {/* Optional refetching indicator */}
+            {isRefetching && (
+                <div className="w-full p-2 text-center bg-zinc-800 bg-opacity-50">
+                    <p className="text-sm text-zinc-300">Refreshing posts...</p>
+                </div>
+            )}
+
+            {/* Posts list */}
             {posts.map((post) => (
                 <ContentCard
                     key={post.id}
-                    item={{ type: ContentType.POST, data: post }}
+                    item={{
+                        type: ContentType.POST,
+                        data: post
+                    }}
                 />
             ))}
         </div>

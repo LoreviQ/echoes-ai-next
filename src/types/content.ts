@@ -8,4 +8,10 @@ export enum ContentType {
 
 export type ContentItem =
     | { type: ContentType.POST; data: Post }
-    | { type: ContentType.CHARACTER; data: Character }; 
+    | { type: ContentType.CHARACTER; data: Character };
+
+// Reference to content without the actual data
+export type ContentReference = {
+    type: ContentType;
+    id: string;
+}; 
