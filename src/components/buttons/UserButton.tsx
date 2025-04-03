@@ -3,9 +3,10 @@
 import React from "react";
 import { CollapsableActionButton } from "./CollapsableActionButton";
 import { LoginIcon } from "@/assets/icons";
-import { createClient } from "@/utils/supabase.client";
 import { useDropdown } from "@/hooks/useDropdown";
 import { Dropdown } from "@/components/ui/Dropdown";
+import { logout } from "@/utils/authUtils";
+
 
 interface UserButtonProps {
     user: {
@@ -27,7 +28,7 @@ export function UserButton({ user }: UserButtonProps) {
                     <CollapsableActionButton
                         label="Logout"
                         icon={LoginIcon}
-                        onClick={logout}
+                        onClick={() => logout()}
                         className="w-full"
                     />
                 </Dropdown>
@@ -66,9 +67,4 @@ function Button({ onClick, user }: { onClick: () => void, user: { avatar_url?: s
             </div>
         </button>
     );
-}
-
-function logout() {
-    const supabase = createClient();
-    supabase.auth.signOut();
 }
