@@ -7,6 +7,17 @@ import { Characters } from '@/components/content/feeds/Characters';
 import { Character } from '@/types/character';
 
 
+/**
+ * Home feed component that displays a list of feed types and allows the user to switch between them.
+ * @returns A component that displays a list of feed types and allows the user to switch between them.
+ */
+export function HomeFeed() {
+    const feedTypes = [FeedType.FOR_YOU, FeedType.FOLLOWING];
+    return (
+        <GeneralFeed feedTypes={feedTypes} />
+    );
+}
+
 
 /**
  * Character feed component that displays a list of feed types and allows the user to switch between them.

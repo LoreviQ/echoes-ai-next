@@ -1,10 +1,12 @@
+import { BackHeader } from '@/components/ui/BackHeader';
 import React from 'react';
+import { HomeFeed } from '@/components/ui/Feed';
 
 export default function HomePage() {
     return (
         <div>
-            <h1>Home Page</h1>
-            <p>This is the main content area for the home page.</p>
+            <BackHeader text="Home" />
+            <HomeFeed />
         </div>
     );
 }
