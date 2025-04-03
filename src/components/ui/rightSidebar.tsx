@@ -18,20 +18,12 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
     const [isExpanded, setIsExpanded] = useState(initialExpanded);
     const { contentType } = useRightSidebar();
     const headerRef = useRef<HTMLDivElement>(null);
-    const [headerHeight, setHeaderHeight] = useState(0);
 
     // Get content hooks
     const thoughtsContent = useThoughtsContent();
     const eventsContent = useEventsContent();
     const messagesContent = useMessagesContent();
     const descriptionContent = useDescriptionContent();
-
-    // Measure header height
-    useEffect(() => {
-        if (headerRef.current) {
-            setHeaderHeight(headerRef.current.offsetHeight);
-        }
-    }, [headerRef, contentType]);
 
     const toggleSidebar = () => {
         const newExpandedState = !isExpanded;
