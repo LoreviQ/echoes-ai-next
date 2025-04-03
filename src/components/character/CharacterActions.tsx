@@ -2,13 +2,12 @@
 
 import { DocumentIcon, SettingsIcon, SpeechBubbleIcon, ThoughtBubbleIcon, ExclamationIcon } from '@/assets/icons';
 import { CircleActionButton } from '@/components/buttons/CircleActionButton';
-import { useCreatePost } from '@/hooks/usePosts';
-import { useDropdown } from '@/hooks/useDropdown';
+import { useCreatePost } from '@/hooks/reactQuery/usePosts';
+import { useDropdown } from '@/hooks/ui/useDropdown';
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 import { Character } from '@/types/character';
-import { useRightSidebar } from '@/hooks/useRightSidebar';
-import { SidebarContentType } from '@/contexts/RightSidebarContext';
-import { useThreadsInvalidation } from '@/hooks/useThreads';
+import { useRightSidebar, SidebarContentType } from '@/contexts/rightSidebar';
+import { useThreadsInvalidation } from '@/hooks/reactQuery/useThreads';
 
 interface CharacterActionsProps {
     character: Character;

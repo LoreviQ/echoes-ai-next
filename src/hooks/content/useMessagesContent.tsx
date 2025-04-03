@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRightSidebar } from "@/hooks/useRightSidebar";
+import { useRightSidebar } from "@/contexts/rightSidebar";
 import { Thread, Message } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
 import { Character } from '@/types/character';

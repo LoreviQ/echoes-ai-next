@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { ContentReference, ContentType, ContentItem } from '@/types/content';
 import { useCharacter } from './useCharacters';
 import { usePost } from './usePosts';
@@ -26,7 +25,6 @@ export function useContentItem(contentRef: ContentReference) {
 
 // Internal hook for fetching a post content item
 function usePostContentItem(postId: string) {
-    const queryClient = useQueryClient();
     const postQuery = usePost(postId);
 
     return {

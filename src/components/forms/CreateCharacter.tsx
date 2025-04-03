@@ -13,9 +13,9 @@ import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets
 import { getRandomWords } from '@/config/randomValues';
 import { api, endpoints } from '@/utils/api';
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
-import { useDropdown } from '@/hooks/useDropdown';
+import { useDropdown } from '@/hooks/ui/useDropdown';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCharactersInvalidation } from '@/hooks/useCharacters';
+import { useCharactersInvalidation } from '@/hooks/reactQuery/useCharacters';
 
 // Character form query key - use array format for proper typing
 const CHARACTER_FORM_KEY = ['character-form-state'];

@@ -2,7 +2,7 @@
 
 import { Character } from "@/types/character";
 import { ContentCard } from "../cards/content";
-import { usePostsWithData } from "@/hooks/usePosts";
+import { usePostsWithData } from "@/hooks/reactQuery/usePosts";
 import { ContentType } from "@/types/content";
 
 export function Posts({ character }: { character: Character }) {

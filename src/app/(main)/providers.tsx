@@ -5,7 +5,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SessionProvider } from "@/contexts/session.client";
 import { ImagePreviewProvider } from "@/contexts/imagePreview";
-import { RightSidebarProvider, SidebarContentType } from "@/contexts/RightSidebarContext";
+import { RightSidebarProvider, SidebarContentType } from "@/contexts/rightSidebar";
 import { useState } from 'react'
 
 

@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
-import LeftSidebar from "@/components/ui/LeftSidebar";
-import RightSidebar from "@/components/ui/RightSidebar";
+import LeftSidebar from "@/components/ui/leftSidebar";
+import RightSidebar from "@/components/ui/rightSidebar";
 import { getInitialSession } from "@/contexts/session.server";
 import { Providers } from "./providers";
-import { SidebarContentType } from "@/contexts/RightSidebarContext";
+import { SidebarContentType } from "@/contexts/rightSidebar";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default async function MainLayout({

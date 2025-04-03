@@ -5,7 +5,7 @@ import { ActionButton } from "@/components/buttons/ActionButton";
 import { TypefaceOutlined } from "@/assets/branding";
 import UserSection from "@/components/ui/UserSection";
 import { HomeIcon, DocumentIcon, SettingsIcon, PlusIcon, UserGroupIcon } from "@/assets/icons";
-import { useModal } from "@/hooks/useModal";
+import { useModal } from "@/hooks/ui/useModal";
 import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
 import { useSession } from "@/contexts/session.client";
 

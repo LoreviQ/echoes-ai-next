@@ -1,7 +1,7 @@
 'use client';
 
-import { useMixedFeed } from '@/hooks/useMixedFeed';
-import { useContentItem } from '@/hooks/useContentItem';
+import { useMixedFeed } from '@/hooks/reactQuery/useMixedFeed';
+import { useContentItem } from '@/hooks/reactQuery/useContentItem';
 import { ContentCard } from '../cards/content';
 import { ContentReference } from '@/types/content';
 

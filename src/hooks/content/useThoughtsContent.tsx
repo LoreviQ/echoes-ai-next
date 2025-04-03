@@ -1,10 +1,8 @@
 'use client';
 
 import React from 'react';
-import { useRightSidebar } from "@/hooks/useRightSidebar";
 
 export function useThoughtsContent() {
-    const { currentCharacter } = useRightSidebar();
 
     const header = (
         <div className="flex items-center justify-between">

@@ -3,7 +3,7 @@
 import React from "react";
 import { CollapsableActionButton } from "./CollapsableActionButton";
 import { LoginIcon } from "@/assets/icons";
-import { useDropdown } from "@/hooks/useDropdown";
+import { useDropdown } from "@/hooks/ui/useDropdown";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { logout } from "@/utils/authUtils";
 

@@ -1,11 +1,8 @@
 'use client';
 
 import React from 'react';
-import { useRightSidebar } from "@/hooks/useRightSidebar";
 
 export function useEventsContent() {
-    const { currentCharacter } = useRightSidebar();
-
     const header = (
         <div className="flex items-center justify-between">
             <h3 className="text-xl font-bold">Events</h3>

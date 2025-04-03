@@ -1,5 +1,5 @@
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
-import { useCharacter } from "@/hooks/useCharacters";
+import { useCharacter } from "@/hooks/reactQuery/useCharacters";
 import { Post } from "@/types/post";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets/icons";
 import { formatFriendlyDate } from "@/utils/dateFormat";

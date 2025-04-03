@@ -4,12 +4,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { SearchIcon, HamburgerIcon } from "@/assets/icons";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { setCookie } from 'nookies';
-import { useRightSidebar } from "@/hooks/useRightSidebar";
-import { SidebarContentType } from "@/contexts/RightSidebarContext";
-import { useThoughtsContent } from "@/hooks/useThoughtsContent";
-import { useEventsContent } from "@/hooks/useEventsContent";
-import { useMessagesContent } from "@/hooks/useMessagesContent";
-import { useDescriptionContent } from "@/hooks/useDescriptionContent";
+import { useRightSidebar, SidebarContentType } from "@/contexts/rightSidebar";
+import { useThoughtsContent } from "@/hooks/content/useThoughtsContent";
+import { useEventsContent } from "@/hooks/content/useEventsContent";
+import { useMessagesContent } from "@/hooks/content/useMessagesContent";
+import { useDescriptionContent } from "@/hooks/content/useDescriptionContent";
 
 interface RightSidebarProps {
     initialExpanded?: boolean;

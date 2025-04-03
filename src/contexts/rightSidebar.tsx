@@ -2,10 +2,14 @@
 
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { Character } from '@/types/character';
-import { useCharacter } from '@/hooks/useCharacters';
-import { useThreads } from '@/hooks/useThreads';
-import { useCreateMessage } from '@/hooks/useThreads';
+import { useCharacter } from '@/hooks/reactQuery/useCharacters';
+import { useThreads } from '@/hooks/reactQuery/useThreads';
+import { useCreateMessage } from '@/hooks/reactQuery/useThreads';
 import { Thread } from '@/types/thread';
+import { useThreadMessages } from '@/hooks/reactQuery/useThreads';
+import { Message } from '@/types/thread';
+import { useContext } from 'react';
+
 // Define possible content types for the sidebar
 export enum SidebarContentType {
     NONE = 'none',
@@ -115,4 +119,52 @@ export function RightSidebarProvider({
             {children}
         </RightSidebarContext.Provider>
     );
+}
+
+interface ThreadMessagesState {
+    selectedThreadId: string | undefined;
+    setSelectedThreadId: (threadId: string) => void;
+    threads: Thread[] | undefined;
+    threadsLoading: boolean;
+    sendMessage: (content: string) => Promise<void>;
+    messageSending: boolean;
+    messages: Message[];
+    messagesLoading: boolean;
+}
+
+export function useRightSidebar() {
+    const context = useContext(RightSidebarContext);
+    if (context === undefined) {
+        throw new Error('useRightSidebar must be used within a RightSidebarProvider');
+    }
+
+    const { currentCharacter, contentType, setContentType, setCurrentCharacter } = context;
+
+    const getThreadMessages = (): ThreadMessagesState => {
+        const { selectedThreadId, setSelectedThreadId, threads, threadsLoading, sendMessage, isSending } = context;
+
+        const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
+
+        return {
+            selectedThreadId,
+            setSelectedThreadId,
+            threads,
+            threadsLoading,
+            sendMessage,
+            messageSending: isSending,
+            messages: messages || [],
+            messagesLoading,
+        };
+    };
+
+    return {
+        // Context state
+        currentCharacter,
+        contentType,
+        setContentType,
+        setCurrentCharacter,
+
+        // Thread and message functionality
+        getThreadMessages,
+    };
 } 

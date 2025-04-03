@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRightSidebar } from "@/hooks/useRightSidebar";
+import { useRightSidebar } from "@/contexts/rightSidebar";
 import { MarkdownContent } from "@/components/ui/MarkdownContent";
 
 export function useDescriptionContent() {
