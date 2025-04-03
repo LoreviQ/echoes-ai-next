@@ -48,7 +48,8 @@ export default async function MainLayout({
                     </div>
                 </div>
             </div>
-            {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
+            {/* UNCOMMENT THIS FOR REACT QUERY DEVTOOLS
+            {process.env.NODE_ENV === "development" && <ReactQueryDevtools />} */}
         </Providers>
     );
 } 
