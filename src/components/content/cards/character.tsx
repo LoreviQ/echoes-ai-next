@@ -2,18 +2,10 @@ import { Character } from "@/types/character";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PreviewImage from "@/components/images/PreviewImage";
-import { useSubscribe, useSubscriptions, useUnsubscribe } from "@/hooks/reactQuery/useSubscriptions";
-import { UseMutationResult } from "@tanstack/react-query";
+import { SubscriptionButton } from "@/components/buttons/SubscriptionButton";
 
 export function CharacterCard({ character }: { character: Character }) {
     const router = useRouter();
-    const { data: subscribedCharacterIds } = useSubscriptions();
-    const { mutate: subscribe, isPending: isSubscribing } = useSubscribe() as UseMutationResult<string, Error, string>;
-    const { mutate: unsubscribe, isPending: isUnsubscribing } = useUnsubscribe() as UseMutationResult<string, Error, string>;
-
-    const isSubscribed = subscribedCharacterIds?.includes(character.id) ?? false;
-    const isLoading = isSubscribing || isUnsubscribing;
-
     const avatarUrl = character.avatar_url || '/images/avatar-placeholder.jpg';
     const characterUrl = `/${character.path}`;
 
@@ -27,17 +19,6 @@ export function CharacterCard({ character }: { character: Character }) {
         e.preventDefault();
         e.stopPropagation();
         router.push(`/search?charactertags=${encodeURIComponent(tag)}`);
-    };
-
-    const handleSubscriptionClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        if (isLoading) return;
-
-        if (isSubscribed) {
-            unsubscribe(character.id);
-        } else {
-            subscribe(character.id);
-        }
     };
 
     return (
@@ -63,18 +44,7 @@ export function CharacterCard({ character }: { character: Character }) {
                                 <span className="text-zinc-500 text-sm">@{character.path}</span>
                             </div>
                             <div className="flex-grow"></div>
-                            <button
-                                onClick={handleSubscriptionClick}
-                                disabled={isLoading}
-                                className={`inline-flex items-center px-4 py-1 rounded-full transition-colors ${isSubscribed
-                                    ? 'bg-black text-white border border-white hover:bg-zinc-900'
-                                    : 'bg-white text-black hover:bg-zinc-200'
-                                    } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            >
-                                <span className="font-bold">
-                                    {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
-                                </span>
-                            </button>
+                            <SubscriptionButton characterId={character.id} />
                         </div>
 
                         {/* Character Bio */}
