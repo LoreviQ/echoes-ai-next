@@ -11,8 +11,8 @@ import { formatFriendlyDate } from '@/utils/dateFormat';
 
 
 export function MessagesContent() {
+    const { currentCharacter, getThreadMessages } = useRightSidebar();
     const {
-        currentCharacter,
         selectedThreadId,
         setSelectedThreadId,
         threads,
@@ -21,7 +21,7 @@ export function MessagesContent() {
         messageSending,
         messages,
         messagesLoading
-    } = useRightSidebar();
+    } = getThreadMessages();
 
     if (!currentCharacter) {
         return null;

@@ -1,6 +1,18 @@
 import { useContext } from 'react';
 import { RightSidebarContext } from '@/contexts/RightSidebarContext';
 import { useThreadMessages, useSelectedThread } from '@/hooks/useThreads';
+import { Message, Thread } from '@/types/thread';
+
+interface ThreadMessagesState {
+    selectedThreadId: string | undefined;
+    setSelectedThreadId: (threadId: string) => void;
+    threads: Thread[] | undefined;
+    threadsLoading: boolean;
+    sendMessage: (content: string) => Promise<void>;
+    messageSending: boolean;
+    messages: Message[];
+    messagesLoading: boolean;
+}
 
 export function useRightSidebar() {
     const context = useContext(RightSidebarContext);
@@ -10,16 +22,29 @@ export function useRightSidebar() {
 
     const { currentCharacter, contentType, setContentType, setCurrentCharacter } = context;
 
-    const {
-        selectedThreadId,
-        setSelectedThreadId,
-        threads,
-        isLoading: threadsLoading,
-        sendMessage,
-        isSending: messageSending
-    } = useSelectedThread(currentCharacter?.id);
+    const getThreadMessages = (): ThreadMessagesState => {
+        const {
+            selectedThreadId,
+            setSelectedThreadId,
+            threads,
+            isLoading: threadsLoading,
+            sendMessage,
+            isSending: messageSending
+        } = useSelectedThread(currentCharacter?.id);
 
-    const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
+        const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
+
+        return {
+            selectedThreadId,
+            setSelectedThreadId,
+            threads,
+            threadsLoading,
+            sendMessage,
+            messageSending,
+            messages: messages || [],
+            messagesLoading,
+        };
+    };
 
     return {
         // Context state
@@ -28,14 +53,7 @@ export function useRightSidebar() {
         setContentType,
         setCurrentCharacter,
 
-        // Thread and message state
-        selectedThreadId,
-        setSelectedThreadId,
-        threads,
-        threadsLoading,
-        sendMessage,
-        messageSending,
-        messages: messages || [],
-        messagesLoading,
+        // Thread and message functionality
+        getThreadMessages,
     };
 } 
