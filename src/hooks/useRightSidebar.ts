@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { RightSidebarContext } from '@/contexts/RightSidebarContext';
-import { useThreadMessages, useSelectedThread } from '@/hooks/useThreads';
+import { useThreadMessages } from '@/hooks/useThreads';
 import { Message, Thread } from '@/types/thread';
 
 interface ThreadMessagesState {
@@ -23,14 +23,7 @@ export function useRightSidebar() {
     const { currentCharacter, contentType, setContentType, setCurrentCharacter } = context;
 
     const getThreadMessages = (): ThreadMessagesState => {
-        const {
-            selectedThreadId,
-            setSelectedThreadId,
-            threads,
-            isLoading: threadsLoading,
-            sendMessage,
-            isSending: messageSending
-        } = useSelectedThread(currentCharacter?.id);
+        const { selectedThreadId, setSelectedThreadId, threads, threadsLoading, sendMessage, isSending } = context;
 
         const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
 
@@ -40,7 +33,7 @@ export function useRightSidebar() {
             threads,
             threadsLoading,
             sendMessage,
-            messageSending,
+            messageSending: isSending,
             messages: messages || [],
             messagesLoading,
         };

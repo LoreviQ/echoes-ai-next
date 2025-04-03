@@ -221,32 +221,3 @@ export function useCreateMessage() {
         },
     });
 }
-
-export function useSelectedThread(characterId: string | undefined) {
-    const [selectedThreadId, setSelectedThreadId] = React.useState<string>();
-    const { data: threads, isLoading } = useThreads(characterId);
-    const createMessageMutation = useCreateMessage();
-
-    // When threads load or change, select the most recent thread
-    React.useEffect(() => {
-        if (!isLoading && threads && threads.length > 0 && !selectedThreadId) {
-            setSelectedThreadId(threads[0].id);
-        }
-    }, [threads, isLoading, selectedThreadId]);
-
-    const sendMessage = React.useCallback(async (content: string) => {
-        if (!selectedThreadId) {
-            throw new Error('No thread selected');
-        }
-        return createMessageMutation.mutateAsync({ threadId: selectedThreadId, content });
-    }, [selectedThreadId, createMessageMutation]);
-
-    return {
-        selectedThreadId,
-        setSelectedThreadId,
-        threads,
-        isLoading,
-        sendMessage,
-        isSending: createMessageMutation.isPending
-    };
-} 
