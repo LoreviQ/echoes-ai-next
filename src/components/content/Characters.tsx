@@ -5,9 +5,17 @@ import { Character } from "@/types/character";
 import Link from "next/link";
 import PreviewImage from "@/components/images/PreviewImage";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export function Characters() {
-    const { data: characters, isLoading, error } = useCharacters();
+    const { data: characters, isLoading, error, getCharactersForUser } = useCharacters();
+
+    // Fetch recommended characters when component mounts
+    useEffect(() => {
+        getCharactersForUser().catch(err => {
+            console.error("Error fetching characters for user:", err);
+        });
+    }, [getCharactersForUser]);
 
     if (isLoading) {
         return (

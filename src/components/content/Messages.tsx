@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRightSidebar } from "@/contexts/RightSidebarContext";
-import { useThreads, useThreadMessages, useSelectedThread } from '@/hooks/useThreads';
+import { useThreadMessages, useSelectedThread } from '@/hooks/useThreads';
 import { Thread, Message } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
 import { Character } from '@/types/character';
@@ -10,10 +10,12 @@ import { RightArrowIcon } from '@/assets/icons';
 import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import { formatFriendlyDate } from '@/utils/dateFormat';
 
+
 export function MessagesContent() {
     const { currentCharacter } = useRightSidebar();
     const { selectedThreadId, setSelectedThreadId, threads, isLoading: threadsLoading, sendMessage, isSending } = useSelectedThread(currentCharacter?.id);
     const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
+
 
     if (!currentCharacter) {
         return null;

@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase.client';
 import { Character } from '@/types/character';
+import { useCallback } from 'react';
 
 // Fetch characters using Supabase directly
 async function fetchCharacters(): Promise<Character[]> {
@@ -39,10 +40,47 @@ async function fetchCharacterById(id: string): Promise<Character | null> {
 }
 
 export function useCharacters() {
-    return useQuery({
+    const queryClient = useQueryClient();
+
+    const { data, isLoading, error } = useQuery({
         queryKey: ['characters'],
         queryFn: () => fetchCharacters(),
     });
+
+    const getCharactersForUser = useCallback(async () => {
+        try {
+            // For now, just use fetchCharacters (this will be expanded later)
+            const fetchedCharacters = await fetchCharacters();
+
+            // Get the current cache
+            const cachedCharacters = queryClient.getQueryData<Character[]>(['characters']) || [];
+
+            // Merge without duplicates
+            const mergedCharacters = [...cachedCharacters];
+
+            // Add new characters that don't already exist in cache
+            fetchedCharacters.forEach(character => {
+                if (!mergedCharacters.some(c => c.id === character.id)) {
+                    mergedCharacters.push(character);
+                }
+            });
+
+            // Update the cache
+            queryClient.setQueryData<Character[]>(['characters'], mergedCharacters);
+
+            return mergedCharacters;
+        } catch (error) {
+            console.error('Error in getCharactersForUser:', error);
+            throw error;
+        }
+    }, [queryClient]);
+
+    return {
+        data,
+        isLoading,
+        error,
+        getCharactersForUser
+    };
 }
 
 export function useCharacter(id: string | undefined) {

@@ -1,12 +1,13 @@
 "use client"
 
-import { DocumentIcon, SettingsIcon, SearchIcon, SpeechBubbleIcon, ThoughtBubbleIcon, ExclamationIcon } from '@/assets/icons';
+import { DocumentIcon, SettingsIcon, SpeechBubbleIcon, ThoughtBubbleIcon, ExclamationIcon } from '@/assets/icons';
 import { CircleActionButton } from '@/components/buttons/CircleActionButton';
 import { useCreatePost } from '@/hooks/usePosts';
 import { useDropdown } from '@/hooks/useDropdown';
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 import { Character } from '@/types/character';
 import { useRightSidebar, SidebarContentType } from '@/contexts/RightSidebarContext';
+import { useThreadsInvalidation } from '@/hooks/useThreads';
 
 interface CharacterActionsProps {
     character: Character;
@@ -16,6 +17,7 @@ export function CharacterActions({ character }: CharacterActionsProps) {
     const { mutate: createPost, isPending } = useCreatePost();
     const { isOpen, toggle, dropdownRef } = useDropdown();
     const { setContentType, setCurrentCharacter } = useRightSidebar();
+    const { invalidateThreads } = useThreadsInvalidation();
 
     const handleGeneratePost = () => {
         if (isPending) return;
@@ -57,6 +59,7 @@ export function CharacterActions({ character }: CharacterActionsProps) {
                     />
                     <CircleActionButton
                         onClick={() => {
+                            invalidateThreads(character.id);
                             setCurrentCharacter(character);
                             setContentType(SidebarContentType.MESSAGES);
                         }}

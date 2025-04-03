@@ -99,6 +99,7 @@ export function useThreadMessages(threadId: string | undefined) {
         };
     }, [threadId, queryClient]);
 
+
     return useQuery({
         queryKey: ['messages', threadId],
         queryFn: () => fetchThreadMessages(threadId!),
