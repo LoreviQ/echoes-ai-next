@@ -6,6 +6,7 @@ import { useCharacter } from '@/hooks/useCharacters';
 
 // Define possible content types for the sidebar
 export enum SidebarContentType {
+    NONE = 'none',
     THOUGHTS = 'thoughts',
     EVENTS = 'events',
     MESSAGES = 'messages',
@@ -23,7 +24,7 @@ const RightSidebarContext = createContext<RightSidebarContextType | undefined>(u
 
 export function RightSidebarProvider({
     children,
-    initialContentType = SidebarContentType.THOUGHTS,
+    initialContentType = SidebarContentType.NONE,
     initialCharacterId = ''
 }: {
     children: ReactNode;
