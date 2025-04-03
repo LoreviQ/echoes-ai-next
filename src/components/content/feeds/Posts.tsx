@@ -2,11 +2,11 @@
 
 import { Character } from "@/types/character";
 import { ContentCard } from "../cards/content";
-import { usePosts } from "@/hooks/usePosts";
+import { usePostsWithData } from "@/hooks/usePosts";
 import { ContentType } from "@/types/content";
 
 export function Posts({ character }: { character: Character }) {
-    const { data: posts, isLoading, error, refetch, isRefetching } = usePosts(character.id);
+    const { data: posts, isLoading, error, refetch, isRefetching } = usePostsWithData(character.id);
 
     if (isLoading && !posts) {
         return (
