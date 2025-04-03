@@ -6,7 +6,8 @@ import { useCreatePost } from '@/hooks/usePosts';
 import { useDropdown } from '@/hooks/useDropdown';
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 import { Character } from '@/types/character';
-import { useRightSidebar, SidebarContentType } from '@/contexts/RightSidebarContext';
+import { useRightSidebar } from '@/hooks/useRightSidebar';
+import { SidebarContentType } from '@/contexts/RightSidebarContext';
 import { useThreadsInvalidation } from '@/hooks/useThreads';
 
 interface CharacterActionsProps {

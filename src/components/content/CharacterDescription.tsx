@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRightSidebar } from "@/contexts/RightSidebarContext";
+import { useRightSidebar } from "@/hooks/useRightSidebar";
 import { MarkdownContent } from "@/components/ui/MarkdownContent";
 
 export function DescriptionContent() {

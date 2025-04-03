@@ -5,6 +5,7 @@ import RightSidebar from "@/components/ui/RightSidebar";
 import { getInitialSession } from "@/contexts/session.server";
 import { Providers } from "./providers";
 import { SidebarContentType } from "@/contexts/RightSidebarContext";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default async function MainLayout({
     children,
@@ -47,6 +48,7 @@ export default async function MainLayout({
                     </div>
                 </div>
             </div>
+            {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
         </Providers>
     );
 } 

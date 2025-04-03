@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useRightSidebar } from "@/contexts/RightSidebarContext";
-import { useThreadMessages, useSelectedThread } from '@/hooks/useThreads';
+import { useRightSidebar } from "@/hooks/useRightSidebar";
 import { Thread, Message } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
 import { Character } from '@/types/character';
@@ -12,10 +11,17 @@ import { formatFriendlyDate } from '@/utils/dateFormat';
 
 
 export function MessagesContent() {
-    const { currentCharacter } = useRightSidebar();
-    const { selectedThreadId, setSelectedThreadId, threads, isLoading: threadsLoading, sendMessage, isSending } = useSelectedThread(currentCharacter?.id);
-    const { data: messages, isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
-
+    const {
+        currentCharacter,
+        selectedThreadId,
+        setSelectedThreadId,
+        threads,
+        threadsLoading,
+        sendMessage,
+        messageSending,
+        messages,
+        messagesLoading
+    } = useRightSidebar();
 
     if (!currentCharacter) {
         return null;
@@ -32,10 +38,10 @@ export function MessagesContent() {
                 threadsLoading={threadsLoading}
             />
             <ChatWindow
-                messages={messages || []}
+                messages={messages}
                 isLoading={messagesLoading}
                 onSendMessage={sendMessage}
-                isSending={isSending}
+                isSending={messageSending}
             />
         </div>
     );
