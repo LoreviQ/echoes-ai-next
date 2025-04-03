@@ -18,6 +18,7 @@ interface RightSidebarProps {
 export default function RightSidebar({ initialExpanded = false }: RightSidebarProps) {
     const [isExpanded, setIsExpanded] = useState(initialExpanded);
     const { contentType } = useRightSidebar();
+    const sidebarHeaderHeight = 74;
 
     const toggleSidebar = () => {
         const newExpandedState = !isExpanded;
@@ -35,7 +36,7 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
             case SidebarContentType.EVENTS:
                 return <EventsContent />;
             case SidebarContentType.MESSAGES:
-                return <MessagesContent />;
+                return <MessagesContent offset={sidebarHeaderHeight} />;
             case SidebarContentType.DESCRIPTION:
                 return <DescriptionContent />;
             default:
@@ -44,7 +45,10 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
     };
 
     return (
-        <div className={`bg-black text-white ${isExpanded ? 'w-full' : 'w-[340px]'} h-screen transition-all duration-300 border-l border-zinc-600`}>
+        <div className={`   bg-black text-white ${isExpanded ? 'w-full' : 'w-[340px]'} 
+                            h-full transition-all duration-300 border-l border-zinc-600
+                            flex flex-col h-screen overflow-hidden
+                        `}>
             <SidebarHeader isExpanded={isExpanded} toggleSidebar={toggleSidebar} />
             {renderContent()}
         </div>
@@ -53,7 +57,7 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
 
 function SidebarHeader({ isExpanded, toggleSidebar }: { isExpanded: boolean, toggleSidebar: () => void }) {
     return (
-        <div className={`py-4 pl-4 ${isExpanded ? 'pr-10' : ''} flex items-center gap-2 w-full`}>
+        <div className={`sticky top-0 z-20 py-4 pl-4 ${isExpanded ? 'pr-10' : ''} flex items-center gap-2 w-full bg-black/60 backdrop-blur-md`}>
             <CircleActionButton
                 icon={HamburgerIcon}
                 onClick={toggleSidebar}

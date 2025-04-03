@@ -10,7 +10,8 @@ import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import { formatFriendlyDate } from '@/utils/dateFormat';
 
 
-export function MessagesContent() {
+export function MessagesContent({ offset }: { offset: number }) {
+    const messageHeaderHeight = 96;
     const { currentCharacter, getThreadMessages } = useRightSidebar();
     const {
         selectedThreadId,
@@ -28,22 +29,23 @@ export function MessagesContent() {
     }
 
     return (
-        // 74px is the height of the header - idk why h-full doesn't work
-        <div className="flex flex-col h-[calc(100vh-74px)] overflow-hidden">
+        <>
             <MessagesHeader
                 character={currentCharacter}
                 selectedThreadId={selectedThreadId}
                 onThreadSelect={setSelectedThreadId}
                 threads={threads}
                 threadsLoading={threadsLoading}
+                offset={offset}
             />
             <ChatWindow
                 messages={messages}
                 isLoading={messagesLoading}
                 onSendMessage={sendMessage}
                 isSending={messageSending}
+                offset={offset + messageHeaderHeight}
             />
-        </div>
+        </>
     );
 }
 
@@ -54,11 +56,15 @@ interface MessagesHeaderProps {
     onThreadSelect: (threadId: string) => void;
     threads?: Thread[];
     threadsLoading: boolean;
+    offset: number;
 }
 
-function MessagesHeader({ character, selectedThreadId, onThreadSelect, threads, threadsLoading }: MessagesHeaderProps) {
+function MessagesHeader({ character, selectedThreadId, onThreadSelect, threads, threadsLoading, offset }: MessagesHeaderProps) {
     return (
-        <div className="sticky top-0 left-0 right-0 bg-black/60 backdrop-blur-md z-10 flex flex-wrap items-center justify-between gap-4 p-4 border-b border-zinc-700">
+        <div
+            className="sticky left-0 right-0 bg-black/60 backdrop-blur-md z-10 flex flex-wrap items-center justify-between gap-4 p-4 border-b border-zinc-700"
+            style={{ top: `${offset}px` }}
+        >
             <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center justify-center w-full sm:w-auto">
                     <div className="w-10 h-10 relative">
@@ -128,9 +134,10 @@ interface ChatWindowProps {
     isLoading: boolean;
     onSendMessage: (content: string) => Promise<void>;
     isSending?: boolean;
+    offset: number;
 }
 
-function ChatWindow({ messages, isLoading, onSendMessage, isSending }: ChatWindowProps) {
+function ChatWindow({ messages, isLoading, onSendMessage, isSending, offset }: ChatWindowProps) {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [inputValue, setInputValue] = useState('');
 
@@ -167,7 +174,7 @@ function ChatWindow({ messages, isLoading, onSendMessage, isSending }: ChatWindo
     return (
         <div className="flex flex-col flex-1 h-full">
             {/* Messages container */}
-            <div className="flex-1 overflow-y-auto p-4 pt-24 flex flex-col-reverse">
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col-reverse" style={{ paddingTop: `${offset}px` }}>
                 <div>
                     {messages.length === 0 ? (
                         <div className="flex justify-center items-center text-zinc-500">
