@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { FeedType } from '@/types/feed';
-import { Posts } from '@/components/content/Posts';
-import { Characters } from '@/components/content/Characters';
+import { Posts } from '@/components/content/feeds/Posts';
+import { Characters } from '@/components/content/feeds/Characters';
 import { Character } from '@/types/character';
 
 

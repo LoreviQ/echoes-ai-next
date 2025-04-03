@@ -6,10 +6,10 @@ import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { setCookie } from 'nookies';
 import { useRightSidebar } from "@/hooks/useRightSidebar";
 import { SidebarContentType } from "@/contexts/RightSidebarContext";
-import { ThoughtsContent } from "@/components/content/Thoughts";
-import { EventsContent } from "@/components/content/Events";
-import { MessagesContent } from "@/components/content/Messages";
-import { DescriptionContent } from "@/components/content/CharacterDescription";
+import { ThoughtsContent } from "@/components/content/character/Thoughts";
+import { EventsContent } from "@/components/content/character/Events";
+import { MessagesContent } from "@/components/content/character/Messages";
+import { DescriptionContent } from "@/components/content/character/Description";
 
 interface RightSidebarProps {
     initialExpanded?: boolean;

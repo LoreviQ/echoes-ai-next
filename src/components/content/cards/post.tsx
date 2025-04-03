@@ -1,56 +1,34 @@
-'use client';
-
-import { Post } from "@/types/post";
-import { Character } from "@/types/character";
-import Image from "next/image";
-import { formatFriendlyDate } from "@/utils/dateFormat";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
+import { useCharacter } from "@/hooks/useCharacters";
+import { Post } from "@/types/post";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets/icons";
-import { MarkdownContent } from "../ui/MarkdownContent";
-import { usePosts } from "@/hooks/usePosts";
+import { formatFriendlyDate } from "@/utils/dateFormat";
+import { MarkdownContent } from "../../ui/MarkdownContent";
+import Image from "next/image";
 
-export function Posts({ character }: { character: Character }) {
-    const { data: posts, isLoading, error } = usePosts(character.id);
+export function PostCard({ post }: { post: Post }) {
+    const { data: character, isLoading, error } = useCharacter(post.character_id);
 
     if (isLoading) {
         return (
-            <div className="w-full p-4 text-center">
-                <p className="text-zinc-400">Loading posts...</p>
+            <div className="px-4 py-2 border-b border-zinc-600">
+                <div className="w-full text-center">
+                    <p className="text-zinc-400">Loading post...</p>
+                </div>
             </div>
         );
     }
 
-    if (error) {
+    if (error || !character) {
         return (
-            <div className="w-full p-4 text-center">
-                <p className="text-red-500">Failed to load posts</p>
+            <div className="px-4 py-2 border-b border-zinc-600">
+                <div className="w-full text-center">
+                    <p className="text-red-500">Failed to load post</p>
+                </div>
             </div>
         );
     }
 
-    if (!posts || posts.length === 0) {
-        return (
-            <div className="w-full p-4 text-center">
-                <p className="text-zinc-400">This character has no posts yet!</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="w-full">
-            {posts.map((post) => (
-                <PostCard key={post.id} character={character} post={post} />
-            ))}
-        </div>
-    );
-}
-
-interface PostCardProps {
-    character: Character;
-    post: Post;
-}
-
-export function PostCard({ character, post }: PostCardProps) {
     const avatarUrl = character.avatar_url || '/images/avatar-placeholder.jpg';
     return (
         <div className="px-4 py-2 border-b border-zinc-600">
@@ -116,4 +94,4 @@ export function PostCard({ character, post }: PostCardProps) {
             </div>
         </div>
     );
-} 
+}

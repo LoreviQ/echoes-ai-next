@@ -1,62 +1,9 @@
-'use client';
-
-import { useCharacters } from "@/hooks/useCharacters";
 import { Character } from "@/types/character";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PreviewImage from "@/components/images/PreviewImage";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-export function Characters() {
-    const { data: characters, isLoading, error, getCharactersForUser } = useCharacters();
-
-    // Fetch recommended characters when component mounts
-    useEffect(() => {
-        getCharactersForUser().catch(err => {
-            console.error("Error fetching characters for user:", err);
-        });
-    }, [getCharactersForUser]);
-
-    if (isLoading) {
-        return (
-            <div className="w-full p-4 text-center">
-                <p className="text-zinc-400">Loading characters...</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="w-full p-4 text-center">
-                <p className="text-red-500">Failed to load characters</p>
-            </div>
-        );
-    }
-
-    if (!characters || characters.length === 0) {
-        return (
-            <div className="w-full p-4 text-center">
-                <p className="text-zinc-400">No characters found!</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="w-full">
-            {characters.map((character) => (
-                <CharacterCard key={character.id} character={character} />
-            ))}
-        </div>
-    );
-}
-
-
-
-interface CharacterCardProps {
-    character: Character;
-}
-
-export function CharacterCard({ character }: CharacterCardProps) {
+export function CharacterCard({ character }: { character: Character }) {
     const router = useRouter();
     const avatarUrl = character.avatar_url || '/images/avatar-placeholder.jpg';
     const characterUrl = `/${character.path}`;
@@ -101,7 +48,7 @@ export function CharacterCard({ character }: CharacterCardProps) {
                                     e.preventDefault();
                                 }}
                                 className={`inline-flex items-center px-4 py-1 rounded-full transition-colors
-                                            bg-white text-black hover:bg-zinc-200`}
+                          bg-white text-black hover:bg-zinc-200`}
                             >
                                 <span className="font-bold">Subscribe</span>
                             </button>
@@ -137,6 +84,6 @@ export function CharacterCard({ character }: CharacterCardProps) {
                     </div>
                 </div>
             </Link>
-        </div >
+        </div>
     );
 } 
