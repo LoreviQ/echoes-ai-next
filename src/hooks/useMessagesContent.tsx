@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { useRightSidebar } from "@/hooks/useRightSidebar";
 import { Thread, Message } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
@@ -9,9 +9,7 @@ import { RightArrowIcon } from '@/assets/icons';
 import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import { formatFriendlyDate } from '@/utils/dateFormat';
 
-
-export function MessagesContent({ offset }: { offset: number }) {
-    const messageHeaderHeight = 96;
+export function useMessagesContent() {
     const { currentCharacter, getThreadMessages } = useRightSidebar();
     const {
         selectedThreadId,
@@ -25,30 +23,36 @@ export function MessagesContent({ offset }: { offset: number }) {
     } = getThreadMessages();
 
     if (!currentCharacter) {
-        return null;
+        return {
+            header: null,
+            content: null
+        };
     }
 
-    return (
-        <>
-            <MessagesHeader
-                character={currentCharacter}
-                selectedThreadId={selectedThreadId}
-                onThreadSelect={setSelectedThreadId}
-                threads={threads}
-                threadsLoading={threadsLoading}
-                offset={offset}
-            />
-            <ChatWindow
-                messages={messages}
-                isLoading={messagesLoading}
-                onSendMessage={sendMessage}
-                isSending={messageSending}
-                offset={offset + messageHeaderHeight}
-            />
-        </>
+    const header = (
+        <MessagesHeader
+            character={currentCharacter}
+            selectedThreadId={selectedThreadId}
+            onThreadSelect={setSelectedThreadId}
+            threads={threads}
+            threadsLoading={threadsLoading}
+        />
     );
-}
 
+    const content = (
+        <ChatWindow
+            messages={messages}
+            isLoading={messagesLoading}
+            onSendMessage={sendMessage}
+            isSending={messageSending}
+        />
+    );
+
+    return {
+        header,
+        content
+    };
+}
 
 interface MessagesHeaderProps {
     character: Character;
@@ -56,15 +60,11 @@ interface MessagesHeaderProps {
     onThreadSelect: (threadId: string) => void;
     threads?: Thread[];
     threadsLoading: boolean;
-    offset: number;
 }
 
-function MessagesHeader({ character, selectedThreadId, onThreadSelect, threads, threadsLoading, offset }: MessagesHeaderProps) {
+function MessagesHeader({ character, selectedThreadId, onThreadSelect, threads, threadsLoading }: MessagesHeaderProps) {
     return (
-        <div
-            className="sticky left-0 right-0 bg-black/60 backdrop-blur-md z-10 flex flex-wrap items-center justify-between gap-4 p-4 border-b border-zinc-700"
-            style={{ top: `${offset}px` }}
-        >
+        <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center justify-center w-full sm:w-auto">
                     <div className="w-10 h-10 relative">
@@ -134,15 +134,14 @@ interface ChatWindowProps {
     isLoading: boolean;
     onSendMessage: (content: string) => Promise<void>;
     isSending?: boolean;
-    offset: number;
 }
 
-function ChatWindow({ messages, isLoading, onSendMessage, isSending, offset }: ChatWindowProps) {
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-    const [inputValue, setInputValue] = useState('');
+function ChatWindow({ messages, isLoading, onSendMessage, isSending }: ChatWindowProps) {
+    const [inputValue, setInputValue] = React.useState('');
+    const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
     // Scroll to bottom when messages change
-    useEffect(() => {
+    React.useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
@@ -174,7 +173,7 @@ function ChatWindow({ messages, isLoading, onSendMessage, isSending, offset }: C
     return (
         <div className="flex flex-col flex-1 h-full">
             {/* Messages container */}
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col-reverse" style={{ paddingTop: `${offset}px` }}>
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col-reverse">
                 <div>
                     {messages.length === 0 ? (
                         <div className="flex justify-center items-center text-zinc-500">
@@ -217,5 +216,4 @@ function ChatWindow({ messages, isLoading, onSendMessage, isSending, offset }: C
             </div>
         </div>
     );
-}
-
+} 

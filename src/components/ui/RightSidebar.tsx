@@ -1,15 +1,15 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { SearchIcon, HamburgerIcon } from "@/assets/icons";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { setCookie } from 'nookies';
 import { useRightSidebar } from "@/hooks/useRightSidebar";
 import { SidebarContentType } from "@/contexts/RightSidebarContext";
-import { ThoughtsContent } from "@/components/content/character/Thoughts";
-import { EventsContent } from "@/components/content/character/Events";
-import { MessagesContent } from "@/components/content/character/Messages";
-import { DescriptionContent } from "@/components/content/character/Description";
+import { useThoughtsContent } from "@/hooks/useThoughtsContent";
+import { useEventsContent } from "@/hooks/useEventsContent";
+import { useMessagesContent } from "@/hooks/useMessagesContent";
+import { useDescriptionContent } from "@/hooks/useDescriptionContent";
 
 interface RightSidebarProps {
     initialExpanded?: boolean;
@@ -18,7 +18,21 @@ interface RightSidebarProps {
 export default function RightSidebar({ initialExpanded = false }: RightSidebarProps) {
     const [isExpanded, setIsExpanded] = useState(initialExpanded);
     const { contentType } = useRightSidebar();
-    const sidebarHeaderHeight = 74;
+    const headerRef = useRef<HTMLDivElement>(null);
+    const [headerHeight, setHeaderHeight] = useState(0);
+
+    // Get content hooks
+    const thoughtsContent = useThoughtsContent();
+    const eventsContent = useEventsContent();
+    const messagesContent = useMessagesContent();
+    const descriptionContent = useDescriptionContent();
+
+    // Measure header height
+    useEffect(() => {
+        if (headerRef.current) {
+            setHeaderHeight(headerRef.current.offsetHeight);
+        }
+    }, [headerRef, contentType]);
 
     const toggleSidebar = () => {
         const newExpandedState = !isExpanded;
@@ -32,46 +46,88 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
     const renderContent = () => {
         switch (contentType) {
             case SidebarContentType.THOUGHTS:
-                return <ThoughtsContent />;
+                return thoughtsContent.content;
             case SidebarContentType.EVENTS:
-                return <EventsContent />;
+                return eventsContent.content;
             case SidebarContentType.MESSAGES:
-                return <MessagesContent offset={sidebarHeaderHeight} />;
+                return messagesContent.content;
             case SidebarContentType.DESCRIPTION:
-                return <DescriptionContent />;
+                return descriptionContent.content;
+            default:
+                return null;
+        }
+    };
+
+    const renderHeaderContent = () => {
+        switch (contentType) {
+            case SidebarContentType.THOUGHTS:
+                return thoughtsContent.header;
+            case SidebarContentType.EVENTS:
+                return eventsContent.header;
+            case SidebarContentType.MESSAGES:
+                return messagesContent.header;
+            case SidebarContentType.DESCRIPTION:
+                return descriptionContent.header;
             default:
                 return null;
         }
     };
 
     return (
-        <div className={`   bg-black text-white ${isExpanded ? 'w-full' : 'w-[340px]'} 
-                            h-full transition-all duration-300 border-l border-zinc-600
-                            flex flex-col h-screen overflow-hidden
-                        `}>
-            <SidebarHeader isExpanded={isExpanded} toggleSidebar={toggleSidebar} />
-            {renderContent()}
-        </div>
-    );
-}
-
-function SidebarHeader({ isExpanded, toggleSidebar }: { isExpanded: boolean, toggleSidebar: () => void }) {
-    return (
-        <div className={`sticky top-0 z-20 py-4 pl-4 ${isExpanded ? 'pr-10' : ''} flex items-center gap-2 w-full bg-black/60 backdrop-blur-md`}>
-            <CircleActionButton
-                icon={HamburgerIcon}
-                onClick={toggleSidebar}
-                className="text-zinc-400 hover:bg-zinc-800/50"
-                size="lg"
-            />
-            <div className="relative group w-full">
-                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zinc-400 transition-colors duration-200 group-focus-within:text-white" />
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 pl-10 pr-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
-                />
+        <div className={`bg-black text-white ${isExpanded ? 'w-full' : 'w-[340px]'} 
+                        h-full transition-all duration-300 border-l border-zinc-600
+                        flex flex-col h-screen`}>
+            <SidebarHeader
+                ref={headerRef}
+                isExpanded={isExpanded}
+                toggleSidebar={toggleSidebar}
+            >
+                {renderHeaderContent()}
+            </SidebarHeader>
+            <div className="flex-1 overflow-auto">
+                {renderContent()}
             </div>
         </div>
     );
 }
+
+interface SidebarHeaderProps {
+    isExpanded: boolean;
+    toggleSidebar: () => void;
+    children?: React.ReactNode;
+}
+
+const SidebarHeader = React.forwardRef<HTMLDivElement, SidebarHeaderProps>(
+    ({ isExpanded, toggleSidebar, children }, ref) => {
+        return (
+            <div
+                ref={ref}
+                className={`sticky top-0 z-20 py-4 pl-4 ${isExpanded ? 'pr-10' : ''} bg-black/60 backdrop-blur-md border-b border-zinc-700`}
+            >
+                <div className="flex items-center gap-2 w-full">
+                    <CircleActionButton
+                        icon={HamburgerIcon}
+                        onClick={toggleSidebar}
+                        className="text-zinc-400 hover:bg-zinc-800/50"
+                        size="lg"
+                    />
+                    <div className="relative group w-full">
+                        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zinc-400 transition-colors duration-200 group-focus-within:text-white" />
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            className="w-full bg-black border border-zinc-600 rounded-xl py-2 pl-10 pr-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200"
+                        />
+                    </div>
+                </div>
+                {children && (
+                    <div className="mt-4 px-4">
+                        {children}
+                    </div>
+                )}
+            </div>
+        );
+    }
+);
+
+SidebarHeader.displayName = 'SidebarHeader';
