@@ -118,11 +118,7 @@ const SidebarHeader = React.forwardRef<HTMLDivElement, SidebarHeaderProps>(
                         />
                     </div>
                 </div>
-                {children && (
-                    <div className="mt-4 px-4">
-                        {children}
-                    </div>
-                )}
+                {children && children}
             </div>
         );
     }
