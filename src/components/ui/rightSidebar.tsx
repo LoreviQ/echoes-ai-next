@@ -1,15 +1,16 @@
 'use client'
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Suspense } from "react";
 import { SearchIcon, HamburgerIcon } from "@/assets/icons";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { useRightSidebar, SidebarContentType } from "@/contexts/rightSidebar";
-import { useThoughtsContent } from "@/hooks/content/useThoughtsContent";
-import { useEventsContent } from "@/hooks/content/useEventsContent";
-import { useMessagesContent } from "@/hooks/content/useMessagesContent";
-import { useDescriptionContent } from "@/hooks/content/useDescriptionContent";
 import { setPreference } from "@/utils/preferences";
-import { useAdvancedSettingsContent } from "@/hooks/content/useAdvanceSettings";
+import { HeaderLoading, ContentLoading } from '@/components/ui/loading';
+import { ThoughtsHeader, ThoughtsContent } from '@/hooks/content/useThoughtsContent';
+import { EventsHeader, EventsContent } from '@/hooks/content/useEventsContent';
+import { MessagesHeader, MessagesContent } from '@/hooks/content/useMessagesContent';
+import { DescriptionHeader, DescriptionContent } from '@/hooks/content/useDescriptionContent';
+import { AdvancedSettingsHeader, AdvancedSettingsContent } from '@/hooks/content/useAdvanceSettings';
 
 interface RightSidebarProps {
     initialExpanded?: boolean;
@@ -20,48 +21,41 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
     const { contentType } = useRightSidebar();
     const headerRef = useRef<HTMLDivElement>(null);
 
-    // Get content hooks
-    const thoughtsContent = useThoughtsContent();
-    const eventsContent = useEventsContent();
-    const messagesContent = useMessagesContent();
-    const descriptionContent = useDescriptionContent();
-    const advancedSettingsContent = useAdvancedSettingsContent();
-
     const toggleSidebar = () => {
         const newExpandedState = !isExpanded;
         setIsExpanded(newExpandedState);
         setPreference('rightSidebarExpanded', newExpandedState);
     };
 
-    const renderContent = () => {
+    const renderHeader = () => {
         switch (contentType) {
             case SidebarContentType.THOUGHTS:
-                return thoughtsContent.content;
+                return <ThoughtsHeader />;
             case SidebarContentType.EVENTS:
-                return eventsContent.content;
+                return <EventsHeader />;
             case SidebarContentType.MESSAGES:
-                return messagesContent.content;
+                return <MessagesHeader />;
             case SidebarContentType.DESCRIPTION:
-                return descriptionContent.content;
+                return <DescriptionHeader />;
             case SidebarContentType.ADVANCED_SETTINGS:
-                return advancedSettingsContent.content;
+                return <AdvancedSettingsHeader />;
             default:
                 return null;
         }
     };
 
-    const renderHeaderContent = () => {
+    const renderContent = () => {
         switch (contentType) {
             case SidebarContentType.THOUGHTS:
-                return thoughtsContent.header;
+                return <ThoughtsContent />;
             case SidebarContentType.EVENTS:
-                return eventsContent.header;
+                return <EventsContent />;
             case SidebarContentType.MESSAGES:
-                return messagesContent.header;
+                return <MessagesContent />;
             case SidebarContentType.DESCRIPTION:
-                return descriptionContent.header;
+                return <DescriptionContent />;
             case SidebarContentType.ADVANCED_SETTINGS:
-                return advancedSettingsContent.header;
+                return <AdvancedSettingsContent />;
             default:
                 return null;
         }
@@ -78,10 +72,14 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
                         isExpanded={isExpanded}
                         toggleSidebar={toggleSidebar}
                     >
-                        {renderHeaderContent()}
+                        <Suspense fallback={<HeaderLoading />}>
+                            {renderHeader()}
+                        </Suspense>
                     </SidebarHeader>
                     <div className="flex-1 overflow-auto">
-                        {renderContent()}
+                        <Suspense fallback={<ContentLoading />}>
+                            {renderContent()}
+                        </Suspense>
                     </div>
                 </div>
             </div>
