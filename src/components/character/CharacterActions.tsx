@@ -81,6 +81,12 @@ export function CharacterActions({ character, isOwner }: CharacterActionsProps) 
                                     <DropdownItem onClick={handleGeneratePost}>
                                         Generate a Post
                                     </DropdownItem>
+                                    <DropdownItem onClick={() => {
+                                        setCurrentCharacter(character);
+                                        setContentType(SidebarContentType.ADVANCED_SETTINGS);
+                                    }}>
+                                        Advanced Settings
+                                    </DropdownItem>
                                 </Dropdown>
                             )}
                         </div>

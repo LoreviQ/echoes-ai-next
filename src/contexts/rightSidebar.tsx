@@ -17,7 +17,8 @@ export enum SidebarContentType {
     THOUGHTS = 'thoughts',
     EVENTS = 'events',
     MESSAGES = 'messages',
-    DESCRIPTION = 'description'
+    DESCRIPTION = 'description',
+    ADVANCED_SETTINGS = 'advanced_settings'
 }
 
 export interface RightSidebarContextType {
@@ -74,15 +75,6 @@ export function RightSidebarProvider({
             setPreference('currentCharacter', '');
         }
     }, [contentType, currentCharacter]);
-
-    // Save selected thread ID to cookie
-    useEffect(() => {
-        if (selectedThreadId) {
-            document.cookie = `selected_thread=${selectedThreadId};path=/;max-age=31536000`;
-        } else {
-            document.cookie = `selected_thread=;path=/;max-age=0`;
-        }
-    }, [selectedThreadId]);
 
     // Reset selectedThreadId when character changes
     useEffect(() => {

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { SearchIcon, HamburgerIcon } from "@/assets/icons";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { useRightSidebar, SidebarContentType } from "@/contexts/rightSidebar";
@@ -9,6 +9,7 @@ import { useEventsContent } from "@/hooks/content/useEventsContent";
 import { useMessagesContent } from "@/hooks/content/useMessagesContent";
 import { useDescriptionContent } from "@/hooks/content/useDescriptionContent";
 import { setPreference } from "@/utils/preferences";
+import { useAdvancedSettingsContent } from "@/hooks/content/useAdvanceSettings";
 
 interface RightSidebarProps {
     initialExpanded?: boolean;
@@ -24,6 +25,7 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
     const eventsContent = useEventsContent();
     const messagesContent = useMessagesContent();
     const descriptionContent = useDescriptionContent();
+    const advancedSettingsContent = useAdvancedSettingsContent();
 
     const toggleSidebar = () => {
         const newExpandedState = !isExpanded;
@@ -41,6 +43,8 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
                 return messagesContent.content;
             case SidebarContentType.DESCRIPTION:
                 return descriptionContent.content;
+            case SidebarContentType.ADVANCED_SETTINGS:
+                return advancedSettingsContent.content;
             default:
                 return null;
         }
@@ -56,6 +60,8 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
                 return messagesContent.header;
             case SidebarContentType.DESCRIPTION:
                 return descriptionContent.header;
+            case SidebarContentType.ADVANCED_SETTINGS:
+                return advancedSettingsContent.header;
             default:
                 return null;
         }
