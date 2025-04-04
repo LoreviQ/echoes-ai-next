@@ -65,18 +65,22 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
     };
 
     return (
-        <div className={`bg-black text-white ${isExpanded ? 'w-full' : 'w-[340px]'} 
-                        h-full transition-all duration-300 border-l border-zinc-600
-                        flex flex-col h-screen`}>
-            <SidebarHeader
-                ref={headerRef}
-                isExpanded={isExpanded}
-                toggleSidebar={toggleSidebar}
-            >
-                {renderHeaderContent()}
-            </SidebarHeader>
-            <div className="flex-1 overflow-auto">
-                {renderContent()}
+        <div className="hidden lg:flex lg:flex-1 justify-start">
+            <div className="hidden lg:block w-full">
+                <div className={`bg-black text-white ${isExpanded ? 'w-full' : 'w-[340px]'} 
+                            h-full transition-all duration-300 border-l border-zinc-600
+                            flex flex-col h-screen`}>
+                    <SidebarHeader
+                        ref={headerRef}
+                        isExpanded={isExpanded}
+                        toggleSidebar={toggleSidebar}
+                    >
+                        {renderHeaderContent()}
+                    </SidebarHeader>
+                    <div className="flex-1 overflow-auto">
+                        {renderContent()}
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -1,10 +1,15 @@
 import Link from "next/link";
 
-export function TypefaceOutlined({ text, path, outlineColour, className }: { text: string, path: string, outlineColour: string, className?: string }) {
+export function TypefaceOutlined({ text, outlineColour, className, onClick }: {
+    text: string,
+    outlineColour: string,
+    className?: string,
+    onClick?: () => void
+}) {
     return (
-        <Link
-            href={path}
-            className={`${className} flex items-center justify-center`}
+        <button
+            onClick={onClick}
+            className={`${className} flex items-center justify-center cursor-pointer`}
             style={{
                 WebkitTextStroke: `2px ${outlineColour}`,
                 color: 'transparent',
@@ -12,6 +17,6 @@ export function TypefaceOutlined({ text, path, outlineColour, className }: { tex
             }}
         >
             {text}
-        </Link>
+        </button>
     );
 }
