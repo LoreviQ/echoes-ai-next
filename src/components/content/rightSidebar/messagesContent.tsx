@@ -25,7 +25,7 @@ const MessagesHeaderComponent = () => {
     }
 
     return (
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 mt-4 mx-4">
             <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center justify-center w-full sm:w-auto">
                     <div className="w-10 h-10 relative">
