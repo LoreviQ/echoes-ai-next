@@ -5,6 +5,7 @@ import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon
 import { formatFriendlyDate } from "@/utils/dateFormat";
 import { MarkdownContent } from "../../ui/MarkdownContent";
 import PreviewImage from "@/components/images/PreviewImage";
+import Link from "next/link";
 
 export function PostCard({ post }: { post: Post }) {
     const { data: character, isLoading, error } = useCharacter(post.character_id);
@@ -59,7 +60,7 @@ export function PostCard({ post }: { post: Post }) {
                     {/* Character Info */}
                     <div className="flex items-center gap-2">
                         <span className="text-white font-bold">{character.name}</span>
-                        <span className="text-zinc-500">@{character.path} · {formatFriendlyDate(new Date(post.created_at))}</span>
+                        <span className="text-zinc-500"><Link href={`/${character.path}`} className="hover:underline">@{character.path}</Link> · {formatFriendlyDate(new Date(post.created_at))}</span>
                     </div>
 
                     {/* Post Content */}
