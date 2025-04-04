@@ -31,7 +31,7 @@ export function FeedProvider({ children }: { children: ReactNode }) {
             setIsLoading(true);
             setError(null);
 
-            const requestBody = { previousContent: feedReferences };
+            const requestBody = { previouslySeenContent: feedReferences };
             const response = await api.post(endpoints.user.recommendations, requestBody);
             const contentRefs = response.data as ContentReference[];
 
