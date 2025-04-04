@@ -1,7 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { updateSession } from '@/utils/supabase.middleware'
-import { UserPreferences, DEFAULT_PREFERENCES } from '@/types/preferences'
 
 export async function middleware(request: NextRequest) {
     const privateUrls = ['/notifications', '/settings'];
@@ -15,24 +14,6 @@ export async function middleware(request: NextRequest) {
 
     // Get the response from the authentication middleware
     const response = await updateSession(request, privateUrls)
-
-    // Read user preferences from cookie or use default values
-    let preferences: UserPreferences = DEFAULT_PREFERENCES
-    const preferencesStr = request.cookies.get('user_preferences')?.value
-    if (preferencesStr) {
-        try {
-            preferences = JSON.parse(preferencesStr)
-        } catch (e) {
-            console.error('Failed to parse user preferences:', e)
-        }
-    }
-
-    // Add user preferences to response headers so client components can access them
-    response.headers.set('x-right-sidebar-expanded', String(preferences.rightSidebarExpanded))
-    response.headers.set('x-left-sidebar-expanded', String(preferences.leftSidebarExpanded))
-    response.headers.set('x-sidebar-content-type', preferences.sidebarContentType)
-    response.headers.set('x-current-character', preferences.currentCharacter)
-
     return response
 }
 
