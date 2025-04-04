@@ -1,20 +1,46 @@
 'use client';
 
-import { useMixedFeed } from '@/hooks/reactQuery/useMixedFeed';
-import { useContentItem } from '@/hooks/reactQuery/useContentItem';
+import { useState, useEffect, useCallback } from 'react';
 import { ContentCard } from '../cards/content';
 import { ContentReference } from '@/types/content';
+import { useContentItem } from '@/hooks/reactQuery/useContentItem';
+import { api, endpoints } from '@/utils/api';
 
 export function ForYouFeed() {
-    const {
-        data: feedReferences,
-        isLoading: isFeedLoading,
-        error: feedError,
-        refetch,
-        isRefetching
-    } = useMixedFeed();
+    const [feedReferences, setFeedReferences] = useState<ContentReference[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
+    const [isRefetching, setIsRefetching] = useState(false);
+
+    const fetchFeed = useCallback(async (isRefetch = false) => {
+        try {
+            if (isRefetch) {
+                setIsRefetching(true);
+            } else {
+                setIsLoading(true);
+            }
+            setError(null);
+
+            // Fetch feed references from API
+            const response = await api.get(endpoints.user.recommendations);
+            const contentRefs = response.data as ContentReference[];
+            setFeedReferences(contentRefs);
+        } catch (err) {
+            setError(err instanceof Error ? err : new Error('Failed to fetch feed'));
+            console.error('Feed fetch error:', err);
+        } finally {
+            setIsLoading(false);
+            setIsRefetching(false);
+        }
+    }, []);
+
+    // Fetch feed on component mount
+    useEffect(() => {
+        fetchFeed();
+    }, [fetchFeed]);
+
     // Handle feed loading state when initially loading
-    if (isFeedLoading && !feedReferences) {
+    if (isLoading && !feedReferences.length) {
         return (
             <div className="w-full p-4 text-center">
                 <p className="text-zinc-400">Loading feed...</p>
@@ -23,12 +49,12 @@ export function ForYouFeed() {
     }
 
     // Handle feed error state
-    if (feedError) {
+    if (error) {
         return (
             <div className="w-full p-4 text-center">
                 <p className="text-red-500">Failed to load feed</p>
                 <button
-                    onClick={() => refetch()}
+                    onClick={() => fetchFeed()}
                     className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-white"
                 >
                     Retry
@@ -43,7 +69,7 @@ export function ForYouFeed() {
             <div className="w-full p-4 text-center">
                 <p className="text-zinc-400">No content found!</p>
                 <button
-                    onClick={() => refetch()}
+                    onClick={() => fetchFeed()}
                     className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-white"
                 >
                     Refresh
@@ -74,7 +100,7 @@ export function ForYouFeed() {
             {/* Refresh button */}
             <div className="w-full p-4 text-center border-t border-zinc-800">
                 <button
-                    onClick={() => refetch()}
+                    onClick={() => fetchFeed(true)}
                     disabled={isRefetching}
                     className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md text-white"
                 >
