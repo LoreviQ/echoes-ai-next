@@ -2,7 +2,6 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { HeaderLoading, ContentLoading } from '@/components/ui/loading';
 import { MarkdownContent } from "@/components/ui/MarkdownContent";
 
 const AdvancedSettingsHeaderComponent = () => (
@@ -24,10 +23,10 @@ const AdvancedSettingsContentComponent = () => (
 
 export const AdvancedSettingsHeader = dynamic(
     () => Promise.resolve(AdvancedSettingsHeaderComponent),
-    { ssr: false, loading: () => <HeaderLoading /> }
+    { ssr: false }
 );
 
 export const AdvancedSettingsContent = dynamic(
     () => Promise.resolve(AdvancedSettingsContentComponent),
-    { ssr: false, loading: () => <ContentLoading /> }
+    { ssr: false }
 ); 

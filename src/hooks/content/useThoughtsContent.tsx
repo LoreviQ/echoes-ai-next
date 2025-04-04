@@ -2,7 +2,6 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { HeaderLoading, ContentLoading } from '@/components/ui/loading';
 
 const ThoughtsHeaderComponent = () => (
     <div className="mt-4 px-4">
@@ -23,10 +22,10 @@ const ThoughtsContentComponent = () => (
 
 export const ThoughtsHeader = dynamic(
     () => Promise.resolve(ThoughtsHeaderComponent),
-    { ssr: false, loading: () => <HeaderLoading /> }
+    { ssr: false }
 );
 
 export const ThoughtsContent = dynamic(
     () => Promise.resolve(ThoughtsContentComponent),
-    { ssr: false, loading: () => <ContentLoading /> }
+    { ssr: false }
 ); 

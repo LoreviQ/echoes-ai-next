@@ -2,7 +2,6 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { HeaderLoading, ContentLoading } from '@/components/ui/loading';
 
 const EventsHeaderComponent = () => (
     <div className="mt-4 px-4">
@@ -25,12 +24,12 @@ const EventsContentComponent = () => (
 
 export const EventsHeader = dynamic(
     () => Promise.resolve(EventsHeaderComponent),
-    { ssr: false, loading: () => <HeaderLoading /> }
+    { ssr: false }
 );
 
 export const EventsContent = dynamic(
     () => Promise.resolve(EventsContentComponent),
-    { ssr: false, loading: () => <ContentLoading /> }
+    { ssr: false }
 );
 
 export function useEventsContent() {

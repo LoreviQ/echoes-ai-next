@@ -9,16 +9,15 @@ import { RightArrowIcon } from '@/assets/icons';
 import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import { formatFriendlyDate } from '@/utils/dateFormat';
 import dynamic from 'next/dynamic';
-import { HeaderLoading, ContentLoading } from '@/components/ui/loading';
 
 export const MessagesHeader = dynamic(
     () => Promise.resolve(MessagesHeaderComponent),
-    { ssr: false, loading: () => <HeaderLoading /> }
+    { ssr: false }
 );
 
 export const MessagesContent = dynamic(
     () => Promise.resolve(MessagesContentComponent),
-    { ssr: false, loading: () => <ContentLoading /> }
+    { ssr: false }
 );
 
 const MessagesHeaderComponent = () => {

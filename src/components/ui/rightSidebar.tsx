@@ -12,6 +12,38 @@ import { MessagesHeader, MessagesContent } from '@/hooks/content/useMessagesCont
 import { DescriptionHeader, DescriptionContent } from '@/hooks/content/useDescriptionContent';
 import { AdvancedSettingsHeader, AdvancedSettingsContent } from '@/hooks/content/useAdvanceSettings';
 
+interface SidebarContentComponents {
+    Header: React.ComponentType;
+    Content: React.ComponentType;
+}
+
+type SidebarContentMap = {
+    [key in Exclude<SidebarContentType, SidebarContentType.NONE>]: SidebarContentComponents;
+};
+
+const SIDEBAR_CONTENT_MAP: SidebarContentMap = {
+    [SidebarContentType.THOUGHTS]: {
+        Header: ThoughtsHeader,
+        Content: ThoughtsContent
+    },
+    [SidebarContentType.EVENTS]: {
+        Header: EventsHeader,
+        Content: EventsContent
+    },
+    [SidebarContentType.MESSAGES]: {
+        Header: MessagesHeader,
+        Content: MessagesContent
+    },
+    [SidebarContentType.DESCRIPTION]: {
+        Header: DescriptionHeader,
+        Content: DescriptionContent
+    },
+    [SidebarContentType.ADVANCED_SETTINGS]: {
+        Header: AdvancedSettingsHeader,
+        Content: AdvancedSettingsContent
+    }
+};
+
 interface RightSidebarProps {
     initialExpanded?: boolean;
 }
@@ -27,39 +59,9 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
         setPreference('rightSidebarExpanded', newExpandedState);
     };
 
-    const renderHeader = () => {
-        switch (contentType) {
-            case SidebarContentType.THOUGHTS:
-                return <ThoughtsHeader />;
-            case SidebarContentType.EVENTS:
-                return <EventsHeader />;
-            case SidebarContentType.MESSAGES:
-                return <MessagesHeader />;
-            case SidebarContentType.DESCRIPTION:
-                return <DescriptionHeader />;
-            case SidebarContentType.ADVANCED_SETTINGS:
-                return <AdvancedSettingsHeader />;
-            default:
-                return null;
-        }
-    };
-
-    const renderContent = () => {
-        switch (contentType) {
-            case SidebarContentType.THOUGHTS:
-                return <ThoughtsContent />;
-            case SidebarContentType.EVENTS:
-                return <EventsContent />;
-            case SidebarContentType.MESSAGES:
-                return <MessagesContent />;
-            case SidebarContentType.DESCRIPTION:
-                return <DescriptionContent />;
-            case SidebarContentType.ADVANCED_SETTINGS:
-                return <AdvancedSettingsContent />;
-            default:
-                return null;
-        }
-    };
+    const currentContent = contentType !== SidebarContentType.NONE ? SIDEBAR_CONTENT_MAP[contentType] : undefined;
+    const ContentComponent = currentContent?.Content;
+    const HeaderComponent = currentContent?.Header;
 
     return (
         <div className="hidden lg:flex lg:flex-1 justify-start">
@@ -73,12 +75,12 @@ export default function RightSidebar({ initialExpanded = false }: RightSidebarPr
                         toggleSidebar={toggleSidebar}
                     >
                         <Suspense fallback={<HeaderLoading />}>
-                            {renderHeader()}
+                            {HeaderComponent && <HeaderComponent />}
                         </Suspense>
                     </SidebarHeader>
                     <div className="flex-1 overflow-auto">
                         <Suspense fallback={<ContentLoading />}>
-                            {renderContent()}
+                            {ContentComponent && <ContentComponent />}
                         </Suspense>
                     </div>
                 </div>

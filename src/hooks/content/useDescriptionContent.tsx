@@ -2,8 +2,8 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { HeaderLoading, ContentLoading } from '@/components/ui/loading';
 import { useRightSidebar } from "@/contexts/rightSidebar";
+import { HeaderLoading } from '@/components/ui/loading';
 import { MarkdownContent } from "@/components/ui/MarkdownContent";
 
 // Note: This component needs the RightSidebar context, so we'll keep it as a proper component
@@ -52,10 +52,10 @@ const DescriptionContentComponent = () => {
 
 export const DescriptionHeader = dynamic(
     () => Promise.resolve(DescriptionHeaderComponent),
-    { ssr: false, loading: () => <HeaderLoading /> }
+    { ssr: false }
 );
 
 export const DescriptionContent = dynamic(
     () => Promise.resolve(DescriptionContentComponent),
-    { ssr: false, loading: () => <ContentLoading /> }
+    { ssr: false }
 ); 
