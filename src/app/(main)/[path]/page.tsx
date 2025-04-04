@@ -31,10 +31,11 @@ export default async function CharacterPage(
     const isOwner = user?.id === character.user_id;
 
     return (
-        <main className="flex flex-col space-y-4">
+        <>
+            <BackHeader text={character.name} />
             <CharacterInfo character={character} isOwner={isOwner} />
             <CharacterFeed character={character} />
-        </main>
+        </>
     );
 }
 
@@ -42,7 +43,6 @@ function CharacterInfo({ character, isOwner }: { character: Character, isOwner: 
     return (
         <div className="w-full">
             <div className="relative w-full">
-                <BackHeader text={character.name} />
                 <div className="relative w-full aspect-[3/1]">
                     <DynamicImage
                         src={character.banner_url}
@@ -82,7 +82,7 @@ function CharacterInfo({ character, isOwner }: { character: Character, isOwner: 
             <div className="px-4 mt-4">
                 <h1 className="font-bold text-2xl">{character.name}</h1>
                 <p className="text-zinc-500">@{character.path}</p>
-                <div className="mt-4 text-white">
+                <div className="py-4 text-white">
                     <MarkdownContent
                         content={character.bio || "This character doesn't have a bio yet!"}
                     />
