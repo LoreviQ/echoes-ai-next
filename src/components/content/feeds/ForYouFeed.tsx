@@ -22,7 +22,7 @@ export function ForYouFeed() {
             setError(null);
 
             // Fetch feed references from API
-            const response = await api.get(endpoints.user.recommendations);
+            const response = await api.post(endpoints.user.recommendations);
             const contentRefs = response.data as ContentReference[];
             setFeedReferences(contentRefs);
         } catch (err) {
