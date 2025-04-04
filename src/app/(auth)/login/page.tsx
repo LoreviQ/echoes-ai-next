@@ -58,7 +58,6 @@ export default function LoginPage() {
         <div className="w-full max-w-md p-8 border border-white rounded-lg bg-black space-y-4">
             <TypefaceOutlined
                 text="EchoesAI"
-                path="/"
                 outlineColour="white"
                 className="text-5xl mb-8"
             />

@@ -9,7 +9,7 @@ import { HomeIcon, DocumentIcon, SettingsIcon, PlusIcon, UserGroupIcon } from "@
 import { useModal } from "@/hooks/ui/useModal";
 import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
 import { useSession } from "@/contexts/session.client";
-import { setCookie } from 'nookies';
+import { setPreference } from "@/utils/preferences";
 
 const navigationItems = [
     {
@@ -47,10 +47,7 @@ export default function LeftSidebar({ initialExpanded = true }: LeftSidebarProps
     const toggleSidebar = () => {
         const newExpandedState = !isExpanded;
         setIsExpanded(newExpandedState);
-        setCookie(null, 'left_sidebar_expanded', String(newExpandedState), {
-            maxAge: 30 * 24 * 60 * 60,
-            path: '/',
-        });
+        setPreference('leftSidebarExpanded', newExpandedState);
     };
 
     const handleCreateClick = () => {

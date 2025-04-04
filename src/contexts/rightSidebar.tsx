@@ -9,6 +9,7 @@ import { Thread } from '@/types/thread';
 import { useThreadMessages } from '@/hooks/reactQuery/useThreads';
 import { Message } from '@/types/thread';
 import { useContext } from 'react';
+import { setPreference } from "@/utils/preferences";
 
 // Define possible content types for the sidebar
 export enum SidebarContentType {
@@ -66,11 +67,11 @@ export function RightSidebarProvider({
 
     // Update cookies when content type or character changes
     useEffect(() => {
-        document.cookie = `sidebar_content_type=${contentType};path=/;max-age=31536000`;
+        setPreference('sidebarContentType', contentType);
         if (currentCharacter) {
-            document.cookie = `current_character=${currentCharacter.id};path=/;max-age=31536000`;
+            setPreference('currentCharacter', currentCharacter.id);
         } else {
-            document.cookie = `current_character=;path=/;max-age=0`;
+            setPreference('currentCharacter', '');
         }
     }, [contentType, currentCharacter]);
 
