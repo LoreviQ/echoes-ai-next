@@ -1,43 +1,20 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { ContentCard } from '../cards/content';
 import { ContentReference } from '@/types/content';
 import { useContentItem } from '@/hooks/reactQuery/useContentItem';
-import { api, endpoints } from '@/utils/api';
+import { useFeed } from '@/contexts/FeedContext';
 
 export function ForYouFeed() {
-    const [feedReferences, setFeedReferences] = useState<ContentReference[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
-    const [isRefetching, setIsRefetching] = useState(false);
+    const { feedReferences, isLoading, error, isRefetching, fetchFeed } = useFeed();
 
-    const fetchFeed = useCallback(async (isRefetch = false) => {
-        try {
-            if (isRefetch) {
-                setIsRefetching(true);
-            } else {
-                setIsLoading(true);
-            }
-            setError(null);
-
-            // Fetch feed references from API
-            const response = await api.post(endpoints.user.recommendations);
-            const contentRefs = response.data as ContentReference[];
-            setFeedReferences(contentRefs);
-        } catch (err) {
-            setError(err instanceof Error ? err : new Error('Failed to fetch feed'));
-            console.error('Feed fetch error:', err);
-        } finally {
-            setIsLoading(false);
-            setIsRefetching(false);
-        }
-    }, []);
-
-    // Fetch feed on component mount
+    // Fetch feed on component mount only if we don't have any feed references
     useEffect(() => {
-        fetchFeed();
-    }, [fetchFeed]);
+        if (feedReferences.length === 0) {
+            fetchFeed();
+        }
+    }, [fetchFeed, feedReferences.length]);
 
     // Handle feed loading state when initially loading
     if (isLoading && !feedReferences.length) {
