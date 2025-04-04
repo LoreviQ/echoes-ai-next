@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { type SessionStatus } from '@/types/session';
 import { createClient } from '@/utils/supabase.client';
+import { setupAuthInterceptor, cleanupAuthInterceptor } from '@/utils/api';
 
 const SessionContext = createContext<SessionStatus>({
     active: false,
@@ -31,8 +32,16 @@ export function SessionProvider({
             });
         });
 
-        return () => subscription.unsubscribe();
+        return () => {
+            subscription.unsubscribe();
+            cleanupAuthInterceptor();
+        };
     }, []);
+
+    // Setup interceptor whenever session status changes
+    useEffect(() => {
+        setupAuthInterceptor(sessionStatus.active);
+    }, [sessionStatus.active]);
 
     return (
         <SessionContext.Provider value={sessionStatus}>
