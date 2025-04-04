@@ -7,6 +7,7 @@ import { getInitialSession } from "@/contexts/session.server";
 import { Providers } from "./providers";
 import { SidebarContentType } from "@/contexts/rightSidebar";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { UserPreferences, DEFAULT_PREFERENCES } from "@/types/preferences";
 
 export default async function MainLayout({
     children,
@@ -15,31 +16,25 @@ export default async function MainLayout({
 }>) {
     const initialSession = await getInitialSession();
 
-    // Read right sidebar preferences from cookies server-side
+    // Read preferences from the single user_preferences cookie
     const cookieStore = await cookies();
-    const rightSidebarCookie = cookieStore.get('right_sidebar_expanded');
-    const isRightSidebarExpanded = rightSidebarCookie?.value === 'true' || false;
-    const leftSidebarCookie = cookieStore.get('left_sidebar_expanded');
-    const isLeftSidebarExpanded = leftSidebarCookie?.value === 'true' || true;
-
-    const contentTypeCookie = cookieStore.get('sidebar_content_type');
-    const initialContentType = contentTypeCookie?.value as SidebarContentType || SidebarContentType.THOUGHTS;
-
-    const currentCharacterCookie = cookieStore.get('current_character');
-    const initialCharacterId = currentCharacterCookie?.value || '';
+    const preferencesStr = cookieStore.get('user_preferences')?.value;
+    const preferences: UserPreferences = preferencesStr
+        ? JSON.parse(decodeURIComponent(preferencesStr))
+        : { ...DEFAULT_PREFERENCES };
 
     return (
         <Providers
             initialSession={initialSession}
-            initialContentType={initialContentType}
-            initialCharacterId={initialCharacterId}
+            initialContentType={preferences.sidebarContentType as SidebarContentType}
+            initialCharacterId={preferences.currentCharacter}
         >
             <div className="flex w-full bg-black text-white min-h-screen">
-                <LeftSidebar initialExpanded={isLeftSidebarExpanded} />
-                <MainWrapper initialExpanded={isLeftSidebarExpanded}>
+                <LeftSidebar initialExpanded={preferences.leftSidebarExpanded} />
+                <MainWrapper initialExpanded={preferences.leftSidebarExpanded}>
                     {children}
                 </MainWrapper>
-                <RightSidebar initialExpanded={isRightSidebarExpanded} />
+                <RightSidebar initialExpanded={preferences.rightSidebarExpanded} />
             </div>
             {/* UNCOMMENT THIS FOR REACT QUERY DEVTOOLS */}
             {/* process.env.NODE_ENV === "development" && <ReactQueryDevtools /> */}
