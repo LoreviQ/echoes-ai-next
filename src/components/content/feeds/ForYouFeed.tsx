@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { ContentCard } from '../cards/content';
 import { ContentReference } from '@/types/content';
 import { useContentItem } from '@/hooks/reactQuery/useContentItem';
@@ -8,6 +8,28 @@ import { useFeed } from '@/contexts/FeedContext';
 
 export function ForYouFeed() {
     const { currentFeed, isLoading, error, newPage, refreshFeed } = useFeed();
+    const observerTarget = useRef(null);
+
+    const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !isLoading) {
+            newPage();
+        }
+    }, [isLoading, newPage]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(handleObserver, {
+            root: null,
+            rootMargin: '20px',
+            threshold: 1.0
+        });
+
+        if (observerTarget.current) {
+            observer.observe(observerTarget.current);
+        }
+
+        return () => observer.disconnect();
+    }, [handleObserver]);
 
     // Load initial page on component mount
     useEffect(() => {
@@ -67,22 +89,14 @@ export function ForYouFeed() {
                 ))}
             </div>
 
-            {/* Load more and refresh buttons */}
-            <div className="w-full p-4 text-center border-t border-zinc-800 flex justify-center space-x-4">
-                <button
-                    onClick={() => newPage()}
-                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md text-white"
-                    disabled={isLoading}
-                >
-                    {isLoading ? 'Loading...' : 'Load More'}
-                </button>
-                <button
-                    onClick={() => refreshFeed()}
-                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md text-white"
-                    disabled={isLoading}
-                >
-                    Refresh Feed
-                </button>
+            {/* Infinite scroll observer target */}
+            <div
+                ref={observerTarget}
+                className="w-full p-4 text-center"
+            >
+                {isLoading && (
+                    <p className="text-zinc-400">Loading more...</p>
+                )}
             </div>
         </div>
     );
