@@ -11,9 +11,10 @@ import { useThreadsInvalidation } from '@/hooks/reactQuery/useThreads';
 
 interface CharacterActionsProps {
     character: Character;
+    isOwner: boolean;
 }
 
-export function CharacterActions({ character }: CharacterActionsProps) {
+export function CharacterActions({ character, isOwner }: CharacterActionsProps) {
     const { mutate: createPost, isPending } = useCreatePost();
     const { isOpen, toggle, dropdownRef } = useDropdown();
     const { setContentType, setCurrentCharacter } = useRightSidebar();
@@ -67,21 +68,23 @@ export function CharacterActions({ character }: CharacterActionsProps) {
                         tooltip="Show Messages"
                         className="bg-black border border-white text-white hover:bg-zinc-900"
                     />
-                    <div className="relative" ref={dropdownRef}>
-                        <CircleActionButton
-                            onClick={toggle}
-                            icon={SettingsIcon}
-                            tooltip="Character Actions"
-                            className="bg-black border border-white text-white hover:bg-zinc-900"
-                        />
-                        {isOpen && (
-                            <Dropdown className='w-50'>
-                                <DropdownItem onClick={handleGeneratePost}>
-                                    Generate a Post
-                                </DropdownItem>
-                            </Dropdown>
-                        )}
-                    </div>
+                    {isOwner && (
+                        <div className="relative" ref={dropdownRef}>
+                            <CircleActionButton
+                                onClick={toggle}
+                                icon={SettingsIcon}
+                                tooltip="Character Actions"
+                                className="bg-black border border-white text-white hover:bg-zinc-900"
+                            />
+                            {isOpen && (
+                                <Dropdown className='w-50'>
+                                    <DropdownItem onClick={handleGeneratePost}>
+                                        Generate a Post
+                                    </DropdownItem>
+                                </Dropdown>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </>
