@@ -13,7 +13,6 @@ export function ForYouFeed() {
         refetch,
         isRefetching
     } = useMixedFeed();
-
     // Handle feed loading state when initially loading
     if (isFeedLoading && !feedReferences) {
         return (

@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function updateSession(request: NextRequest, publicUrls: string[]) {
+export async function updateSession(request: NextRequest, privateUrls: string[]) {
     let supabaseResponse = NextResponse.next({
         request,
     })
@@ -36,12 +36,10 @@ export async function updateSession(request: NextRequest, publicUrls: string[]) 
     const {
         data: { user },
     } = await supabase.auth.getUser()
-    if (
-        !user &&
-        !publicUrls.includes(request.nextUrl.pathname) &&
-        !request.nextUrl.pathname.startsWith('/auth')
-    ) {
-        // no user, potentially respond by redirecting the user to the login page
+
+    // Check if the current path requires authentication
+    if (!user && privateUrls.includes(request.nextUrl.pathname)) {
+        // no user and trying to access private URL, redirect to login
         const url = request.nextUrl.clone()
         url.pathname = '/login'
         return NextResponse.redirect(url)

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { updateSession } from '@/utils/supabase.middleware'
 
 export async function middleware(request: NextRequest) {
-    const publicUrls = ['/home', '/login'];
+    const privateUrls = ['/notifications', '/settings'];
 
     // Handle root path redirection
     if (request.nextUrl.pathname === '/') {
@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Get the response from the authentication middleware
-    const response = await updateSession(request, publicUrls)
+    const response = await updateSession(request, privateUrls)
 
     // Read sidebar preferences from cookies or use default values
     const rightSidebarExpanded = request.cookies.get('right_sidebar_expanded')?.value === 'true' || false
