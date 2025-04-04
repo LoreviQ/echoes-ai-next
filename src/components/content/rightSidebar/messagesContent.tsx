@@ -10,16 +10,6 @@ import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import { formatFriendlyDate } from '@/utils/dateFormat';
 import dynamic from 'next/dynamic';
 
-export const MessagesHeader = dynamic(
-    () => Promise.resolve(MessagesHeaderComponent),
-    { ssr: false }
-);
-
-export const MessagesContent = dynamic(
-    () => Promise.resolve(MessagesContentComponent),
-    { ssr: false }
-);
-
 const MessagesHeaderComponent = () => {
     const { active: isLoggedIn } = useSession();
     const { currentCharacter, getThreadMessages } = useRightSidebar();
@@ -80,7 +70,7 @@ const MessagesHeaderComponent = () => {
     )
 }
 
-export const MessagesContentComponent = () => {
+const MessagesContentComponent = () => {
     const { active: isLoggedIn } = useSession();
     const { currentCharacter, getThreadMessages } = useRightSidebar();
     const threadData = isLoggedIn ? getThreadMessages() : null;
@@ -222,3 +212,12 @@ function ChatMessage({ message }: ChatMessageProps) {
         </div>
     );
 }
+
+// Export the dynamic components
+export const MessagesHeader = dynamic(() => Promise.resolve(MessagesHeaderComponent), {
+    ssr: false
+});
+
+export const MessagesContent = dynamic(() => Promise.resolve(MessagesContentComponent), {
+    ssr: false
+});

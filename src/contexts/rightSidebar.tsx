@@ -59,7 +59,15 @@ export function RightSidebarProvider({
     // Use the useCharacter hook to fetch the initial character
     const { data: initialCharacter } = useCharacter(initialCharacterId);
     const [contentType, setContentType] = useState<SidebarContentType>(initialContentType);
-    const [currentCharacter, setCurrentCharacter] = useState<Character | null>(initialCharacter ? initialCharacter : null);
+    const [currentCharacter, setCurrentCharacter] = useState<Character | null>(null);
+
+    // Update currentCharacter when initialCharacter becomes available
+    useEffect(() => {
+        if (initialCharacter) {
+            setCurrentCharacter(initialCharacter);
+        }
+    }, [initialCharacter]);
+
     const [selectedThreadId, setSelectedThreadId] = useState<string | undefined>(undefined);
 
     // Move useThreads to the top level and make it depend on the currentCharacter
