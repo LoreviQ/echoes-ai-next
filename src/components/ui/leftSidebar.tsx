@@ -64,18 +64,20 @@ export default function LeftSidebar({ initialExpanded = true }: LeftSidebarProps
                 <div className={`bg-black text-white w-[84px] xl:w-[280px] h-screen transition-all duration-300 border-r border-zinc-600 flex flex-col`}>
                     <div className="p-4 flex-1 overflow-y-auto">
                         <div className="space-y-4">
-                            <TypefaceOutlined
-                                text="EchoesAI"
-                                outlineColour="white"
-                                className="hidden xl:block text-5xl"
-                                onClick={toggleSidebar}
-                            />
-                            <TypefaceOutlined
-                                text="EAI"
-                                outlineColour="white"
-                                className="xl:hidden text-3xl"
-                                onClick={toggleSidebar}
-                            />
+                            <div className="flex justify-center">
+                                <TypefaceOutlined
+                                    text="EchoesAI"
+                                    outlineColour="white"
+                                    className="hidden xl:block text-5xl"
+                                    onClick={toggleSidebar}
+                                />
+                                <TypefaceOutlined
+                                    text="EAI"
+                                    outlineColour="white"
+                                    className="xl:hidden text-3xl"
+                                    onClick={toggleSidebar}
+                                />
+                            </div>
                             <div className="flex flex-col space-y-2">
                                 {navigationItems.map((item) => (
                                     <div key={item.path} className="w-full">
