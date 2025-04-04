@@ -6,11 +6,11 @@ import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { useRightSidebar, SidebarContentType } from "@/contexts/rightSidebar";
 import { setPreference } from "@/utils/preferences";
 import { HeaderLoading, ContentLoading } from '@/components/ui/loading';
-import { ThoughtsHeader, ThoughtsContent } from '@/hooks/content/useThoughtsContent';
-import { EventsHeader, EventsContent } from '@/hooks/content/useEventsContent';
-import { MessagesHeader, MessagesContent } from '@/hooks/content/useMessagesContent';
-import { DescriptionHeader, DescriptionContent } from '@/hooks/content/useDescriptionContent';
-import { AdvancedSettingsHeader, AdvancedSettingsContent } from '@/hooks/content/useAdvanceSettings';
+import { ThoughtsHeader, ThoughtsContent } from '@/components/content/rightSidebar/thoughtsContent';
+import { EventsHeader, EventsContent } from '@/components/content/rightSidebar/eventsContent';
+import { MessagesHeader, MessagesContent } from '@/components/content/rightSidebar/messagesContent';
+import { DescriptionHeader, DescriptionContent } from '@/components/content/rightSidebar/descriptionContent';
+import { AdvancedSettingsHeader, AdvancedSettingsContent } from '@/components/content/rightSidebar/advancedSettings';
 
 interface SidebarContentComponents {
     Header: React.ComponentType;
