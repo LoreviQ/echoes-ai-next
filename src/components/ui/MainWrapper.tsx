@@ -9,7 +9,7 @@ interface MainWrapperProps {
 
 export default function MainWrapper({ children, initialExpanded }: MainWrapperProps) {
     return (
-        <main className={`w-full min-w-[320px] flex-1 h-screen overflow-y-auto ${!initialExpanded && 'sm:max-w-[600px] sm:flex-none'}`}>
+        <main className={`w-full min-w-[320px] flex-1 h-screen overflow-y-auto transition-all duration-300 ${!initialExpanded && 'sm:max-w-[600px] sm:flex-none'}`}>
             {children}
         </main>
     );

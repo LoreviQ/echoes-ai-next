@@ -42,7 +42,7 @@ export default async function MainLayout({
                 <RightSidebar initialExpanded={isRightSidebarExpanded} />
             </div>
             {/* UNCOMMENT THIS FOR REACT QUERY DEVTOOLS */}
-            {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
+            {/* process.env.NODE_ENV === "development" && <ReactQueryDevtools /> */}
         </Providers>
     );
 }

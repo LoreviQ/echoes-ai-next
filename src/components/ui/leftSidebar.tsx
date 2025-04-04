@@ -62,7 +62,7 @@ export default function LeftSidebar({ initialExpanded = true }: LeftSidebarProps
     };
 
     return (
-        <div className={`hidden sm:flex ${!isExpanded ? 'sm:flex-1 sm:justify-end' : ''}`}>
+        <div className={`hidden sm:flex transition-all duration-300 ${!isExpanded ? 'sm:flex-1 sm:justify-end' : ''}`}>
             <div className="hidden sm:block">
                 <div className={`bg-black text-white w-[84px] xl:w-[280px] h-screen transition-all duration-300 border-r border-zinc-600 flex flex-col`}>
                     <div className="p-4 flex-1 overflow-y-auto">
