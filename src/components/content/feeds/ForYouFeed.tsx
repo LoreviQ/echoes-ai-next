@@ -7,7 +7,7 @@ import { useContentItem } from '@/hooks/reactQuery/useContentItem';
 import { useFeed } from '@/contexts/FeedContext';
 
 export function ForYouFeed() {
-    const { feedReferences, isLoading, error, isRefetching, fetchFeed } = useFeed();
+    const { feedReferences, isLoading, error, fetchFeed, refreshFeed } = useFeed();
 
     // Fetch feed on component mount only if we don't have any feed references
     useEffect(() => {
@@ -57,13 +57,6 @@ export function ForYouFeed() {
 
     return (
         <div className="w-full">
-            {/* Optional refetching indicator */}
-            {isRefetching && (
-                <div className="w-full p-2 text-center bg-zinc-800 bg-opacity-50">
-                    <p className="text-sm text-zinc-300">Refreshing content...</p>
-                </div>
-            )}
-
             {/* Content feed */}
             <div className="w-full">
                 {feedReferences.map((contentRef) => (
@@ -77,11 +70,10 @@ export function ForYouFeed() {
             {/* Refresh button */}
             <div className="w-full p-4 text-center border-t border-zinc-800">
                 <button
-                    onClick={() => fetchFeed(true)}
-                    disabled={isRefetching}
+                    onClick={() => refreshFeed()}
                     className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md text-white"
                 >
-                    {isRefetching ? 'Refreshing...' : 'Refresh Feed'}
+                    Refresh Feed
                 </button>
             </div>
         </div>
