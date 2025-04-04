@@ -18,6 +18,7 @@ export default async function MainLayout({
     const cookieStore = await cookies();
     const rightSidebarCookie = cookieStore.get('right_sidebar_expanded');
     const isRightSidebarExpanded = rightSidebarCookie?.value === 'true' || false;
+    const ifLeftSidebarExpanded = true;
 
     const contentTypeCookie = cookieStore.get('sidebar_content_type');
     const initialContentType = contentTypeCookie?.value as SidebarContentType || SidebarContentType.THOUGHTS;
@@ -32,13 +33,13 @@ export default async function MainLayout({
             initialCharacterId={initialCharacterId}
         >
             <div className="flex w-full bg-black text-white min-h-screen">
-                <div className="hidden sm:flex sm:flex-1 justify-end">
+                <div className={`hidden sm:flex ${!ifLeftSidebarExpanded ? 'sm:flex-1 sm:justify-end' : ''}`}>
                     <div className="hidden sm:block">
                         <LeftSidebar />
                     </div>
                 </div>
 
-                <main className="w-full min-w-[320px] sm:max-w-[600px] sm:flex-none flex-1 h-screen overflow-y-auto">
+                <main className={`w-full min-w-[320px] flex-1 h-screen overflow-y-auto ${!ifLeftSidebarExpanded && 'sm:max-w-[600px] sm:flex-none'}`}>
                     {children}
                 </main>
 
