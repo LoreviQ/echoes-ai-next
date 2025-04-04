@@ -7,17 +7,17 @@ import { useContentItem } from '@/hooks/reactQuery/useContentItem';
 import { useFeed } from '@/contexts/FeedContext';
 
 export function ForYouFeed() {
-    const { feedReferences, isLoading, error, fetchFeed, refreshFeed } = useFeed();
+    const { currentFeed, isLoading, error, newPage, refreshFeed } = useFeed();
 
-    // Fetch feed on component mount only if we don't have any feed references
+    // Load initial page on component mount
     useEffect(() => {
-        if (feedReferences.length === 0) {
-            fetchFeed();
+        if (currentFeed.length === 0) {
+            newPage();
         }
-    }, [fetchFeed, feedReferences.length]);
+    }, [newPage, currentFeed.length]);
 
     // Handle feed loading state when initially loading
-    if (isLoading && !feedReferences.length) {
+    if (isLoading && !currentFeed.length) {
         return (
             <div className="w-full p-4 text-center">
                 <p className="text-zinc-400">Loading feed...</p>
@@ -31,7 +31,7 @@ export function ForYouFeed() {
             <div className="w-full p-4 text-center">
                 <p className="text-red-500">Failed to load feed</p>
                 <button
-                    onClick={() => fetchFeed()}
+                    onClick={() => refreshFeed()}
                     className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-white"
                 >
                     Retry
@@ -41,12 +41,12 @@ export function ForYouFeed() {
     }
 
     // Handle empty feed
-    if (!feedReferences || feedReferences.length === 0) {
+    if (!currentFeed || currentFeed.length === 0) {
         return (
             <div className="w-full p-4 text-center">
                 <p className="text-zinc-400">No content found!</p>
                 <button
-                    onClick={() => fetchFeed()}
+                    onClick={() => refreshFeed()}
                     className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-white"
                 >
                     Refresh
@@ -59,7 +59,7 @@ export function ForYouFeed() {
         <div className="w-full">
             {/* Content feed */}
             <div className="w-full">
-                {feedReferences.map((contentRef) => (
+                {currentFeed.map((contentRef) => (
                     <FeedItem
                         key={`${contentRef.type}-${contentRef.id}`}
                         contentRef={contentRef}
@@ -67,11 +67,19 @@ export function ForYouFeed() {
                 ))}
             </div>
 
-            {/* Refresh button */}
-            <div className="w-full p-4 text-center border-t border-zinc-800">
+            {/* Load more and refresh buttons */}
+            <div className="w-full p-4 text-center border-t border-zinc-800 flex justify-center space-x-4">
+                <button
+                    onClick={() => newPage()}
+                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md text-white"
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Loading...' : 'Load More'}
+                </button>
                 <button
                     onClick={() => refreshFeed()}
                     className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md text-white"
+                    disabled={isLoading}
                 >
                     Refresh Feed
                 </button>
