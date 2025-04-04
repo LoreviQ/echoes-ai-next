@@ -4,7 +4,7 @@ import { Post } from "@/types/post";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets/icons";
 import { formatFriendlyDate } from "@/utils/dateFormat";
 import { MarkdownContent } from "../../ui/MarkdownContent";
-import Image from "next/image";
+import PreviewImage from "@/components/images/PreviewImage";
 
 export function PostCard({ post }: { post: Post }) {
     const { data: character, isLoading, error } = useCharacter(post.character_id);
@@ -35,12 +35,12 @@ export function PostCard({ post }: { post: Post }) {
             <div className="flex space-x-4">
                 {/* Avatar */}
                 <div className="flex-shrink-0 pt-2">
-                    <Image
+                    <PreviewImage
                         src={avatarUrl}
                         alt={`${character.name}'s avatar`}
+                        className="rounded-full"
                         width={48}
                         height={48}
-                        className="rounded-full"
                     />
                 </div>
 

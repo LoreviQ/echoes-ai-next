@@ -9,9 +9,11 @@ interface PreviewImageProps {
     fill?: boolean;
     className?: string;
     priority?: boolean;
+    width?: number;
+    height?: number;
 }
 
-export default function PreviewImage({ src, alt, fill, className, priority }: PreviewImageProps) {
+export default function PreviewImage({ src, alt, fill, className, priority, width, height }: PreviewImageProps) {
     const { openPreview } = useImagePreview();
 
     return (
@@ -26,6 +28,8 @@ export default function PreviewImage({ src, alt, fill, className, priority }: Pr
                 src={src}
                 alt={alt}
                 fill={fill}
+                width={!fill ? width : undefined}
+                height={!fill ? height : undefined}
                 className={className}
                 priority={priority}
             />
