@@ -26,7 +26,7 @@ export function CollapsableActionButton({ label, onClick, icon: Icon, className,
             <div className="w-8 h-8 flex items-center justify-center">
                 <Icon />
             </div>
-            <span className="ml-3 md:hidden xl:block">
+            <span className="ml-3 hidden xl:block">
                 {label}
             </span>
         </button>

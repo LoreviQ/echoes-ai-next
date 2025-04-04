@@ -32,17 +32,17 @@ export default async function MainLayout({
             initialCharacterId={initialCharacterId}
         >
             <div className="flex w-full bg-black text-white min-h-screen">
-                <div className="flex flex-1 justify-end">
-                    <div className="hidden md:block">
+                <div className="hidden sm:flex sm:flex-1 justify-end">
+                    <div className="hidden sm:block">
                         <LeftSidebar />
                     </div>
                 </div>
 
-                <main className="w-[600px] flex-none h-screen overflow-y-auto">
+                <main className="w-full min-w-[320px] sm:max-w-[600px] sm:flex-none flex-1 h-screen overflow-y-auto">
                     {children}
                 </main>
 
-                <div className="flex flex-1 justify-start">
+                <div className="hidden lg:flex lg:flex-1 justify-start">
                     <div className="hidden lg:block w-full">
                         <RightSidebar initialExpanded={isRightSidebarExpanded} />
                     </div>

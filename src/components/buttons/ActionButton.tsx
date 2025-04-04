@@ -28,7 +28,7 @@ export function ActionButton({ label, onClick, icon: Icon, className }: ActionBu
                     <Icon />
                 </div>
             )}
-            <span className="md:hidden xl:block">
+            <span className="hidden xl:block">
                 {label}
             </span>
         </button>
