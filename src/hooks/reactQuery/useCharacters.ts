@@ -62,6 +62,11 @@ export function useCharacters() {
         }
     }, [queryClient]);
 
+    const updateCharacter = useCallback((id: string, character: Character) => {
+        // Update the character in the cache
+        queryClient.setQueryData(['character', id], character);
+    }, [queryClient]);
+
     // Get the actual character objects from the IDs
     const characters = characterIds?.map(id =>
         queryClient.getQueryData<Character>(['character', id])
@@ -72,6 +77,7 @@ export function useCharacters() {
         isLoading,
         error,
         getCharactersForUser,
+        updateCharacter,
         refetch,
         isRefetching
     };

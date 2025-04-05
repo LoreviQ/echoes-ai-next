@@ -1,23 +1,25 @@
 'use client';
 
-import { Character } from "@/types";
+import { Character, CharacterBio } from "@/types";
 import { MarkdownContent } from "@/components/ui";
 import { useState } from "react";
 import { PenSquareIcon, CheckSquareIcon } from "@/assets";
 import { database } from "@/utils";
+import { useCharacters } from "@/hooks/reactQuery/useCharacters";
 
 interface EditableBioProps {
     character: Character;
     isOwner: boolean;
 }
-export function EditableBio({ character, isOwner }: EditableBioProps) {
+export function EditableBio({ character: initialCharacter, isOwner }: EditableBioProps) {
+    const [character, setCharacter] = useState(initialCharacter);
     const [isEditing, setIsEditing] = useState(false);
     const toggleEdit = () => {
         setIsEditing(!isEditing);
     }
 
     if (isEditing) {
-        return <BioForm character={character} toggleEdit={toggleEdit} />;
+        return <BioForm character={character} toggleEdit={toggleEdit} setCharacter={setCharacter} />;
     }
     return (
         <Bio character={character} isOwner={isOwner} toggleEdit={toggleEdit} />
@@ -59,16 +61,22 @@ function Bio({ character, isOwner, toggleEdit: onClick }: BioProps) {
 interface BioFormProps {
     character: Character;
     toggleEdit: (e: React.FormEvent) => void;
+    setCharacter: (character: Character) => void;
 }
-function BioForm({ character, toggleEdit: onClick }: BioFormProps) {
+function BioForm({ character, toggleEdit: onClick, setCharacter }: BioFormProps) {
     const [name, setName] = useState(character.name);
     const [path, setPath] = useState(character.path);
     const [bio, setBio] = useState(character.bio || "");
+    const { updateCharacter } = useCharacters();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onClick(e);
-        database.updateCharacterBio(character.id, { name, path, bio });
+        const newCharacter: Character = { ...character, name, path, bio };
+        const newBio: CharacterBio = { name, path, bio };
+        database.updateCharacterBio(character.id, newBio);
+        setCharacter(newCharacter);
+        updateCharacter(character.id, newCharacter);
     }
 
     return (
