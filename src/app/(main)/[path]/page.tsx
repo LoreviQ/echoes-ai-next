@@ -15,13 +15,13 @@ export default async function CharacterPage(
     const supabase = await createServerClient();
 
     // Fetch character data
-    const { character, error } = await databaseQueries.getCharacter(params.path);
+    const { character, error } = await databaseQueries.getCharacter(params.path, supabase);
     if (error || !character) {
         notFound();
     }
 
     // Get current user
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user } = await databaseQueries.getLoggedInUser(supabase);
     const isOwner = user?.id === character.user_id;
 
     return (
