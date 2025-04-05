@@ -8,7 +8,7 @@ import { useRightSidebar, SidebarContentType } from "@/contexts";
 import { setPreference } from "@/utils";
 import { HeaderLoading, ContentLoading } from '@/components/ui';
 import * as RightSidebarContent from '@/components/content/rightSidebar';
-
+import { CharacterIdentity } from "@/components/ui";
 interface SidebarContentComponents {
     Header: React.ComponentType;
     Content: React.ComponentType;
@@ -94,6 +94,7 @@ interface SidebarHeaderProps {
 
 const SidebarHeader = React.forwardRef<HTMLDivElement, SidebarHeaderProps>(
     ({ isExpanded, toggleSidebar, children }, ref) => {
+        const { currentCharacter } = useRightSidebar();
         return (
             <div
                 ref={ref}
@@ -115,7 +116,12 @@ const SidebarHeader = React.forwardRef<HTMLDivElement, SidebarHeaderProps>(
                         />
                     </div>
                 </div>
-                {children && children}
+                {children && currentCharacter && (
+                    <div className="flex flex-wrap items-center justify-between gap-4 mt-4 mx-4">
+                        <CharacterIdentity character={currentCharacter} />
+                        {children}
+                    </div>
+                )}
             </div>
         );
     }

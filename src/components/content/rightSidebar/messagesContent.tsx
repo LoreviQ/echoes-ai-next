@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { Message } from '@/types';
 import { useRightSidebar, useSession } from "@/contexts";
 import { RightArrowIcon } from '@/assets';
-import { MarkdownContent, CharacterIdentity } from '@/components/ui';
+import { MarkdownContent } from '@/components/ui';
 import { formatFriendlyDate } from '@/utils';
 
 const MessagesHeaderComponent = () => {
@@ -18,38 +18,31 @@ const MessagesHeaderComponent = () => {
         return null;
     }
 
-    // Type guard to ensure required props are present when logged in
-    if (isLoggedIn && !threadData) {
+    if (!threadData) {
         throw new Error('Required props missing for logged in state');
     }
 
     return (
-        <div className="flex flex-wrap items-center justify-between gap-4 mt-4 mx-4">
-            <CharacterIdentity character={currentCharacter} />
-
-            {isLoggedIn && threadData && (
-                <div className="w-full sm:w-auto ml-auto">
-                    <select
-                        className="w-full bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-sm"
-                        value={threadData.selectedThreadId}
-                        onChange={(e) => threadData.setSelectedThreadId(e.target.value)}
-                    >
-                        {threadData.threadsLoading ? (
-                            <option>Loading threads...</option>
-                        ) : !threadData.threads ? (
-                            <option>No threads available</option>
-                        ) : threadData.threads.length === 0 ? (
-                            <option>No threads available</option>
-                        ) : (
-                            threadData.threads.map((thread) => (
-                                <option key={thread.id} value={thread.id}>
-                                    {thread.title}
-                                </option>
-                            ))
-                        )}
-                    </select>
-                </div>
-            )}
+        <div className="w-full sm:w-auto ml-auto">
+            <select
+                className="w-full bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-sm"
+                value={threadData.selectedThreadId}
+                onChange={(e) => threadData.setSelectedThreadId(e.target.value)}
+            >
+                {threadData.threadsLoading ? (
+                    <option>Loading threads...</option>
+                ) : !threadData.threads ? (
+                    <option>No threads available</option>
+                ) : threadData.threads.length === 0 ? (
+                    <option>No threads available</option>
+                ) : (
+                    threadData.threads.map((thread) => (
+                        <option key={thread.id} value={thread.id}>
+                            {thread.title}
+                        </option>
+                    ))
+                )}
+            </select>
         </div>
     )
 }

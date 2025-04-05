@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
 import { useRightSidebar } from "@/contexts";
-import { MarkdownContent, CharacterIdentity } from "@/components/ui";
+import { MarkdownContent } from "@/components/ui";
 import { PenSquareIcon, CheckSquareIcon } from "@/assets";
 
 const DescriptionHeaderComponent = () => {
@@ -25,19 +25,16 @@ const DescriptionHeaderComponent = () => {
     }
 
     return (
-        <div className="flex flex-wrap items-center justify-between gap-4 mt-4 mx-4">
-            <CharacterIdentity character={currentCharacter} />
-            <button
-                onClick={handleClick}
-                className="text-zinc-500 hover:text-white transition-colors"
-            >
-                {editCharacter ? (
-                    <CheckSquareIcon className="w-6 h-6" />
-                ) : (
-                    <PenSquareIcon className="w-6 h-6" />
-                )}
-            </button>
-        </div>
+        <button
+            onClick={handleClick}
+            className="text-zinc-500 hover:text-white transition-colors"
+        >
+            {editCharacter ? (
+                <CheckSquareIcon className="w-6 h-6" />
+            ) : (
+                <PenSquareIcon className="w-6 h-6" />
+            )}
+        </button>
     );
 };
 
