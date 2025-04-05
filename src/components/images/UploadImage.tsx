@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 
-import { createClient } from '@/utils';
+import { createClient, databaseQueries } from '@/utils';
 import type { SupabaseCellReference } from '@/types';
 
 interface UploadImageProps {
@@ -41,34 +41,17 @@ export default function UploadImage({
 
         try {
             setIsUploading(true);
+            // create reusable supabase client
             const supabase = createClient();
 
             // Upload file to storage
             const fileExt = file.name.split('.').pop();
             const filePath = `${reference.id}.${fileExt}`;
-
-            const { data: uploadData, error: uploadError } = await supabase
-                .storage
-                .from(bucketName)
-                .upload(filePath, file, {
-                    upsert: true
-                });
-
+            const { publicUrl, error: uploadError } = await databaseQueries.upload(bucketName, filePath, file, supabase);
             if (uploadError) throw uploadError;
 
-            // Get public URL
-            const { data: { publicUrl } } = supabase
-                .storage
-                .from(bucketName)
-                .getPublicUrl(filePath);
-
             // Update database reference
-            console.log(reference);
-            const { error: updateError } = await supabase
-                .from(reference.tableName)
-                .update({ [reference.columnName]: publicUrl })
-                .eq('id', reference.id);
-
+            const { error: updateError } = await databaseQueries.updateByReference(reference, { [reference.columnName]: publicUrl }, supabase);
             if (updateError) throw updateError;
 
             // Notify parent component

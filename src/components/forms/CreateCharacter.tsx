@@ -4,8 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
+import { Character } from '@/types';
 import { PROTECTED_ROUTES, getRandomWords } from '@/config';
-import { createClient, uploadImage, api, endpoints } from '@/utils';
+import { createClient, uploadImage, api, endpoints, databaseQueries } from '@/utils';
 import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
 import { uiHook, queryHook } from '@/hooks';
 import { SubmitButton, CircleActionButton } from '@/components/buttons';
@@ -92,7 +93,6 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
     const [bannerFile, setBannerFile] = useState<File | string | null>(null);
     const [avatarPreviewUrl, setAvatarPreviewUrl] = useState('/images/avatar-placeholder.jpg');
     const [bannerPreviewUrl, setBannerPreviewUrl] = useState('/images/banner-placeholder.jpg');
-    const supabase = createClient();
 
     // Load form state from React Query cache on component mount
     useEffect(() => {
@@ -231,7 +231,8 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
         setIsSubmitting(true);
 
         try {
-            const { data: { user }, error: userError } = await supabase.auth.getUser();
+            const supabase = createClient();
+            const { user, error: userError } = await databaseQueries.getLoggedInUser(supabase);
 
             if (!user || userError) {
                 throw new Error('Authentication error');
@@ -267,22 +268,24 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 }
             }
 
-            const { error: insertError } = await supabase
-                .from('characters')
-                .insert({
-                    user_id: user.id,
-                    name,
-                    path,
-                    bio: bio || null,
-                    description: description || null,
-                    public: isPublic,
-                    nsfw: isNsfw,
-                    avatar_url: avatarUrl,
-                    banner_url: bannerUrl,
-                    tags: tags,
-                    gender: gender === Gender.CUSTOM ? customGender : gender
-                });
+            const character: Character = {
+                user_id: user.id,
+                name,
+                path,
+                bio: bio || null,
+                description: description || null,
+                public: isPublic,
+                nsfw: isNsfw,
+                avatar_url: avatarUrl,
+                banner_url: bannerUrl,
+                tags,
+                gender: gender === Gender.CUSTOM ? customGender : gender,
+                id: '',
+                created_at: '',
+                updated_at: ''
+            }
 
+            const { error: insertError } = await databaseQueries.insertCharacter(character, supabase);
             if (insertError) {
                 console.error('Error creating character:', insertError);
                 throw insertError;

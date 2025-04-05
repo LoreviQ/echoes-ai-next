@@ -2,23 +2,14 @@ import { useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Character } from '@/types';
-import { createClient } from '@/utils';
+import { databaseQueries } from '@/utils';
 
 // Fetch characters using Supabase directly
 async function fetchCharacters(): Promise<{ characters: Character[], characterIds: string[] }> {
     try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-            .from('characters')
-            .select('*')
-            .eq('public', true)
-            .order('created_at', { ascending: false });
-
+        const { characters, error } = await databaseQueries.getCharacters();
         if (error) throw error;
-
-        const characters = data || [];
         const characterIds = characters.map(character => character.id);
-
         return { characters, characterIds };
     } catch (error) {
         console.error('Error fetching characters:', error);
@@ -29,15 +20,9 @@ async function fetchCharacters(): Promise<{ characters: Character[], characterId
 // Fetch a single character by ID
 async function fetchCharacterById(id: string): Promise<Character | null> {
     try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-            .from('characters')
-            .select('*')
-            .eq('id', id)
-            .single();
-
+        const { character, error } = await databaseQueries.getCharacter(id);
         if (error) throw error;
-        return data;
+        return character;
     } catch (error) {
         console.error('Error fetching character:', error);
         throw error;

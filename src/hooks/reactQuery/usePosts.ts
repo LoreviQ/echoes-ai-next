@@ -1,23 +1,14 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
 import { Post } from '@/types';
-import { api, endpoints, createClient } from '@/utils';
+import { api, endpoints, databaseQueries } from '@/utils';
 
 // Fetch posts using Supabase directly
 async function fetchPosts(characterId: string): Promise<{ posts: Post[], postIds: string[] }> {
     try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-            .from('posts')
-            .select('*')
-            .eq('character_id', characterId)
-            .order('created_at', { ascending: false });
-
+        const { posts, error } = await databaseQueries.getPostsByCharacterId(characterId);
         if (error) throw error;
-
-        const posts = data || [];
         const postIds = posts.map(post => post.id);
-
         return { posts, postIds };
     } catch (error) {
         console.error('Error fetching posts:', error);
@@ -79,17 +70,10 @@ export function usePost(postId: string) {
             if (cachedPost) return cachedPost;
 
             // Fetch from API if not in cache
-            const supabase = createClient();
-            const { data, error } = await supabase
-                .from('posts')
-                .select('*')
-                .eq('id', postId)
-                .single();
-
+            const { post, error } = await databaseQueries.getPost(postId);
             if (error) throw error;
-            if (!data) throw new Error(`Post not found: ${postId}`);
-
-            return data;
+            if (!post) throw new Error(`Post not found: ${postId}`);
+            return post;
         },
         staleTime: 5 * 60 * 1000, // 5 minutes stale time
     });

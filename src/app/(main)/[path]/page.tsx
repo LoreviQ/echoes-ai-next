@@ -15,7 +15,7 @@ export default async function CharacterPage(
     const supabase = await createServerClient();
 
     // Fetch character data
-    const { character, error } = await databaseQueries.getCharacter(params.path, supabase);
+    const { character, error } = await databaseQueries.getCharacterByPath(params.path, supabase);
     if (error || !character) {
         notFound();
     }
