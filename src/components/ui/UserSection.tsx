@@ -1,6 +1,6 @@
 'use client';
 
-import { useSession } from '@/contexts/session.client';
+import { useSession } from '@/contexts';
 import { NavButton, UserButton } from "@/components/buttons";
 import { LoginIcon } from "@/assets";
 

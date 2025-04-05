@@ -21,7 +21,7 @@ export enum SidebarContentType {
     ADVANCED_SETTINGS = 'advanced_settings'
 }
 
-export interface RightSidebarContextType {
+interface RightSidebarContextType {
     contentType: SidebarContentType;
     setContentType: (type: SidebarContentType) => void;
     currentCharacter: Character | null;
@@ -34,7 +34,7 @@ export interface RightSidebarContextType {
     isSending: boolean;
 }
 
-export const RightSidebarContext = createContext<RightSidebarContextType>({
+const RightSidebarContext = createContext<RightSidebarContextType>({
     contentType: SidebarContentType.NONE,
     setContentType: () => { },
     currentCharacter: null,

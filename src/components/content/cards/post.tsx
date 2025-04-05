@@ -3,7 +3,7 @@ import { useCharacter } from "@/hooks/reactQuery/useCharacters";
 import { Post } from "@/types/post";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets";
 import { formatFriendlyDate } from "@/utils/dateFormat";
-import { MarkdownContent } from "../../ui/MarkdownContent";
+import { MarkdownContent } from "@/components/ui";
 import { PreviewImage } from "@/components/images";
 import Link from "next/link";
 

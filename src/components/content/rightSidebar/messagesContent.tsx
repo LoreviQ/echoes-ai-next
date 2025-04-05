@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useRightSidebar } from "@/contexts/rightSidebar";
-import { useSession } from "@/contexts/session.client";
+import dynamic from 'next/dynamic';
+
+import { useRightSidebar, useSession } from "@/contexts";
 import { Message } from '@/types/thread';
 import { PreviewImage } from '@/components/images';
 import { RightArrowIcon } from '@/assets';
 import { MarkdownContent } from '@/components/ui';
 import { formatFriendlyDate } from '@/utils/dateFormat';
-import dynamic from 'next/dynamic';
 
 const MessagesHeaderComponent = () => {
     const { active: isLoggedIn } = useSession();

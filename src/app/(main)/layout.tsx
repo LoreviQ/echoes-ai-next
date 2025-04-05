@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
-import { LeftSidebar, RightSidebar, MainWrapper } from "@/components/ui";
-import { getInitialSession } from "@/contexts/session.server";
-import { Providers } from "./providers";
-import { SidebarContentType } from "@/contexts/rightSidebar";
-import { UserPreferences, DEFAULT_PREFERENCES } from "@/types/preferences";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+import { Providers } from "./providers";
+import { LeftSidebar, RightSidebar, MainWrapper } from "@/components/ui";
+import { SidebarContentType } from "@/contexts";
+import { UserPreferences, DEFAULT_PREFERENCES } from "@/types/preferences";
+import { createClient } from '@/utils/supabase.server';
 
 export default async function MainLayout({
     children,
@@ -38,4 +39,13 @@ export default async function MainLayout({
             {/* process.env.NODE_ENV === "development" && <ReactQueryDevtools /> */}
         </Providers>
     );
+}
+
+async function getInitialSession() {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    return {
+        active: !!user,
+        user: user?.user_metadata ?? null
+    };
 }

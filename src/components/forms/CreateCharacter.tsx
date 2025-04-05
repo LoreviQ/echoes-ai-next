@@ -40,7 +40,7 @@ const parseGender = (input: string): { gender: Gender; customValue?: string } =>
     return { gender: Gender.CUSTOM, customValue: input.trim() };
 };
 
-export interface CharacterFormData {
+interface CharacterFormData {
     name: string;
     path: string;
     bio: string;
@@ -71,7 +71,7 @@ interface StoredFormState {
     bannerFile: string | null;
 }
 
-export function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacterFormProps) {
+export default function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacterFormProps) {
     const router = useRouter();
     const queryClient = useQueryClient();
     const { invalidateCharacters } = useCharactersInvalidation();

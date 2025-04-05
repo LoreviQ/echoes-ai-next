@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { ContentCard } from '../cards/content';
+
+import { ContentCard } from '@/components/content/cards';
 import { ContentReference } from '@/types/content';
 import { useContentItem } from '@/hooks/reactQuery/useContentItem';
-import { useFeed } from '@/contexts/FeedContext';
+import { useFeed } from '@/contexts';
 
 export function ForYouFeed() {
     const { currentFeed, isLoading, error, newPage, refreshFeed } = useFeed();

@@ -6,7 +6,7 @@ import { useCreatePost } from '@/hooks/reactQuery/usePosts';
 import { useDropdown } from '@/hooks/ui/useDropdown';
 import { Dropdown, DropdownItem } from '@/components/ui';
 import { Character } from '@/types/character';
-import { useRightSidebar, SidebarContentType } from '@/contexts/rightSidebar';
+import { useRightSidebar, SidebarContentType } from '@/contexts';
 import { useThreadsInvalidation } from '@/hooks/reactQuery/useThreads';
 
 interface CharacterActionsProps {

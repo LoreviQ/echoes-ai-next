@@ -2,7 +2,8 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { useRightSidebar } from "@/contexts/rightSidebar";
+
+import { useRightSidebar } from "@/contexts";
 import { MarkdownContent } from "@/components/ui";
 
 const DescriptionHeaderComponent = () => {

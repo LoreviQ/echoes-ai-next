@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from "react";
+
 import { NavButton, ActionButton } from "@/components/buttons";
 import { UserSection } from "@/components/ui";
 import { TypefaceOutlined, HomeIcon, DocumentIcon, SettingsIcon, PlusIcon, UserGroupIcon } from "@/assets";
 import { useModal } from "@/hooks/ui/useModal";
-import { CreateCharacterForm } from "@/components/forms/CreateCharacter";
-import { useSession } from "@/contexts/session.client";
+import CreateCharacterForm from "@/components/forms/CreateCharacter";
+import { useSession } from "@/contexts";
 import { setPreference } from "@/utils/preferences";
 
 const navigationItems = [

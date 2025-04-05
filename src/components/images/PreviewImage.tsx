@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useImagePreview } from '@/contexts/imagePreview';
+
+import { useImagePreview } from '@/contexts';
 
 interface PreviewImageProps {
     src: string;

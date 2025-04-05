@@ -3,10 +3,13 @@
 'use client'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { SessionProvider } from "@/contexts/session.client";
-import { ImagePreviewProvider } from "@/contexts/imagePreview";
-import { RightSidebarProvider, SidebarContentType } from "@/contexts/rightSidebar";
-import { FeedProvider } from "@/contexts/FeedContext";
+import {
+    SessionProvider,
+    ImagePreviewProvider,
+    RightSidebarProvider,
+    FeedProvider,
+    SidebarContentType
+} from "@/contexts";
 import { useState } from 'react'
 
 
