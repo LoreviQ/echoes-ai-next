@@ -2,11 +2,8 @@
 
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { Character } from '@/types/character';
-import { useCharacter } from '@/hooks/reactQuery/useCharacters';
-import { useThreads } from '@/hooks/reactQuery/useThreads';
-import { useCreateMessage } from '@/hooks/reactQuery/useThreads';
+import { useCharacter, useThreads, useCreateMessage, useThreadMessages } from '@/hooks/reactQuery';
 import { Thread } from '@/types/thread';
-import { useThreadMessages } from '@/hooks/reactQuery/useThreads';
 import { Message } from '@/types/thread';
 import { useContext } from 'react';
 import { setPreference } from "@/utils/preferences";

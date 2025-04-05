@@ -1,4 +1,4 @@
-import { useSubscribe, useSubscriptions, useUnsubscribe } from "@/hooks/reactQuery/useSubscriptions";
+import { useSubscribe, useSubscriptions, useUnsubscribe } from "@/hooks/reactQuery";
 import { UseMutationResult } from "@tanstack/react-query";
 
 interface SubscriptionButtonProps {

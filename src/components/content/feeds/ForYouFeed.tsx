@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback } from 'react';
 
 import { ContentCard } from '@/components/content/cards';
 import { ContentReference } from '@/types/content';
-import { useContentItem } from '@/hooks/reactQuery/useContentItem';
+import { useContentItem } from '@/hooks/reactQuery';
 import { useFeed } from '@/contexts';
 
 export function ForYouFeed() {

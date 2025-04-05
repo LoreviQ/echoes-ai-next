@@ -10,9 +10,8 @@ import { SelectImage } from '@/components/images';
 import { uploadImage } from '@/utils/imageUpload';
 import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
 import { api, endpoints } from '@/utils/api';
-import { useDropdown } from '@/hooks/ui/useDropdown';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCharactersInvalidation } from '@/hooks/reactQuery/useCharacters';
+import { uiHook, queryHook } from '@/hooks';
 
 // Character form query key - use array format for proper typing
 const CHARACTER_FORM_KEY = ['character-form-state'];
@@ -74,8 +73,8 @@ interface StoredFormState {
 export default function CreateCharacterForm({ onSuccess, modal = false }: CreateCharacterFormProps) {
     const router = useRouter();
     const queryClient = useQueryClient();
-    const { invalidateCharacters } = useCharactersInvalidation();
-    const { isOpen, toggle, close, dropdownRef } = useDropdown();
+    const { invalidateCharacters } = queryHook.useCharactersInvalidation();
+    const { isOpen, toggle, close, dropdownRef } = uiHook.useDropdown();
     const [tags, setTags] = useState('');
     const [name, setName] = useState('');
     const [path, setPath] = useState('');

@@ -2,12 +2,10 @@
 
 import { DocumentIcon, SettingsIcon, SpeechBubbleIcon, ThoughtBubbleIcon, ExclamationIcon } from '@/assets';
 import { CircleActionButton } from '@/components/buttons';
-import { useCreatePost } from '@/hooks/reactQuery/usePosts';
-import { useDropdown } from '@/hooks/ui/useDropdown';
 import { Dropdown, DropdownItem } from '@/components/ui';
 import { Character } from '@/types/character';
 import { useRightSidebar, SidebarContentType } from '@/contexts';
-import { useThreadsInvalidation } from '@/hooks/reactQuery/useThreads';
+import { uiHook, queryHook } from '@/hooks';
 
 interface CharacterActionsProps {
     character: Character;
@@ -15,10 +13,10 @@ interface CharacterActionsProps {
 }
 
 export function CharacterActions({ character, isOwner }: CharacterActionsProps) {
-    const { mutate: createPost, isPending } = useCreatePost();
-    const { isOpen, toggle, dropdownRef } = useDropdown();
+    const { mutate: createPost, isPending } = queryHook.useCreatePost();
+    const { isOpen, toggle, dropdownRef } = uiHook.useDropdown();
     const { setContentType, setCurrentCharacter } = useRightSidebar();
-    const { invalidateThreads } = useThreadsInvalidation();
+    const { invalidateThreads } = queryHook.useThreadsInvalidation();
 
     const handleGeneratePost = () => {
         if (isPending) return;
