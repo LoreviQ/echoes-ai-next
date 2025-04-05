@@ -1,5 +1,6 @@
 import { Character } from "@/types";
 import { PreviewImage } from "../images";
+import Link from "next/link";
 
 export function CharacterIdentity({ character }: { character: Character }) {
     return (
@@ -16,7 +17,9 @@ export function CharacterIdentity({ character }: { character: Character }) {
             </div>
             <div className="flex flex-col items-center sm:items-start w-full sm:w-auto">
                 <span className="font-bold text-lg">{character.name}</span>
-                <span className="text-sm text-zinc-400">@{character.path}</span>
+                <Link href={`/${character.path}`} className="text-sm text-zinc-400 hover:underline">
+                    @{character.path}
+                </Link>
             </div>
         </div>
     )
