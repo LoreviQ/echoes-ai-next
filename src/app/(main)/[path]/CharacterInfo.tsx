@@ -1,5 +1,5 @@
 import { Character } from "@/types/character";
-import { DynamicImage } from "@/components/images/DynamicImage";
+import { DynamicImage } from "@/components/images";
 import { CharacterActions } from "./CharacterActions";
 import { MarkdownContent } from "@/components/ui/MarkdownContent";
 

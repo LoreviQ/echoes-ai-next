@@ -6,7 +6,7 @@ import { SubmitButton, CircleActionButton } from '@/components/buttons';
 import { Switch } from '@/components/ui/switch';
 import { createClient } from '@/utils/supabase.client';
 import { PROTECTED_ROUTES } from '@/config/routes';
-import SelectImage from '@/components/images/SelectImage';
+import { SelectImage } from '@/components/images';
 import { uploadImage } from '@/utils/imageUpload';
 import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
 import { getRandomWords } from '@/config/randomValues';

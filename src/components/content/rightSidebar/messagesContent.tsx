@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useRightSidebar } from "@/contexts/rightSidebar";
 import { useSession } from "@/contexts/session.client";
 import { Message } from '@/types/thread';
-import PreviewImage from '@/components/images/PreviewImage';
+import { PreviewImage } from '@/components/images';
 import { RightArrowIcon } from '@/assets';
 import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import { formatFriendlyDate } from '@/utils/dateFormat';

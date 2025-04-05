@@ -4,7 +4,7 @@ import { Post } from "@/types/post";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets";
 import { formatFriendlyDate } from "@/utils/dateFormat";
 import { MarkdownContent } from "../../ui/MarkdownContent";
-import PreviewImage from "@/components/images/PreviewImage";
+import { PreviewImage } from "@/components/images";
 import Link from "next/link";
 
 export function PostCard({ post }: { post: Post }) {

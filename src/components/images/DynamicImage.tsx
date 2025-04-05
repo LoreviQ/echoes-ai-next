@@ -19,7 +19,7 @@ interface DynamicImageProps {
     className?: string;
 }
 
-export function DynamicImage({ src, placeholderSrc, alt, bucketName, cellReference, className, upload = false }: DynamicImageProps) {
+export default function DynamicImage({ src, placeholderSrc, alt, bucketName, cellReference, className, upload = false }: DynamicImageProps) {
     if (!src) {
         src = placeholderSrc;
     }
