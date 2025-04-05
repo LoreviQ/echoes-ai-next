@@ -32,7 +32,13 @@ export default async function CharacterPage(
 
     return (
         <>
-            <BackHeader text={character.name} />
+            <BackHeader text={character.name} >
+                {character.nsfw && (
+                    <div className="px-2 py-1 bg-red-600 rounded text-white text-xs font-bold">
+                        NSFW
+                    </div>
+                )}
+            </BackHeader>
             <CharacterInfo character={character} isOwner={isOwner} />
             <CharacterFeed character={character} />
         </>
