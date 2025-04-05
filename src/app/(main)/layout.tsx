@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 import { LeftSidebar, RightSidebar, MainWrapper } from "@/components/ui";
 import { SidebarContentType } from "@/contexts";
 import { UserPreferences, DEFAULT_PREFERENCES } from "@/types";
-import { createClient } from '@/utils/supabase.server';
+import { createServerClient } from '@/utils';
 
 export default async function MainLayout({
     children,
@@ -42,7 +42,7 @@ export default async function MainLayout({
 }
 
 async function getInitialSession() {
-    const supabase = await createClient();
+    const supabase = await createServerClient();
     const { data: { user } } = await supabase.auth.getUser();
     return {
         active: !!user,

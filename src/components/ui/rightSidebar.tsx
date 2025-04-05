@@ -5,7 +5,7 @@ import React, { useState, useRef, Suspense } from "react";
 import { SearchIcon, HamburgerIcon } from "@/assets";
 import { CircleActionButton } from "@/components/buttons";
 import { useRightSidebar, SidebarContentType } from "@/contexts";
-import { setPreference } from "@/utils/preferences";
+import { setPreference } from "@/utils";
 import { HeaderLoading, ContentLoading } from '@/components/ui';
 import * as RightSidebarContent from '@/components/content/rightSidebar';
 

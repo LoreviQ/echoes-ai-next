@@ -3,8 +3,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 
 import { type SessionStatus } from '@/types';
-import { createClient } from '@/utils/supabase.client';
-import { setupAuthInterceptor, cleanupAuthInterceptor } from '@/utils/api';
+import { createClient, setupAuthInterceptor, cleanupAuthInterceptor } from '@/utils';
 
 const SessionContext = createContext<SessionStatus>({
     active: false,

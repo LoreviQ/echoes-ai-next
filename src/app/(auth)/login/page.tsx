@@ -1,8 +1,9 @@
 'use client';
 
-import { TypefaceOutlined, GitHubIcon, GoogleIcon } from '@/assets';
-import { createClient } from '@/utils/supabase.client';
 import { Provider } from '@supabase/supabase-js';
+
+import { TypefaceOutlined, GitHubIcon, GoogleIcon } from '@/assets';
+import { createClient } from '@/utils';
 
 interface LoginProvider {
     id: Provider;

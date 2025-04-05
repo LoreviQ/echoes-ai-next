@@ -4,7 +4,7 @@ import { createContext, useState, ReactNode, useEffect, useContext, useCallback 
 
 import { Character, Thread, Message } from '@/types';
 import { useCharacter, useThreads, useCreateMessage, useThreadMessages } from '@/hooks/reactQuery';
-import { setPreference } from "@/utils/preferences";
+import { setPreference } from "@/utils";
 
 // Define possible content types for the sidebar
 export enum SidebarContentType {

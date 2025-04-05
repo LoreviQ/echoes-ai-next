@@ -8,7 +8,7 @@ import { useRightSidebar, useSession } from "@/contexts";
 import { PreviewImage } from '@/components/images';
 import { RightArrowIcon } from '@/assets';
 import { MarkdownContent } from '@/components/ui';
-import { formatFriendlyDate } from '@/utils/dateFormat';
+import { formatFriendlyDate } from '@/utils';
 
 const MessagesHeaderComponent = () => {
     const { active: isLoggedIn } = useSession();

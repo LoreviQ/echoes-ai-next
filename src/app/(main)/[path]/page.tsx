@@ -1,7 +1,7 @@
-import { createClient } from '@/utils/supabase.server';
 import { notFound } from 'next/navigation';
+
+import { databaseQueries, createServerClient } from '@/utils';
 import { CharacterFeed, BackHeader } from '@/components/ui';
-import { getCharacter } from '@/utils/databaseQueries/characters';
 import { CharacterInfo } from './CharacterInfo';
 import { CharacterStatusAlerts } from './CharacterStatusAlerts';
 
@@ -11,10 +11,10 @@ export default async function CharacterPage(
     }
 ) {
     const params = await props.params;
-    const supabase = await createClient();
+    const supabase = await createServerClient();
 
     // Fetch character data
-    const { character, error } = await getCharacter(params.path);
+    const { character, error } = await databaseQueries.getCharacter(params.path);
     if (error || !character) {
         notFound();
     }

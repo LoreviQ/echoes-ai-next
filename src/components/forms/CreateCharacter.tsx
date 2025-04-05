@@ -1,17 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+
+import { PROTECTED_ROUTES, getRandomWords } from '@/config';
+import { createClient, uploadImage, api, endpoints } from '@/utils';
+import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
+import { uiHook, queryHook } from '@/hooks';
 import { SubmitButton, CircleActionButton } from '@/components/buttons';
 import { Switch, Dropdown, DropdownItem } from '@/components/ui';
-import { createClient } from '@/utils/supabase.client';
-import { PROTECTED_ROUTES, getRandomWords } from '@/config';
 import { SelectImage } from '@/components/images';
-import { uploadImage } from '@/utils/imageUpload';
-import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
-import { api, endpoints } from '@/utils/api';
-import { useQueryClient } from '@tanstack/react-query';
-import { uiHook, queryHook } from '@/hooks';
 
 // Character form query key - use array format for proper typing
 const CHARACTER_FORM_KEY = ['character-form-state'];

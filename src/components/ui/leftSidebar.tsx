@@ -8,7 +8,7 @@ import { TypefaceOutlined, HomeIcon, DocumentIcon, SettingsIcon, PlusIcon, UserG
 import { useModal } from "@/hooks/ui";
 import CreateCharacterForm from "@/components/forms/CreateCharacter";
 import { useSession } from "@/contexts";
-import { setPreference } from "@/utils/preferences";
+import { setPreference } from "@/utils";
 
 const navigationItems = [
     {

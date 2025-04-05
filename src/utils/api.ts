@@ -1,6 +1,6 @@
 // Relative url gets redirected to the backend
 const API_BASE_URL = '/api';
-export const API_VERSION = "v1";
+const API_VERSION = "v1";
 import axios from "axios";
 import { getAuthToken } from './supabase.client';
 

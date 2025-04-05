@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useCallback, ReactNode, useMemo } from 'react';
 
 import { ContentReference } from '@/types';
-import { api, endpoints } from '@/utils/api';
+import { api, endpoints } from '@/utils';
 
 interface FeedContextType {
     currentFeed: ContentReference[];

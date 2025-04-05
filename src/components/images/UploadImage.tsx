@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 
-import { createClient } from '@/utils/supabase.client';
+import { createClient } from '@/utils';
 import type { SupabaseCellReference } from '@/types';
 
 interface UploadImageProps {

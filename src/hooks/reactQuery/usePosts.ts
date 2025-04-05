@@ -1,8 +1,7 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { createClient } from '@/utils/supabase.client';
 import { Post } from '@/types';
-import { api, endpoints } from '@/utils/api';
+import { api, endpoints, createClient } from '@/utils';
 
 // Fetch posts using Supabase directly
 async function fetchPosts(characterId: string): Promise<{ posts: Post[], postIds: string[] }> {

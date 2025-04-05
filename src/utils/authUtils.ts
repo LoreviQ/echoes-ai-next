@@ -1,5 +1,6 @@
-import { createClient } from "@/utils/supabase.client";
 import { QueryClient } from "@tanstack/react-query";
+
+import { createClient } from "@/utils";
 
 export function logout() {
     const supabase = createClient();

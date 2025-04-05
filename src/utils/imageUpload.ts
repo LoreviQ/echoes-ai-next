@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase.client';
+import { createClient } from '@/utils';
 
 /**
  * Uploads an image file to Supabase storage and returns the public URL

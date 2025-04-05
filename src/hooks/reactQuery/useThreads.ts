@@ -1,8 +1,8 @@
 import React from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { createClient } from '@/utils/supabase.client';
 import { Thread, Message } from '@/types';
+import { createClient } from '@/utils';
 
 async function fetchThreads(characterId: string): Promise<Thread[]> {
     try {
