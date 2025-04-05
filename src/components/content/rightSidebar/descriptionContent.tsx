@@ -39,6 +39,13 @@ const DescriptionContentComponent = () => {
                     className="text-white"
                 />
             </div>
+            <h1 className="text-2xl font-bold">Appearance</h1>
+            <div className="p-4">
+                <MarkdownContent
+                    content={currentCharacter.appearance || "This character doesn't have an appearance yet!"}
+                    className="text-white"
+                />
+            </div>
         </div>
     );
 };
