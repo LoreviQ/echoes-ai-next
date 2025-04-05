@@ -1,7 +1,6 @@
 import { createClient } from '@/utils/supabase.server';
 import { notFound } from 'next/navigation';
-import { CharacterFeed } from '@/components/ui/Feed';
-import { BackHeader } from '@/components/ui/BackHeader';
+import { CharacterFeed, BackHeader } from '@/components/ui';
 import { getCharacter } from '@/utils/databaseQueries/characters';
 import { CharacterInfo } from './CharacterInfo';
 import { CharacterStatusAlerts } from './CharacterStatusAlerts';

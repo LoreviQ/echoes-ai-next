@@ -52,7 +52,7 @@ interface GeneralFeedProps {
  * @param isHeaderSticky - Whether the feed header should stick to the top while scrolling
  * @returns A component that displays a list of feed types and allows the user to switch between them.
  */
-export function GeneralFeed({ feedTypes, character, header: isHeaderSticky = false }: GeneralFeedProps) {
+function GeneralFeed({ feedTypes, character, header: isHeaderSticky = false }: GeneralFeedProps) {
     const [activeTab, setActiveTab] = useState<FeedType>(feedTypes[0]);
 
     const renderContent = () => {

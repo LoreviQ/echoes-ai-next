@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { NavButton, ActionButton } from "@/components/buttons";
-import UserSection from "@/components/ui/UserSection";
+import { UserSection } from "@/components/ui";
 import { TypefaceOutlined, HomeIcon, DocumentIcon, SettingsIcon, PlusIcon, UserGroupIcon } from "@/assets";
 import { useModal } from "@/hooks/ui/useModal";
 import { CreateCharacterForm } from "@/components/forms/CreateCharacter";

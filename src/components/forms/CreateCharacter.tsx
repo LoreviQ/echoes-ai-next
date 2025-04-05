@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { SubmitButton, CircleActionButton } from '@/components/buttons';
-import { Switch } from '@/components/ui/switch';
+import { Switch, Dropdown, DropdownItem } from '@/components/ui';
 import { createClient } from '@/utils/supabase.client';
 import { PROTECTED_ROUTES } from '@/config/routes';
 import { SelectImage } from '@/components/images';
@@ -11,7 +11,6 @@ import { uploadImage } from '@/utils/imageUpload';
 import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
 import { getRandomWords } from '@/config/randomValues';
 import { api, endpoints } from '@/utils/api';
-import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';
 import { useDropdown } from '@/hooks/ui/useDropdown';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCharactersInvalidation } from '@/hooks/reactQuery/useCharacters';

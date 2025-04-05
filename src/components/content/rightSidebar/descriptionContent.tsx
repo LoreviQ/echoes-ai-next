@@ -3,7 +3,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useRightSidebar } from "@/contexts/rightSidebar";
-import { MarkdownContent } from "@/components/ui/MarkdownContent";
+import { MarkdownContent } from "@/components/ui";
 
 const DescriptionHeaderComponent = () => {
     const { currentCharacter } = useRightSidebar();

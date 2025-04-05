@@ -4,7 +4,7 @@ import React from "react";
 import { CollapsableActionButton } from "./CollapsableActionButton";
 import { LoginIcon, ExclamationIcon } from "@/assets";
 import { useDropdown } from "@/hooks/ui/useDropdown";
-import { Dropdown } from "@/components/ui/Dropdown";
+import { Dropdown } from "@/components/ui";
 import { logout } from "@/utils/authUtils";
 import { debug } from "@/utils/debug";
 

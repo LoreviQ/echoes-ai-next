@@ -1,7 +1,7 @@
 import { Character } from "@/types/character";
 import { DynamicImage } from "@/components/images";
 import { CharacterActions } from "./CharacterActions";
-import { MarkdownContent } from "@/components/ui/MarkdownContent";
+import { MarkdownContent } from "@/components/ui";
 
 export function CharacterInfo({ character, isOwner }: { character: Character, isOwner: boolean }) {
     return (

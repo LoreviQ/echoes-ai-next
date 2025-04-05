@@ -11,7 +11,7 @@ function processHashtags(content: string): string {
     return content.replace(/#(\w+)/g, '[$&](/search?hashtag=$1)');
 }
 
-export function MarkdownContent({ content, className = "" }: MarkdownContentProps) {
+export default function MarkdownContent({ content, className = "" }: MarkdownContentProps) {
     const processedContent = processHashtags(content);
 
     return (

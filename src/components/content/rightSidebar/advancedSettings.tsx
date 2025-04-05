@@ -2,7 +2,7 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { MarkdownContent } from "@/components/ui/MarkdownContent";
+import { MarkdownContent } from "@/components/ui";
 
 const AdvancedSettingsHeaderComponent = () => (
     <div className="mt-4 px-4">

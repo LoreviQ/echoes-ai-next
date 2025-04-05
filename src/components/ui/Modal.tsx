@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { TopLeftArrowIcon } from '@/assets';
 
-export interface ModalProps {
+interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     title: string;
@@ -12,7 +12,7 @@ export interface ModalProps {
     redirectPath?: string;
 }
 
-export function Modal({
+export default function Modal({
     isOpen,
     onClose,
     title,

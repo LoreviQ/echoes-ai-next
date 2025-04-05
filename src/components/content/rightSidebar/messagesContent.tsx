@@ -6,7 +6,7 @@ import { useSession } from "@/contexts/session.client";
 import { Message } from '@/types/thread';
 import { PreviewImage } from '@/components/images';
 import { RightArrowIcon } from '@/assets';
-import { MarkdownContent } from '@/components/ui/MarkdownContent';
+import { MarkdownContent } from '@/components/ui';
 import { formatFriendlyDate } from '@/utils/dateFormat';
 import dynamic from 'next/dynamic';
 
