@@ -1,4 +1,4 @@
-import { Character } from "@/types/character";
+import { Character } from "@/types";
 
 export function CharacterStatusAlerts({ character, isOwner }: { character: Character, isOwner: boolean }) {
     return (

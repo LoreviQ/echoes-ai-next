@@ -1,9 +1,8 @@
 'use client';
 
-import { Character } from "@/types/character";
-import { ContentCard } from "../cards/content";
+import { Character, ContentType } from "@/types";
+import { ContentCard } from "@/components/content/cards";
 import { usePostsWithData } from "@/hooks/reactQuery";
-import { ContentType } from "@/types/content";
 
 export function Posts({ character }: { character: Character }) {
     const { data: posts, isLoading, error, refetch, isRefetching } = usePostsWithData(character.id);

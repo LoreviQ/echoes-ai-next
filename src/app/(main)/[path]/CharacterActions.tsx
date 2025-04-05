@@ -3,7 +3,7 @@
 import { DocumentIcon, SettingsIcon, SpeechBubbleIcon, ThoughtBubbleIcon, ExclamationIcon } from '@/assets';
 import { CircleActionButton } from '@/components/buttons';
 import { Dropdown, DropdownItem } from '@/components/ui';
-import { Character } from '@/types/character';
+import { Character } from '@/types';
 import { useRightSidebar, SidebarContentType } from '@/contexts';
 import { uiHook, queryHook } from '@/hooks';
 

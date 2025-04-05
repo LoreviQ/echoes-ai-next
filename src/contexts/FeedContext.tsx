@@ -1,7 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback, ReactNode, useMemo } from 'react';
-import { ContentReference } from '@/types/content';
+
+import { ContentReference } from '@/types';
 import { api, endpoints } from '@/utils/api';
 
 interface FeedContextType {

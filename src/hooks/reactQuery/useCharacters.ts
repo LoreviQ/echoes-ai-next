@@ -1,7 +1,8 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { createClient } from '@/utils/supabase.client';
-import { Character } from '@/types/character';
 import { useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { createClient } from '@/utils/supabase.client';
+import { Character } from '@/types';
 
 // Fetch characters using Supabase directly
 async function fetchCharacters(): Promise<{ characters: Character[], characterIds: string[] }> {

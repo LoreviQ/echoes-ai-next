@@ -1,8 +1,8 @@
 'use client';
 
-import { ContentItem, ContentType } from "@/types/content";
 import { PostCard } from "./post";
 import { CharacterCard } from "./character";
+import { ContentItem, ContentType } from "@/types";
 
 
 export function ContentCard({ item }: { item: ContentItem }) {

@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Providers } from "./providers";
 import { LeftSidebar, RightSidebar, MainWrapper } from "@/components/ui";
 import { SidebarContentType } from "@/contexts";
-import { UserPreferences, DEFAULT_PREFERENCES } from "@/types/preferences";
+import { UserPreferences, DEFAULT_PREFERENCES } from "@/types";
 import { createClient } from '@/utils/supabase.server';
 
 export default async function MainLayout({

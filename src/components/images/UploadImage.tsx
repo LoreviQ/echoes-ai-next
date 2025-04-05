@@ -1,9 +1,10 @@
 "use client";
 
-import Image from 'next/image';
 import { useState, useRef } from 'react';
+import Image from 'next/image';
+
 import { createClient } from '@/utils/supabase.client';
-import type { SupabaseCellReference } from '@/types/supabase';
+import type { SupabaseCellReference } from '@/types';
 
 interface UploadImageProps {
     src: string;

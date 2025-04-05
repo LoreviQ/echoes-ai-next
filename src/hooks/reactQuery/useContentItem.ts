@@ -1,6 +1,5 @@
-import { ContentReference, ContentType, ContentItem } from '@/types/content';
-import { useCharacter } from './useCharacters';
-import { usePost } from './usePosts';
+import { ContentReference, ContentType, ContentItem } from '@/types';
+import { useCharacter, usePost } from '@/hooks/reactQuery';
 
 /**
  * Hook to fetch a content item by its reference

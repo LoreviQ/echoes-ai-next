@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FeedType } from '@/types/feed';
-import { Character } from '@/types/character';
+import { FeedType, Character } from '@/types';
 
 import * as FeedContent from '@/components/content/feeds';
 

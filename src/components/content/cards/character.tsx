@@ -1,6 +1,7 @@
-import { Character } from "@/types/character";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { Character } from "@/types";
 import { PreviewImage } from "@/components/images";
 import { SubscriptionButton } from "@/components/buttons";
 

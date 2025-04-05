@@ -3,8 +3,8 @@
 import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
+import { Message } from '@/types';
 import { useRightSidebar, useSession } from "@/contexts";
-import { Message } from '@/types/thread';
 import { PreviewImage } from '@/components/images';
 import { RightArrowIcon } from '@/assets';
 import { MarkdownContent } from '@/components/ui';

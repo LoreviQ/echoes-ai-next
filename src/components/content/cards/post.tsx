@@ -1,11 +1,12 @@
-import { CircleActionButton } from "@/components/buttons";
+import Link from "next/link";
+
+import { Post } from "@/types";
 import { useCharacter } from "@/hooks/reactQuery";
-import { Post } from "@/types/post";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets";
 import { formatFriendlyDate } from "@/utils/dateFormat";
+import { CircleActionButton } from "@/components/buttons";
 import { MarkdownContent } from "@/components/ui";
 import { PreviewImage } from "@/components/images";
-import Link from "next/link";
 
 export function PostCard({ post }: { post: Post }) {
     const { data: character, isLoading, error } = useCharacter(post.character_id);

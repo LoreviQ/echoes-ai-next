@@ -1,9 +1,10 @@
 'use client';
 
-import { useCharacters } from "@/hooks/reactQuery";
-import { ContentCard } from "../cards/content";
 import { useEffect } from "react";
-import { ContentType } from "@/types/content";
+
+import { useCharacters } from "@/hooks/reactQuery";
+import { ContentCard } from "@/components/content/cards";
+import { ContentType } from "@/types";
 
 export function Characters() {
     const {

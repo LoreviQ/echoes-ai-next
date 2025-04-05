@@ -1,7 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import { type SessionStatus } from '@/types/session';
+
+import { type SessionStatus } from '@/types';
 import { createClient } from '@/utils/supabase.client';
 import { setupAuthInterceptor, cleanupAuthInterceptor } from '@/utils/api';
 

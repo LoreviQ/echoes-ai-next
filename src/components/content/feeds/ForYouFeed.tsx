@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
+import { ContentReference } from '@/types';
 import { ContentCard } from '@/components/content/cards';
-import { ContentReference } from '@/types/content';
 import { useContentItem } from '@/hooks/reactQuery';
 import { useFeed } from '@/contexts';
 

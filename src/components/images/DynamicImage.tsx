@@ -1,7 +1,5 @@
-import { SupabaseCellReference } from "@/types/supabase";
-import PreviewImage from "./PreviewImage";
-import UploadImage from "./UploadImage";
-
+import { SupabaseCellReference } from "@/types";
+import { PreviewImage, UploadImage } from "@/components/images";
 
 /**
  * DynamicImage component

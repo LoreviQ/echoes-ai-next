@@ -1,11 +1,9 @@
 'use client'
 
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { Character } from '@/types/character';
+import { createContext, useState, ReactNode, useEffect, useContext, useCallback } from 'react';
+
+import { Character, Thread, Message } from '@/types';
 import { useCharacter, useThreads, useCreateMessage, useThreadMessages } from '@/hooks/reactQuery';
-import { Thread } from '@/types/thread';
-import { Message } from '@/types/thread';
-import { useContext } from 'react';
 import { setPreference } from "@/utils/preferences";
 
 // Define possible content types for the sidebar
@@ -94,7 +92,7 @@ export function RightSidebarProvider({
         }
     }, [threads, threadsLoading, selectedThreadId, currentCharacter]);
 
-    const sendMessage = React.useCallback(async (content: string) => {
+    const sendMessage = useCallback(async (content: string) => {
         if (!selectedThreadId) {
             throw new Error('No thread selected');
         }

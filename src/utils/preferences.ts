@@ -1,5 +1,6 @@
 import { setCookie } from 'nookies'
-import { UserPreferences, DEFAULT_PREFERENCES } from '@/types/preferences'
+
+import { UserPreferences, DEFAULT_PREFERENCES } from '@/types';
 
 export function setPreference<K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) {
     // Get current preferences from cookie or use defaults
