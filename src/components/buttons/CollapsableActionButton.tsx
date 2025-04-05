@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { type IconComponent } from "@/assets/icons";
+import { type IconComponent } from "@/assets";
 
 export interface ActionButtonProps {
     label: string;

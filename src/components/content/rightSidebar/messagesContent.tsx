@@ -5,7 +5,7 @@ import { useRightSidebar } from "@/contexts/rightSidebar";
 import { useSession } from "@/contexts/session.client";
 import { Message } from '@/types/thread';
 import PreviewImage from '@/components/images/PreviewImage';
-import { RightArrowIcon } from '@/assets/icons';
+import { RightArrowIcon } from '@/assets';
 import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import { formatFriendlyDate } from '@/utils/dateFormat';
 import dynamic from 'next/dynamic';

@@ -1,7 +1,6 @@
 'use client';
 
-import { TypefaceOutlined } from '@/assets/branding';
-import { GitHubIcon, GoogleIcon } from '@/assets/brandIcons';
+import { TypefaceOutlined, GitHubIcon, GoogleIcon } from '@/assets';
 import { createClient } from '@/utils/supabase.client';
 import { Provider } from '@supabase/supabase-js';
 

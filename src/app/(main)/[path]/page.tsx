@@ -6,6 +6,7 @@ import { CharacterFeed } from '@/components/ui/Feed';
 import { CharacterActions } from '@/components/character/CharacterActions';
 import { BackHeader } from '@/components/ui/BackHeader';
 import { MarkdownContent } from '@/components/ui/MarkdownContent';
+import { getCharacter } from '@/utils/databaseQueries/characters';
 
 export default async function CharacterPage(
     props: {
@@ -16,12 +17,7 @@ export default async function CharacterPage(
     const supabase = await createClient();
 
     // Fetch character data
-    const { data: character, error } = await supabase
-        .from('characters')
-        .select('*')
-        .eq('path', params.path)
-        .single() as { data: Character | null, error: any };
-
+    const { character, error } = await getCharacter(params.path);
     if (error || !character) {
         notFound();
     }
@@ -33,11 +29,7 @@ export default async function CharacterPage(
     return (
         <>
             <BackHeader text={character.name} >
-                {character.nsfw && (
-                    <div className="px-2 py-1 bg-red-600 rounded text-white text-xs font-bold">
-                        NSFW
-                    </div>
-                )}
+                <CharacterStatusAlerts character={character} isOwner={isOwner} />
             </BackHeader>
             <CharacterInfo character={character} isOwner={isOwner} />
             <CharacterFeed character={character} />
@@ -98,3 +90,19 @@ function CharacterInfo({ character, isOwner }: { character: Character, isOwner: 
     );
 }
 
+function CharacterStatusAlerts({ character, isOwner }: { character: Character, isOwner: boolean }) {
+    return (
+        <div className="flex items-center space-x-2">
+            {isOwner && (
+                <div className={`px-2 py-1 rounded text-white text-xs font-bold ${character.public ? 'bg-green-600' : 'bg-yellow-600'}`}>
+                    {character.public ? 'PUBLIC' : 'PRIVATE'}
+                </div>
+            )}
+            {character.nsfw && (
+                <div className="px-2 py-1 bg-red-600 rounded text-white text-xs font-bold">
+                    NSFW
+                </div>
+            )}
+        </div>
+    );
+}

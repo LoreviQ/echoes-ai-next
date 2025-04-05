@@ -3,7 +3,7 @@
 import { useSession } from '@/contexts/session.client';
 import { NavButton } from "@/components/buttons/NavButton";
 import { UserButton } from "@/components/buttons/UserButton";
-import { LoginIcon } from "@/assets/icons";
+import { LoginIcon } from "@/assets";
 
 export default function UserSection() {
     const sessionStatus = useSession();

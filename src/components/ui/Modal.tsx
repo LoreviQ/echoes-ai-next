@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { TopLeftArrowIcon } from '@/assets/icons';
+import { TopLeftArrowIcon } from '@/assets';
 
 export interface ModalProps {
     isOpen: boolean;

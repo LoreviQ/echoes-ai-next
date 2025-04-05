@@ -9,7 +9,7 @@ import { PROTECTED_ROUTES } from '@/config/routes';
 import SelectImage from '@/components/images/SelectImage';
 import { uploadImage } from '@/utils/imageUpload';
 import { CircleActionButton } from '@/components/buttons/CircleActionButton';
-import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets/icons';
+import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
 import { getRandomWords } from '@/config/randomValues';
 import { api, endpoints } from '@/utils/api';
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';

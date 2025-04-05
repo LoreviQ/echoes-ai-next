@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, Suspense } from "react";
-import { SearchIcon, HamburgerIcon } from "@/assets/icons";
+import { SearchIcon, HamburgerIcon } from "@/assets";
 import { CircleActionButton } from "@/components/buttons/CircleActionButton";
 import { useRightSidebar, SidebarContentType } from "@/contexts/rightSidebar";
 import { setPreference } from "@/utils/preferences";

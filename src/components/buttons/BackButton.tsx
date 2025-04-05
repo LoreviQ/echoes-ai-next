@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { CircleActionButton } from './CircleActionButton';
-import { LeftArrowIcon } from '@/assets/icons';
+import { LeftArrowIcon } from '@/assets';
 
 export function BackButton() {
     const router = useRouter();
