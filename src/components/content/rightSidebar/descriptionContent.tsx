@@ -4,26 +4,17 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 
 import { useRightSidebar } from "@/contexts";
-import { MarkdownContent } from "@/components/ui";
+import { MarkdownContent, CharacterIdentity } from "@/components/ui";
 
 const DescriptionHeaderComponent = () => {
     const { currentCharacter } = useRightSidebar();
-
     if (!currentCharacter) {
-        return (
-            <div className="mt-4 px-4">
-                <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold">Character Description</h3>
-                </div>
-            </div>
-        );
+        return null;
     }
 
     return (
-        <div className="mt-4 px-4">
-            <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold">{currentCharacter.name || 'Character'}</h3>
-            </div>
+        <div className="flex flex-wrap items-center justify-between gap-4 mt-4 mx-4">
+            <CharacterIdentity character={currentCharacter} />
         </div>
     );
 };
@@ -41,10 +32,13 @@ const DescriptionContentComponent = () => {
 
     return (
         <div className="p-4">
-            <MarkdownContent
-                content={currentCharacter.description || "This character doesn't have a description yet!"}
-                className="text-white"
-            />
+            <h1 className="text-2xl font-bold">Description</h1>
+            <div className="p-4">
+                <MarkdownContent
+                    content={currentCharacter.description || "This character doesn't have a description yet!"}
+                    className="text-white"
+                />
+            </div>
         </div>
     );
 };

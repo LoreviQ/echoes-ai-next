@@ -9,3 +9,4 @@ export { default as LeftSidebar } from './leftSidebar';
 export { HomeFeed, CharacterFeed, CharacterRecommendationFeed } from './Feed';
 export { Dropdown, DropdownItem } from './Dropdown';
 export { default as BackHeader } from './BackHeader';
+export * from './character';

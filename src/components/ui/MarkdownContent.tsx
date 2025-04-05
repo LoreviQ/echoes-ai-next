@@ -13,23 +13,30 @@ function processHashtags(content: string): string {
 
 export default function MarkdownContent({ content, className = "" }: MarkdownContentProps) {
     const processedContent = processHashtags(content);
+    // Split content by newlines and filter out empty lines
+    const contentSections = processedContent.split('\n').filter(section => section.trim() !== '');
 
     return (
-        <ReactMarkdown
-            components={{
-                p: ({ children }) => (
-                    <p className={`whitespace-pre-wrap prose prose-invert prose-sm max-w-none ${className}`}>
-                        {children}
-                    </p>
-                ),
-                a: ({ href, children }) => (
-                    <a href={href} className="text-sky-500 hover:underline">
-                        {children}
-                    </a>
-                )
-            }}
-        >
-            {processedContent}
-        </ReactMarkdown>
+        <div className="flex flex-col gap-2">
+            {contentSections.map((section, index) => (
+                <ReactMarkdown
+                    key={index}
+                    components={{
+                        p: ({ children }) => (
+                            <p className={`whitespace-pre-wrap prose prose-invert prose-sm max-w-none ${className}`}>
+                                {children}
+                            </p>
+                        ),
+                        a: ({ href, children }) => (
+                            <a href={href} className="text-sky-500 hover:underline">
+                                {children}
+                            </a>
+                        )
+                    }}
+                >
+                    {section}
+                </ReactMarkdown>
+            ))}
+        </div>
     );
 } 

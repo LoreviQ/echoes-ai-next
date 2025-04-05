@@ -5,9 +5,8 @@ import dynamic from 'next/dynamic';
 
 import { Message } from '@/types';
 import { useRightSidebar, useSession } from "@/contexts";
-import { PreviewImage } from '@/components/images';
 import { RightArrowIcon } from '@/assets';
-import { MarkdownContent } from '@/components/ui';
+import { MarkdownContent, CharacterIdentity } from '@/components/ui';
 import { formatFriendlyDate } from '@/utils';
 
 const MessagesHeaderComponent = () => {
@@ -26,22 +25,7 @@ const MessagesHeaderComponent = () => {
 
     return (
         <div className="flex flex-wrap items-center justify-between gap-4 mt-4 mx-4">
-            <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center justify-center w-full sm:w-auto">
-                    <div className="w-10 h-10 relative">
-                        <PreviewImage
-                            src={currentCharacter.avatar_url || '/default-avatar.png'}
-                            alt={`${currentCharacter.name}'s avatar`}
-                            fill
-                            className="rounded-full object-cover"
-                        />
-                    </div>
-                </div>
-                <div className="flex flex-col items-center sm:items-start w-full sm:w-auto">
-                    <span className="font-bold text-lg">{currentCharacter.name}</span>
-                    <span className="text-sm text-zinc-400">@{currentCharacter.path}</span>
-                </div>
-            </div>
+            <CharacterIdentity character={currentCharacter} />
 
             {isLoggedIn && threadData && (
                 <div className="w-full sm:w-auto ml-auto">
