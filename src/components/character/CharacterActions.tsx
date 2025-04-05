@@ -1,7 +1,7 @@
 "use client"
 
 import { DocumentIcon, SettingsIcon, SpeechBubbleIcon, ThoughtBubbleIcon, ExclamationIcon } from '@/assets';
-import { CircleActionButton } from '@/components/buttons/CircleActionButton';
+import { CircleActionButton } from '@/components/buttons';
 import { useCreatePost } from '@/hooks/reactQuery/usePosts';
 import { useDropdown } from '@/hooks/ui/useDropdown';
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown';

@@ -1,4 +1,4 @@
-import { BackButton } from '@/components/buttons/BackButton';
+import { BackButton } from '@/components/buttons';
 
 interface BackHeaderProps {
     text: string;

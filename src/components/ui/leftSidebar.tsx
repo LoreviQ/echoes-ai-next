@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { NavButton } from "@/components/buttons/NavButton";
-import { ActionButton } from "@/components/buttons/ActionButton";
+import { NavButton, ActionButton } from "@/components/buttons";
 import UserSection from "@/components/ui/UserSection";
 import { TypefaceOutlined, HomeIcon, DocumentIcon, SettingsIcon, PlusIcon, UserGroupIcon } from "@/assets";
 import { useModal } from "@/hooks/ui/useModal";

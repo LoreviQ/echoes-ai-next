@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, Suspense } from "react";
 import { SearchIcon, HamburgerIcon } from "@/assets";
-import { CircleActionButton } from "@/components/buttons/CircleActionButton";
+import { CircleActionButton } from "@/components/buttons";
 import { useRightSidebar, SidebarContentType } from "@/contexts/rightSidebar";
 import { setPreference } from "@/utils/preferences";
 import { HeaderLoading, ContentLoading } from '@/components/ui/loading';

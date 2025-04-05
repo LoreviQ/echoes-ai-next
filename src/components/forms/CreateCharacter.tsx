@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { SubmitButton } from '@/components/buttons/SubmitButton';
+import { SubmitButton, CircleActionButton } from '@/components/buttons';
 import { Switch } from '@/components/ui/switch';
 import { createClient } from '@/utils/supabase.client';
 import { PROTECTED_ROUTES } from '@/config/routes';
 import SelectImage from '@/components/images/SelectImage';
 import { uploadImage } from '@/utils/imageUpload';
-import { CircleActionButton } from '@/components/buttons/CircleActionButton';
 import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
 import { getRandomWords } from '@/config/randomValues';
 import { api, endpoints } from '@/utils/api';

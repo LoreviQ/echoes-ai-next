@@ -2,7 +2,7 @@ import { Character } from "@/types/character";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PreviewImage from "@/components/images/PreviewImage";
-import { SubscriptionButton } from "@/components/buttons/SubscriptionButton";
+import { SubscriptionButton } from "@/components/buttons";
 
 export function CharacterCard({ character }: { character: Character }) {
     const router = useRouter();
