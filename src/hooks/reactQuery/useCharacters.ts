@@ -4,38 +4,15 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Character } from '@/types';
 import { database } from '@/utils';
 
-// Fetch characters using Supabase directly
-async function fetchCharacters(): Promise<{ characters: Character[], characterIds: string[] }> {
-    try {
-        const { characters, error } = await database.getCharacters();
-        if (error) throw error;
-        const characterIds = characters.map(character => character.id);
-        return { characters, characterIds };
-    } catch (error) {
-        console.error('Error fetching characters:', error);
-        throw error;
-    }
-}
-
-// Fetch a single character by ID
-async function fetchCharacterById(id: string): Promise<Character | null> {
-    try {
-        const { character, error } = await database.getCharacter(id);
-        if (error) throw error;
-        return character;
-    } catch (error) {
-        console.error('Error fetching character:', error);
-        throw error;
-    }
-}
-
 export function useCharacters() {
     const queryClient = useQueryClient();
 
     const { data: characterIds, isLoading, error, refetch, isRefetching } = useQuery({
         queryKey: ['character_ids'],
         queryFn: async () => {
-            const { characters, characterIds } = await fetchCharacters();
+            const { characters, error } = await database.getCharacters();
+            if (error) throw error;
+            const characterIds = characters.map(character => character.id);
 
             // Store each character individually in the cache
             characters.forEach(character => {
@@ -50,7 +27,9 @@ export function useCharacters() {
     const getCharactersForUser = useCallback(async () => {
         try {
             // For now, just use fetchCharacters (this will be expanded later)
-            const { characters, characterIds } = await fetchCharacters();
+            const { characters, error } = await database.getCharacters();
+            if (error) throw error;
+            const characterIds = characters.map(character => character.id);
 
             // Get the current cache
             const cachedCharacterIds = queryClient.getQueryData<string[]>(['character_ids']) || [];
@@ -111,7 +90,8 @@ export function useCharacter(id: string | undefined) {
             if (cachedCharacter) return cachedCharacter;
 
             // If not in cache, fetch it
-            const character = await fetchCharacterById(id);
+            const { character, error } = await database.getCharacter(id);
+            if (error) throw error;
             if (character) {
                 // Add this character ID to the character_ids list if it's not there
                 queryClient.setQueryData<string[]>(['character_ids'], (old = []) => {

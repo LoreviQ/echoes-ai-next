@@ -3,26 +3,15 @@ import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { Post } from '@/types';
 import { api, endpoints, database } from '@/utils';
 
-// Fetch posts using Supabase directly
-async function fetchPosts(characterId: string): Promise<{ posts: Post[], postIds: string[] }> {
-    try {
-        const { posts, error } = await database.getPostsByCharacterId(characterId);
-        if (error) throw error;
-        const postIds = posts.map(post => post.id);
-        return { posts, postIds };
-    } catch (error) {
-        console.error('Error fetching posts:', error);
-        throw error;
-    }
-}
-
 export function usePosts(characterId: string) {
     const queryClient = useQueryClient();
 
     return useQuery({
         queryKey: ['character_posts', characterId],
         queryFn: async () => {
-            const { posts, postIds } = await fetchPosts(characterId);
+            const { posts, error } = await database.getPostsByCharacterId(characterId);
+            if (error) throw error;
+            const postIds = posts.map(post => post.id);
 
             // Store each post individually in the cache
             posts.forEach(post => {

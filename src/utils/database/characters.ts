@@ -42,6 +42,7 @@ export async function getCharacters(
     return { characters: data || [], error };
 }
 
+
 export async function insertCharacter(
     character: Character,
     client?: SupabaseClient
