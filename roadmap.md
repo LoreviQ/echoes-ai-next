@@ -2,9 +2,9 @@
 
 ## Core Functionality
 
-- [ ] Proper README
-- [ ] ENV example
-- [ ] Move URLs to ENV
+- [X] Proper README
+- [X] ENV example
+- [X] Move URLs to ENV
 
 ## Character Management
 
