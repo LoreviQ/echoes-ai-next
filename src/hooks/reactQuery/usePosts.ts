@@ -1,12 +1,12 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
 import { Post } from '@/types';
-import { api, endpoints, databaseQueries } from '@/utils';
+import { api, endpoints, database } from '@/utils';
 
 // Fetch posts using Supabase directly
 async function fetchPosts(characterId: string): Promise<{ posts: Post[], postIds: string[] }> {
     try {
-        const { posts, error } = await databaseQueries.getPostsByCharacterId(characterId);
+        const { posts, error } = await database.getPostsByCharacterId(characterId);
         if (error) throw error;
         const postIds = posts.map(post => post.id);
         return { posts, postIds };
@@ -70,7 +70,7 @@ export function usePost(postId: string) {
             if (cachedPost) return cachedPost;
 
             // Fetch from API if not in cache
-            const { post, error } = await databaseQueries.getPost(postId);
+            const { post, error } = await database.getPost(postId);
             if (error) throw error;
             if (!post) throw new Error(`Post not found: ${postId}`);
             return post;

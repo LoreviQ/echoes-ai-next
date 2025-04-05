@@ -2,12 +2,12 @@ import { useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Character } from '@/types';
-import { databaseQueries } from '@/utils';
+import { database } from '@/utils';
 
 // Fetch characters using Supabase directly
 async function fetchCharacters(): Promise<{ characters: Character[], characterIds: string[] }> {
     try {
-        const { characters, error } = await databaseQueries.getCharacters();
+        const { characters, error } = await database.getCharacters();
         if (error) throw error;
         const characterIds = characters.map(character => character.id);
         return { characters, characterIds };
@@ -20,7 +20,7 @@ async function fetchCharacters(): Promise<{ characters: Character[], characterId
 // Fetch a single character by ID
 async function fetchCharacterById(id: string): Promise<Character | null> {
     try {
-        const { character, error } = await databaseQueries.getCharacter(id);
+        const { character, error } = await database.getCharacter(id);
         if (error) throw error;
         return character;
     } catch (error) {

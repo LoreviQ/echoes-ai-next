@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { databaseQueries } from '@/utils';
+import { database } from '@/utils';
 import { createServerClient } from '@/utils/supabase.server';
 import { CharacterFeed, BackHeader } from '@/components/ui';
 import { CharacterInfo } from './CharacterInfo';
@@ -15,13 +15,13 @@ export default async function CharacterPage(
     const supabase = await createServerClient();
 
     // Fetch character data
-    const { character, error } = await databaseQueries.getCharacterByPath(params.path, supabase);
+    const { character, error } = await database.getCharacterByPath(params.path, supabase);
     if (error || !character) {
         notFound();
     }
 
     // Get current user
-    const { user } = await databaseQueries.getLoggedInUser(supabase);
+    const { user } = await database.getLoggedInUser(supabase);
     const isOwner = user?.id === character.user_id;
 
     return (

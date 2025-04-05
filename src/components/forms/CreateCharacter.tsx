@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { Character } from '@/types';
 import { PROTECTED_ROUTES, getRandomWords } from '@/config';
-import { createClient, uploadImage, api, endpoints, databaseQueries } from '@/utils';
+import { createClient, uploadImage, api, endpoints, database } from '@/utils';
 import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
 import { uiHook, queryHook } from '@/hooks';
 import { SubmitButton, CircleActionButton } from '@/components/buttons';
@@ -232,7 +232,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
 
         try {
             const supabase = createClient();
-            const { user, error: userError } = await databaseQueries.getLoggedInUser(supabase);
+            const { user, error: userError } = await database.getLoggedInUser(supabase);
 
             if (!user || userError) {
                 throw new Error('Authentication error');
@@ -285,7 +285,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 updated_at: ''
             }
 
-            const { error: insertError } = await databaseQueries.insertCharacter(character, supabase);
+            const { error: insertError } = await database.insertCharacter(character, supabase);
             if (insertError) {
                 console.error('Error creating character:', insertError);
                 throw insertError;
