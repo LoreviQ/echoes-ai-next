@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 import { LeftSidebar, RightSidebar, MainWrapper } from "@/components/ui";
 import { SidebarContentType } from "@/contexts";
 import { UserPreferences, DEFAULT_PREFERENCES } from "@/types";
-import { createServerClient } from '@/utils';
+import { createServerClient } from '@/utils/supabase.server';
 
 export default async function MainLayout({
     children,

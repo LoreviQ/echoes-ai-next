@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
-import { databaseQueries, createServerClient } from '@/utils';
+import { databaseQueries } from '@/utils';
+import { createServerClient } from '@/utils/supabase.server';
 import { CharacterFeed, BackHeader } from '@/components/ui';
 import { CharacterInfo } from './CharacterInfo';
 import { CharacterStatusAlerts } from './CharacterStatusAlerts';
