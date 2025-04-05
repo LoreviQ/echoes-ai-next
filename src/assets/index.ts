@@ -8,28 +8,4 @@ export { GitHubIcon, GoogleIcon } from './brandIcons';
 export type { IconProps, IconComponent } from './icons';
 
 // UI Icons
-export {
-    HomeIcon,
-    UserIcon,
-    DocumentIcon,
-    SettingsIcon,
-    LoginIcon,
-    LogoutIcon,
-    SearchIcon,
-    PlusIcon,
-    LeftArrowIcon,
-    RightArrowIcon,
-    DiceIcon,
-    LoadingSpinner,
-    DotsMenuIcon,
-    SpeechBubbleIcon,
-    RepostIcon,
-    HeartIcon,
-    MiniBarChartIcon,
-    GenerateIcon,
-    TopLeftArrowIcon,
-    UserGroupIcon,
-    HamburgerIcon,
-    ThoughtBubbleIcon,
-    ExclamationIcon,
-} from './icons'; 
+export * from './icons';

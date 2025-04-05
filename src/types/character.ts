@@ -15,6 +15,9 @@ export type CharacterSchema = {
     gender: string;
 }
 
+// CharacterBio type that includes only name, path and bio fields
+export type CharacterBio = Pick<CharacterSchema, 'name' | 'path' | 'bio'>;
+
 export type Character = CharacterSchema & {
     subscriber_count: number;
 }
