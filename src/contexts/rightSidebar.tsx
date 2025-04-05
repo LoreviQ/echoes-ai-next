@@ -27,6 +27,8 @@ interface RightSidebarContextType {
     threadsLoading: boolean;
     sendMessage: (content: string) => Promise<void>;
     isSending: boolean;
+    editCharacter: boolean;
+    toggleEdit: () => void;
 }
 
 const RightSidebarContext = createContext<RightSidebarContextType>({
@@ -39,7 +41,9 @@ const RightSidebarContext = createContext<RightSidebarContextType>({
     threads: [],
     threadsLoading: false,
     sendMessage: async () => { },
-    isSending: false
+    isSending: false,
+    editCharacter: false,
+    toggleEdit: () => { }
 });
 
 export function RightSidebarProvider({
@@ -55,6 +59,11 @@ export function RightSidebarProvider({
     const { data: initialCharacter } = useCharacter(initialCharacterId);
     const [contentType, setContentType] = useState<SidebarContentType>(initialContentType);
     const [currentCharacter, setCurrentCharacter] = useState<Character | null>(null);
+    const [editCharacter, setEditCharacter] = useState(false);
+
+    const toggleEdit = useCallback(() => {
+        setEditCharacter(prev => !prev);
+    }, []);
 
     // Update currentCharacter when initialCharacter becomes available
     useEffect(() => {
@@ -110,7 +119,9 @@ export function RightSidebarProvider({
             threads,
             threadsLoading,
             sendMessage,
-            isSending: createMessageMutation.isPending
+            isSending: createMessageMutation.isPending,
+            editCharacter,
+            toggleEdit
         }}>
             {children}
         </RightSidebarContext.Provider>
@@ -134,7 +145,7 @@ export function useRightSidebar() {
         throw new Error('useRightSidebar must be used within a RightSidebarProvider');
     }
 
-    const { currentCharacter, contentType, setContentType, setCurrentCharacter } = context;
+    const { currentCharacter, contentType, setContentType, setCurrentCharacter, editCharacter, toggleEdit } = context;
 
     const getThreadMessages = (): ThreadMessagesState => {
         const { selectedThreadId, setSelectedThreadId, threads, threadsLoading, sendMessage, isSending } = context;
@@ -159,6 +170,8 @@ export function useRightSidebar() {
         contentType,
         setContentType,
         setCurrentCharacter,
+        editCharacter,
+        toggleEdit,
 
         // Thread and message functionality
         getThreadMessages,
