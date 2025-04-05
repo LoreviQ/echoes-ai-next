@@ -6,5 +6,6 @@ export type Message = {
     created_at: string;
 }
 
-export type CreateMessage = Pick<Message, 'thread_id' | 'sender_type' | 'content'>;
+// Type for creating a new message - only includes fields that need to be provided
+export type CreateMessage = Omit<Message, 'id' | 'created_at'>;
 

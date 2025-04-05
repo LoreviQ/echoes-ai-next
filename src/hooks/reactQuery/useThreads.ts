@@ -83,7 +83,7 @@ export function useCreateThread() {
             const supabase = createClient();
             const { data: { user }, error: userError } = await supabase.auth.getUser();
             if (userError || !user) throw new Error('Authentication error');
-            const { thread, error } = await database.createThread({
+            const { thread, error } = await database.insertThread({
                 user_id: user.id,
                 character_id: characterId,
                 title: 'New Thread',
@@ -109,7 +109,7 @@ export function useCreateMessage() {
             const supabase = createClient();
             const { data: { user }, error: userError } = await supabase.auth.getUser();
             if (userError || !user) throw new Error('Authentication error');
-            const { message, error } = await database.createMessage({
+            const { message, error } = await database.insertMessage({
                 thread_id: threadId,
                 sender_type: 'user',
                 content,

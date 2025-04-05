@@ -25,7 +25,7 @@ export async function getMessages(threadId: string, client?: SupabaseClient): Pr
  * @param client - The Supabase client to use
  * @returns A promise that resolves to the created message and an error
  */
-export async function createMessage(message: CreateMessage, client?: SupabaseClient): Promise<{ message: Message, error: PostgrestError | null }> {
+export async function insertMessage(message: CreateMessage, client?: SupabaseClient): Promise<{ message: Message, error: PostgrestError | null }> {
     const supabase = client || createClient();
     const { data, error } = await supabase
         .from('messages')

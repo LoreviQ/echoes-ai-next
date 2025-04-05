@@ -13,4 +13,10 @@ export type Character = {
     nsfw: boolean;
     tags: string;
     gender: string;
-} 
+}
+
+// Type for creating a new character - only includes fields that need to be provided
+export type CreateCharacter = Omit<
+    Character,
+    'id' | 'created_at' | 'updated_at'
+>;

@@ -268,7 +268,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 }
             }
 
-            const character: Character = {
+            const { error: insertError } = await database.insertCharacter({
                 user_id: user.id,
                 name,
                 path,
@@ -280,12 +280,8 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 banner_url: bannerUrl,
                 tags,
                 gender: gender === Gender.CUSTOM ? customGender : gender,
-                id: '',
-                created_at: '',
-                updated_at: ''
-            }
+            }, supabase);
 
-            const { error: insertError } = await database.insertCharacter(character, supabase);
             if (insertError) {
                 console.error('Error creating character:', insertError);
                 throw insertError;

@@ -25,7 +25,7 @@ export async function getThreads(characterId: string, client?: SupabaseClient): 
  * @param client - The Supabase client to use
  * @returns A promise that resolves to the created thread and any error
  */
-export async function createThread(thread: CreateThread, client?: SupabaseClient): Promise<{ thread: Thread, error: PostgrestError | null }> {
+export async function insertThread(thread: CreateThread, client?: SupabaseClient): Promise<{ thread: Thread, error: PostgrestError | null }> {
     const supabase = client || createClient();
     const { data, error } = await supabase
         .from('threads')

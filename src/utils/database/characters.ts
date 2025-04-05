@@ -1,6 +1,6 @@
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 
-import { Character } from "@/types";
+import { Character, CreateCharacter } from "@/types";
 import { createClient } from "@/utils";
 
 export async function getCharacter(
@@ -44,25 +44,13 @@ export async function getCharacters(
 
 
 export async function insertCharacter(
-    character: Character,
+    character: CreateCharacter,
     client?: SupabaseClient
 ): Promise<{ error: PostgrestError | null }> {
     const supabase = client || createClient();
     const { error } = await supabase
         .from('characters')
-        .insert({
-            user_id: character.user_id,
-            name: character.name,
-            path: character.path,
-            bio: character.bio || null,
-            description: character.description || null,
-            public: character.public,
-            nsfw: character.nsfw,
-            avatar_url: character.avatar_url,
-            banner_url: character.banner_url,
-            tags: character.tags,
-            gender: character.gender
-        });
+        .insert(character);
 
     return { error };
 }

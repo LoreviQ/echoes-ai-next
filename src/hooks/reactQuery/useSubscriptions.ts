@@ -28,7 +28,7 @@ export const useSubscribe = () => {
             const supabase = createClient();
             const { user } = await database.getLoggedInUser(supabase);
             if (!user) throw new Error('User not authenticated');
-            const { error } = await database.insertSubscription(character_id, user.id, supabase);
+            const { error } = await database.insertSubscription({ character_id, user_id: user.id }, supabase);
             if (error) throw error;
             return character_id;
         },
@@ -51,7 +51,7 @@ export const useUnsubscribe = () => {
             const supabase = createClient();
             const { user } = await database.getLoggedInUser(supabase);
             if (!user) throw new Error('User not authenticated');
-            const { error } = await database.deleteSubscription(character_id, user.id, supabase);
+            const { error } = await database.deleteSubscription({ character_id, user_id: user.id }, supabase);
             if (error) throw error;
             return character_id;
         },

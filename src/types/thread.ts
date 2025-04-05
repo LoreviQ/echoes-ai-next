@@ -8,5 +8,5 @@ export type Thread = {
 }
 
 // Type for creating a new thread - only includes fields that need to be provided
-export type CreateThread = Pick<Thread, 'user_id' | 'character_id' | 'title'>;
+export type CreateThread = Omit<Thread, 'id' | 'created_at' | 'updated_at'>;
 

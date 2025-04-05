@@ -1,6 +1,6 @@
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/utils";
-import { UserSubscriptions } from "@/types";
+import { Subscription, UserSubscription } from "@/types";
 
 /**
  * Get all subscriptions for a user
@@ -11,7 +11,7 @@ import { UserSubscriptions } from "@/types";
 export async function getSubscriptions(
     userId: string,
     client?: SupabaseClient
-): Promise<{ subscriptions: UserSubscriptions[]; error: PostgrestError | null }> {
+): Promise<{ subscriptions: UserSubscription[]; error: PostgrestError | null }> {
     const supabase = client || createClient();
     const { data, error } = await supabase
         .from('character_subscriptions')
@@ -32,14 +32,13 @@ export async function getSubscriptions(
  * @returns A promise that resolves to the character ID
  */
 export async function insertSubscription(
-    characterId: string,
-    userId: string,
+    subscription: Subscription,
     client?: SupabaseClient
 ): Promise<{ error: PostgrestError | null }> {
     const supabase = client || createClient();
     const { error } = await supabase
         .from('character_subscriptions')
-        .insert([{ character_id: characterId, user_id: userId }]);
+        .insert([subscription]);
     return { error }
 }
 
@@ -51,15 +50,14 @@ export async function insertSubscription(
  * @returns A promise that resolves to the character ID
  */
 export async function deleteSubscription(
-    characterId: string,
-    userId: string,
+    subscription: Subscription,
     client?: SupabaseClient
 ): Promise<{ error: PostgrestError | null }> {
     const supabase = client || createClient();
     const { error } = await supabase
         .from('character_subscriptions')
         .delete()
-        .eq('character_id', characterId)
-        .eq('user_id', userId);
+        .eq('character_id', subscription.character_id)
+        .eq('user_id', subscription.user_id);
     return { error }
 }
