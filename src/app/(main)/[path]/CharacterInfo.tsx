@@ -44,7 +44,13 @@ export function CharacterInfo({ character, isOwner }: { character: Character, is
             </div>
             <CharacterActions character={character} isOwner />
             <div className="px-4 mt-4">
-                <h1 className="font-bold text-2xl">{character.name}</h1>
+                <div className="flex justify-between items-center">
+                    <h1 className="font-bold text-2xl">{character.name}</h1>
+                    <div className="text-zinc-500">
+                        <span>Followers: </span>
+                        <span>{character.subscriber_count}</span>
+                    </div>
+                </div>
                 <p className="text-zinc-500">@{character.path}</p>
                 <div className="py-4 text-white">
                     <MarkdownContent

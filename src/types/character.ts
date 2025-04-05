@@ -1,4 +1,4 @@
-export type Character = {
+export type CharacterSchema = {
     id: string;
     user_id: string;
     name: string;
@@ -15,8 +15,12 @@ export type Character = {
     gender: string;
 }
 
+export type Character = CharacterSchema & {
+    subscriber_count: number;
+}
+
 // Type for creating a new character - only includes fields that need to be provided
 export type CreateCharacter = Omit<
-    Character,
+    CharacterSchema,
     'id' | 'created_at' | 'updated_at'
 >;

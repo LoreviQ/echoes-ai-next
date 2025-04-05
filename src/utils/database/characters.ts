@@ -3,6 +3,35 @@ import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { Character, CreateCharacter } from "@/types";
 import { createClient } from "@/utils";
 
+type CharacterWithSubscriptionCount = {
+    id: string;
+    user_id: string;
+    name: string;
+    bio: string | null;
+    description: string | null;
+    avatar_url: string | null;
+    banner_url: string | null;
+    public: boolean;
+    created_at: string;
+    updated_at: string;
+    path: string;
+    nsfw: boolean;
+    tags: string;
+    gender: string;
+    character_subscription_counts?: {
+        subscriber_count: number;
+    }[] | null;
+}
+
+function transformCharacterData(data: CharacterWithSubscriptionCount | null): Character | null {
+    if (!data) return null;
+
+    return {
+        ...data,
+        subscriber_count: data.character_subscription_counts?.[0]?.subscriber_count ?? 0
+    };
+}
+
 export async function getCharacter(
     id: string,
     client?: SupabaseClient
@@ -10,10 +39,15 @@ export async function getCharacter(
     const supabase = client || createClient();
     const { data, error } = await supabase
         .from('characters')
-        .select('*')
+        .select(`
+            *,
+            character_subscription_counts (
+                subscriber_count
+            )
+        `)
         .eq('id', id)
         .single();
-    return { character: data, error };
+    return { character: transformCharacterData(data), error };
 }
 
 export async function getCharacterByPath(
@@ -23,11 +57,16 @@ export async function getCharacterByPath(
     const supabase = client || createClient();
     const { data, error } = await supabase
         .from('characters')
-        .select('*')
+        .select(`
+            *,
+            character_subscription_counts (
+                subscriber_count
+            )
+        `)
         .eq('path', path)
         .single();
 
-    return { character: data, error };
+    return { character: transformCharacterData(data), error };
 }
 
 export async function getCharacters(
@@ -36,12 +75,19 @@ export async function getCharacters(
     const supabase = client || createClient();
     const { data, error } = await supabase
         .from('characters')
-        .select('*')
+        .select(`
+            *,
+            character_subscription_counts (
+                subscriber_count
+            )
+        `)
         .eq('public', true)
         .order('created_at', { ascending: false });
-    return { characters: data || [], error };
+    return {
+        characters: (data || []).map(transformCharacterData) as Character[],
+        error
+    };
 }
-
 
 export async function insertCharacter(
     character: CreateCharacter,
