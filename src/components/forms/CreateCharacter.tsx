@@ -61,6 +61,7 @@ interface StoredFormState {
     path: string;
     bio: string;
     description: string;
+    appearance: string;
     gender: Gender;
     customGender: string;
     isPublic: boolean;
@@ -80,6 +81,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
     const [path, setPath] = useState('');
     const [bio, setBio] = useState('');
     const [description, setDescription] = useState('');
+    const [appearance, setAppearance] = useState('');
     const [gender, setGender] = useState<Gender>(Gender.NA);
     const [customGender, setCustomGender] = useState('');
     const [isPublic, setIsPublic] = useState(true);
@@ -104,6 +106,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
             setPath(savedState.path || '');
             setBio(savedState.bio || '');
             setDescription(savedState.description || '');
+            setAppearance(savedState.appearance || '');
             setGender(savedState.gender || Gender.NA);
             setCustomGender(savedState.customGender || '');
             setIsPublic(savedState.isPublic);
@@ -131,6 +134,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
             path,
             bio,
             description,
+            appearance,
             gender,
             customGender,
             isPublic,
@@ -141,7 +145,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
             bannerFile: typeof bannerFile === 'string' ? bannerFile : null
         };
         queryClient.setQueryData(CHARACTER_FORM_KEY, formState);
-    }, [name, path, bio, description, gender, customGender, isPublic, isNsfw, tags, avatarFile, bannerFile, isSubmitting, isGenerating, queryClient]);
+    }, [name, path, bio, description, appearance, gender, customGender, isPublic, isNsfw, tags, avatarFile, bannerFile, isSubmitting, isGenerating, queryClient]);
 
     // Clear form state after successful submission
     const clearFormState = () => {
@@ -266,13 +270,13 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 path,
                 bio: bio || null,
                 description: description || null,
+                appearance: appearance || null,
                 public: isPublic,
                 nsfw: isNsfw,
                 avatar_url: avatarUrl,
                 banner_url: bannerUrl,
                 tags,
                 gender: gender === Gender.CUSTOM ? customGender : gender,
-                appearance: null,
             });
 
             if (insertError) {
@@ -311,6 +315,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 setName(data.content.name);
                 setBio(data.content.bio);
                 setDescription(data.content.description);
+                setAppearance(data.content.appearance);
                 const parsedGender = parseGender(data.content.gender);
                 setGender(parsedGender.gender);
                 if (parsedGender.customValue) {
@@ -339,7 +344,8 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 gender: gender === Gender.CUSTOM ? customGender : gender,
                 description: description,
                 bio: bio,
-                nsfw: isNsfw
+                nsfw: isNsfw,
+                appearance: appearance
             };
 
             const { data } = await api.post(endpoints.characters.generateAvatar, characterData);
@@ -372,7 +378,8 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 gender: gender === Gender.CUSTOM ? customGender : gender,
                 description: description,
                 bio: bio,
-                nsfw: isNsfw
+                nsfw: isNsfw,
+                appearance: appearance
             };
 
             const { data } = await api.post(endpoints.characters.generateBanner, characterData);
@@ -564,6 +571,26 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                         disabled={isSubmitting || isGenerating}
                         className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50 min-h-[72px] overflow-hidden"
                         placeholder="Enter character description (optional)"
+                    />
+                </div>
+                <div className="flex flex-col space-y-2">
+                    <div className="flex items-center px-2 space-x-2">
+                        <label htmlFor="appearance" className="text-sm font-medium text-zinc-200">Appearance</label>
+                        <span className="text-xs text-zinc-400">A physical description of your character</span>
+                    </div>
+                    <textarea
+                        id="appearance"
+                        value={appearance}
+                        onChange={(e) => {
+                            setAppearance(e.target.value);
+                            // Auto-grow functionality
+                            e.target.style.height = 'auto';
+                            e.target.style.height = `${e.target.scrollHeight}px`;
+                        }}
+                        rows={3}
+                        disabled={isSubmitting || isGenerating}
+                        className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50 min-h-[72px] overflow-hidden"
+                        placeholder="Enter character appearance (optional)"
                     />
                 </div>
                 <div className="flex items-center justify-center space-x-12">
