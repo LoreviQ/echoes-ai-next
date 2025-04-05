@@ -6,11 +6,7 @@ import { CircleActionButton } from "@/components/buttons";
 import { useRightSidebar, SidebarContentType } from "@/contexts/rightSidebar";
 import { setPreference } from "@/utils/preferences";
 import { HeaderLoading, ContentLoading } from '@/components/ui/loading';
-import { ThoughtsHeader, ThoughtsContent } from '@/components/content/rightSidebar/thoughtsContent';
-import { EventsHeader, EventsContent } from '@/components/content/rightSidebar/eventsContent';
-import { MessagesHeader, MessagesContent } from '@/components/content/rightSidebar/messagesContent';
-import { DescriptionHeader, DescriptionContent } from '@/components/content/rightSidebar/descriptionContent';
-import { AdvancedSettingsHeader, AdvancedSettingsContent } from '@/components/content/rightSidebar/advancedSettings';
+import * as RightSidebarContent from '@/components/content/rightSidebar';
 
 interface SidebarContentComponents {
     Header: React.ComponentType;
@@ -23,24 +19,24 @@ type SidebarContentMap = {
 
 const SIDEBAR_CONTENT_MAP: SidebarContentMap = {
     [SidebarContentType.THOUGHTS]: {
-        Header: ThoughtsHeader,
-        Content: ThoughtsContent
+        Header: RightSidebarContent.ThoughtsHeader,
+        Content: RightSidebarContent.ThoughtsContent
     },
     [SidebarContentType.EVENTS]: {
-        Header: EventsHeader,
-        Content: EventsContent
+        Header: RightSidebarContent.EventsHeader,
+        Content: RightSidebarContent.EventsContent
     },
     [SidebarContentType.MESSAGES]: {
-        Header: MessagesHeader,
-        Content: MessagesContent
+        Header: RightSidebarContent.MessagesHeader,
+        Content: RightSidebarContent.MessagesContent
     },
     [SidebarContentType.DESCRIPTION]: {
-        Header: DescriptionHeader,
-        Content: DescriptionContent
+        Header: RightSidebarContent.DescriptionHeader,
+        Content: RightSidebarContent.DescriptionContent
     },
     [SidebarContentType.ADVANCED_SETTINGS]: {
-        Header: AdvancedSettingsHeader,
-        Content: AdvancedSettingsContent
+        Header: RightSidebarContent.AdvancedSettingsHeader,
+        Content: RightSidebarContent.AdvancedSettingsContent
     }
 };
 
