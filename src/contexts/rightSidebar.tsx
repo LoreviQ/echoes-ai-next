@@ -2,9 +2,9 @@
 
 import { createContext, useState, ReactNode, useEffect, useContext, useCallback } from 'react';
 
-import { Character, Thread, Message } from '@/types';
-import { useCharacter, useThreads, useCreateMessage, useThreadMessages } from '@/hooks/reactQuery';
-import { setPreference } from "@/utils";
+import { Character, Thread, Message, CharacterDescription } from '@/types';
+import { useCharacter, useThreads, useCreateMessage, useThreadMessages, useCharacters } from '@/hooks/reactQuery';
+import { setPreference, database } from "@/utils";
 
 // Define possible content types for the sidebar
 export enum SidebarContentType {
@@ -29,6 +29,7 @@ interface RightSidebarContextType {
     isSending: boolean;
     editCharacter: boolean;
     toggleEdit: () => void;
+    updateDescription: (description: string, appearance: string) => Promise<void>;
 }
 
 const RightSidebarContext = createContext<RightSidebarContextType>({
@@ -43,7 +44,8 @@ const RightSidebarContext = createContext<RightSidebarContextType>({
     sendMessage: async () => { },
     isSending: false,
     editCharacter: false,
-    toggleEdit: () => { }
+    toggleEdit: () => { },
+    updateDescription: async () => { }
 });
 
 export function RightSidebarProvider({
@@ -78,6 +80,8 @@ export function RightSidebarProvider({
     const { data: threads = [], isLoading: threadsLoading } = useThreads(currentCharacter?.id || '');
     const createMessageMutation = useCreateMessage();
 
+    const { updateCharacter } = useCharacters();
+
     // Update cookies when content type or character changes
     useEffect(() => {
         setPreference('sidebarContentType', contentType);
@@ -108,6 +112,20 @@ export function RightSidebarProvider({
         await createMessageMutation.mutateAsync({ threadId: selectedThreadId, content });
     }, [selectedThreadId, createMessageMutation]);
 
+    const updateDescription = useCallback(async (description: string, appearance: string) => {
+        if (!currentCharacter) return;
+
+        const newDescription: CharacterDescription = { description, appearance };
+        await database.updateCharacterDescription(currentCharacter.id, newDescription);
+
+        const updatedCharacter = { ...currentCharacter, description, appearance };
+        setCurrentCharacter(updatedCharacter);
+        updateCharacter(currentCharacter.id, updatedCharacter);
+
+        // Close edit mode after successful update
+        setEditCharacter(false);
+    }, [currentCharacter, updateCharacter]);
+
     return (
         <RightSidebarContext.Provider value={{
             contentType,
@@ -121,7 +139,8 @@ export function RightSidebarProvider({
             sendMessage,
             isSending: createMessageMutation.isPending,
             editCharacter,
-            toggleEdit
+            toggleEdit,
+            updateDescription
         }}>
             {children}
         </RightSidebarContext.Provider>
@@ -145,7 +164,7 @@ export function useRightSidebar() {
         throw new Error('useRightSidebar must be used within a RightSidebarProvider');
     }
 
-    const { currentCharacter, contentType, setContentType, setCurrentCharacter, editCharacter, toggleEdit } = context;
+    const { currentCharacter, contentType, setContentType, setCurrentCharacter, editCharacter, toggleEdit, updateDescription } = context;
 
     const getThreadMessages = (): ThreadMessagesState => {
         const { selectedThreadId, setSelectedThreadId, threads, threadsLoading, sendMessage, isSending } = context;
@@ -172,6 +191,7 @@ export function useRightSidebar() {
         setCurrentCharacter,
         editCharacter,
         toggleEdit,
+        updateDescription,
 
         // Thread and message functionality
         getThreadMessages,

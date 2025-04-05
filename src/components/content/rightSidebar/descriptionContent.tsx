@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
 import { useRightSidebar } from "@/contexts";
@@ -9,6 +9,17 @@ import { PenSquareIcon, CheckSquareIcon } from "@/assets";
 
 const DescriptionHeaderComponent = () => {
     const { currentCharacter, editCharacter, toggleEdit } = useRightSidebar();
+
+    const handleClick = async () => {
+        if (editCharacter) {
+            // If we're in edit mode, trigger the submit handler
+            await (window as any).__handleDescriptionSubmit?.();
+        } else {
+            // If we're not in edit mode, just toggle edit mode
+            toggleEdit();
+        }
+    };
+
     if (!currentCharacter) {
         return null;
     }
@@ -17,7 +28,7 @@ const DescriptionHeaderComponent = () => {
         <div className="flex flex-wrap items-center justify-between gap-4 mt-4 mx-4">
             <CharacterIdentity character={currentCharacter} />
             <button
-                onClick={toggleEdit}
+                onClick={handleClick}
                 className="text-zinc-500 hover:text-white transition-colors"
             >
                 {editCharacter ? (
@@ -66,7 +77,15 @@ const ReadableDescription = () => {
 }
 
 const EditableDescription = () => {
-    const { currentCharacter } = useRightSidebar();
+    const { currentCharacter, updateDescription } = useRightSidebar();
+    const [description, setDescription] = useState(currentCharacter?.description || "");
+    const [appearance, setAppearance] = useState(currentCharacter?.appearance || "");
+
+    // Reset form when character changes
+    useEffect(() => {
+        setDescription(currentCharacter?.description || "");
+        setAppearance(currentCharacter?.appearance || "");
+    }, [currentCharacter]);
 
     if (!currentCharacter) {
         return null;
@@ -75,6 +94,16 @@ const EditableDescription = () => {
     const adjustTextareaHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         e.target.style.height = 'auto';
         e.target.style.height = `${e.target.scrollHeight}px`;
+    };
+
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setDescription(e.target.value);
+        adjustTextareaHeight(e);
+    };
+
+    const handleAppearanceChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setAppearance(e.target.value);
+        adjustTextareaHeight(e);
     };
 
     // Set initial height on mount
@@ -86,23 +115,37 @@ const EditableDescription = () => {
         });
     }, [currentCharacter]);
 
+    // Add submit handler to be called from header
+    useEffect(() => {
+        const handleSubmit = async () => {
+            await updateDescription(description, appearance);
+        };
+
+        // Store the handler in a custom property on the window object
+        (window as any).__handleDescriptionSubmit = handleSubmit;
+
+        return () => {
+            delete (window as any).__handleDescriptionSubmit;
+        };
+    }, [description, appearance, updateDescription]);
+
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold">Description</h1>
             <div className="p-4">
                 <textarea
-                    value={currentCharacter.description || ""}
+                    value={description}
                     placeholder="Write your character's description here..."
-                    onChange={adjustTextareaHeight}
+                    onChange={handleDescriptionChange}
                     className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 min-h-[100px] resize-none overflow-hidden"
                 />
             </div>
             <h1 className="text-2xl font-bold">Appearance</h1>
             <div className="p-4">
                 <textarea
-                    value={currentCharacter.appearance || ""}
+                    value={appearance}
                     placeholder="Write your character's appearance here..."
-                    onChange={adjustTextareaHeight}
+                    onChange={handleAppearanceChange}
                     className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 min-h-[100px] resize-none overflow-hidden"
                 />
             </div>

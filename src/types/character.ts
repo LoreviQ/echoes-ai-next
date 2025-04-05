@@ -19,6 +19,10 @@ export type CharacterSchema = {
 // CharacterBio type that includes only name, path and bio fields
 export type CharacterBio = Pick<CharacterSchema, 'name' | 'path' | 'bio'>;
 
+// CharacterDescription type that includes only description and appearance fields
+export type CharacterDescription = Pick<CharacterSchema, 'description' | 'appearance'>;
+
+// Character extended type that includes subscriber_count
 export type Character = CharacterSchema & {
     subscriber_count: number;
 }
