@@ -7,10 +7,6 @@ export type Thread = {
     updated_at: string;
 }
 
-export type Message = {
-    id: string;
-    thread_id: string;
-    sender_type: 'user' | 'character';
-    content: string;
-    created_at: string;
-} 
+// Type for creating a new thread - only includes fields that need to be provided
+export type CreateThread = Pick<Thread, 'user_id' | 'character_id' | 'title'>;
+

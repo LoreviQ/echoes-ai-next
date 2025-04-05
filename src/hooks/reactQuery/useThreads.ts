@@ -1,42 +1,9 @@
 import React from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { Thread, Message } from '@/types';
+import { Message } from '@/types';
 import { createClient } from '@/utils';
-
-async function fetchThreads(characterId: string): Promise<Thread[]> {
-    try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-            .from('threads')
-            .select('*')
-            .eq('character_id', characterId)
-            .order('updated_at', { ascending: false });
-
-        if (error) throw error;
-        return data || [];
-    } catch (error) {
-        console.error('Error fetching threads:', error);
-        throw error;
-    }
-}
-
-async function fetchThreadMessages(threadId: string): Promise<Message[]> {
-    try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-            .from('messages')
-            .select('*')
-            .eq('thread_id', threadId)
-            .order('created_at', { ascending: true });
-
-        if (error) throw error;
-        return data || [];
-    } catch (error) {
-        console.error('Error fetching messages:', error);
-        throw error;
-    }
-}
+import { database } from '@/utils';
 
 export function useThreads(characterId: string | undefined) {
     const createThreadMutation = useCreateThread();
@@ -44,8 +11,8 @@ export function useThreads(characterId: string | undefined) {
     return useQuery({
         queryKey: ['threads', characterId],
         queryFn: async () => {
-            const threads = await fetchThreads(characterId!);
-
+            const { threads, error } = await database.getThreads(characterId!);
+            if (error) throw error;
             // If no threads exist, create one automatically
             if (threads.length === 0 && characterId) {
                 const newThread = await createThreadMutation.mutateAsync({ characterId });
@@ -61,49 +28,36 @@ export function useThreads(characterId: string | undefined) {
 export function useThreadMessages(threadId: string | undefined) {
     const queryClient = useQueryClient();
 
+    const updateMessageCache = React.useCallback((payload: { new: Message }) => {
+        const newMessage = payload.new;
+
+        queryClient.setQueryData(['messages', threadId], (old: Message[] = []) => {
+            // Avoid duplicates by checking if message already exists
+            if (old.some(msg => msg.id === newMessage.id)) {
+                return old;
+            }
+            return [...old, newMessage];
+        });
+
+        // Also update the thread's updated_at timestamp in our cache
+        queryClient.invalidateQueries({ queryKey: ['threads'] });
+    }, [threadId, queryClient]);
+
     React.useEffect(() => {
         if (!threadId) return;
 
         const supabase = createClient();
-
-        // Create a subscription to the messages table
-        const subscription = supabase
-            .channel('messages_changes')
-            .on('postgres_changes',
-                {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'messages',
-                    filter: `thread_id=eq.${threadId}`
-                },
-                (payload) => {
-                    // When a new message is detected, update the cache
-                    const newMessage = payload.new as Message;
-
-                    queryClient.setQueryData(['messages', threadId], (old: Message[] = []) => {
-                        // Avoid duplicates by checking if message already exists
-                        if (old.some(msg => msg.id === newMessage.id)) {
-                            return old;
-                        }
-                        return [...old, newMessage];
-                    });
-
-                    // Also update the thread's updated_at timestamp in our cache
-                    queryClient.invalidateQueries({ queryKey: ['threads'] });
-                }
-            )
-            .subscribe();
+        const subscription = database.createMessageSubscription(threadId, updateMessageCache, supabase);
 
         // Clean up subscription when component unmounts or threadId changes
         return () => {
             subscription.unsubscribe();
         };
-    }, [threadId, queryClient]);
-
+    }, [threadId, updateMessageCache]);
 
     return useQuery({
         queryKey: ['messages', threadId],
-        queryFn: () => fetchThreadMessages(threadId!),
+        queryFn: () => database.getMessages(threadId!),
         enabled: !!threadId,
     });
 }
@@ -127,23 +81,13 @@ export function useCreateThread() {
     return useMutation({
         mutationFn: async ({ characterId }: { characterId: string }) => {
             const supabase = createClient();
-
-            // Get the actual user from Supabase auth
             const { data: { user }, error: userError } = await supabase.auth.getUser();
             if (userError || !user) throw new Error('Authentication error');
-
-            const { data: thread, error } = await supabase
-                .from('threads')
-                .insert({
-                    user_id: user.id,
-                    character_id: characterId,
-                    title: 'New Thread',
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString()
-                })
-                .select()
-                .single();
-
+            const { thread, error } = await database.createThread({
+                user_id: user.id,
+                character_id: characterId,
+                title: 'New Thread',
+            });
             if (error) throw error;
             return thread;
         },
@@ -160,24 +104,16 @@ export function useCreateMessage() {
     const queryClient = useQueryClient();
 
     return useMutation({
+        // Insert a message into the database
         mutationFn: async ({ threadId, content }: { threadId: string; content: string }) => {
             const supabase = createClient();
-
-            // Get the actual user from Supabase auth
             const { data: { user }, error: userError } = await supabase.auth.getUser();
             if (userError || !user) throw new Error('Authentication error');
-
-            const { data: message, error } = await supabase
-                .from('messages')
-                .insert({
-                    thread_id: threadId,
-                    sender_type: 'user',
-                    content,
-                    created_at: new Date().toISOString(),
-                })
-                .select()
-                .single();
-
+            const { message, error } = await database.createMessage({
+                thread_id: threadId,
+                sender_type: 'user',
+                content,
+            });
             if (error) throw error;
             return message;
         },

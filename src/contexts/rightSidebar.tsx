@@ -96,7 +96,7 @@ export function RightSidebarProvider({
         if (!selectedThreadId) {
             throw new Error('No thread selected');
         }
-        return createMessageMutation.mutateAsync({ threadId: selectedThreadId, content });
+        await createMessageMutation.mutateAsync({ threadId: selectedThreadId, content });
     }, [selectedThreadId, createMessageMutation]);
 
     return (
@@ -148,7 +148,7 @@ export function useRightSidebar() {
             threadsLoading,
             sendMessage,
             messageSending: isSending,
-            messages: messages || [],
+            messages: messages?.messages || [],
             messagesLoading,
         };
     };

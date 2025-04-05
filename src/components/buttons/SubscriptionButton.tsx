@@ -10,7 +10,7 @@ export function SubscriptionButton({ characterId }: SubscriptionButtonProps) {
     const { mutate: subscribe, isPending: isSubscribing } = useSubscribe() as UseMutationResult<string, Error, string>;
     const { mutate: unsubscribe, isPending: isUnsubscribing } = useUnsubscribe() as UseMutationResult<string, Error, string>;
 
-    const isSubscribed = subscribedCharacterIds?.includes(characterId) ?? false;
+    const isSubscribed = subscribedCharacterIds?.some(sub => sub.character_id === characterId) ?? false;
     const isLoading = isSubscribing || isUnsubscribing;
 
     const handleSubscriptionClick = (e: React.MouseEvent) => {
