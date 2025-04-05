@@ -1,4 +1,4 @@
-import { createClient } from '@/utils';
+import { database } from '.';
 
 /**
  * Uploads an image file to Supabase storage and returns the public URL
@@ -8,29 +8,14 @@ import { createClient } from '@/utils';
  */
 export async function uploadImage(file: File, bucketName: string): Promise<string | null> {
     try {
-        const supabase = createClient();
-
         // Generate a unique filename
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
         const filePath = `${fileName}.${fileExt}`;
 
         // Upload file to storage
-        const { error: uploadError } = await supabase
-            .storage
-            .from(bucketName)
-            .upload(filePath, file, {
-                upsert: true
-            });
-
-        if (uploadError) throw uploadError;
-
-        // Get public URL
-        const { data: { publicUrl } } = supabase
-            .storage
-            .from(bucketName)
-            .getPublicUrl(filePath);
-
+        const { publicUrl, error } = await database.upload(bucketName, filePath, file);
+        if (error) throw error;
         return publicUrl;
     } catch (error) {
         console.error('Error uploading image:', error);
