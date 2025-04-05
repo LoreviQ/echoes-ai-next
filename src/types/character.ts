@@ -13,6 +13,7 @@ export type CharacterSchema = {
     nsfw: boolean;
     tags: string;
     gender: string;
+    appearance: string | null;
 }
 
 // CharacterBio type that includes only name, path and bio fields

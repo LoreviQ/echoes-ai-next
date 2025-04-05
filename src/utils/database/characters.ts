@@ -1,23 +1,9 @@
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 
-import { Character, CreateCharacter, CharacterBio } from "@/types";
+import { Character, CreateCharacter, CharacterSchema, CharacterBio } from "@/types";
 import { createClient } from "@/utils";
 
-type CharacterWithSubscriptionCount = {
-    id: string;
-    user_id: string;
-    name: string;
-    bio: string | null;
-    description: string | null;
-    avatar_url: string | null;
-    banner_url: string | null;
-    public: boolean;
-    created_at: string;
-    updated_at: string;
-    path: string;
-    nsfw: boolean;
-    tags: string;
-    gender: string;
+type CharacterWithSubscriptionCount = CharacterSchema & {
     character_subscription_counts?: {
         subscriber_count: number;
     }[] | null;

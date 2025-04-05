@@ -272,6 +272,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 banner_url: bannerUrl,
                 tags,
                 gender: gender === Gender.CUSTOM ? customGender : gender,
+                appearance: null,
             });
 
             if (insertError) {
