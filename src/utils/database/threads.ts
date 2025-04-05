@@ -20,7 +20,7 @@ export async function getThreads(characterId: string, client?: SupabaseClient): 
 }
 
 /**
- * Creates a thread for a character
+ * Creates a thread for a character and the logged in user (user defaults to logged in user due to supabase function triggers)
  * @param thread - The thread data to create
  * @param client - The Supabase client to use
  * @returns A promise that resolves to the created thread and any error

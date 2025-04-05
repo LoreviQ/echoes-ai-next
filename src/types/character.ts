@@ -25,5 +25,5 @@ export type Character = CharacterSchema & {
 // Type for creating a new character - only includes fields that need to be provided
 export type CreateCharacter = Omit<
     CharacterSchema,
-    'id' | 'created_at' | 'updated_at'
+    'id' | 'created_at' | 'updated_at' | 'user_id'
 >;

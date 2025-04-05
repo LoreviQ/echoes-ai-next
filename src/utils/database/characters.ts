@@ -89,6 +89,12 @@ export async function getCharacters(
     };
 }
 
+/**
+ * Inserts a new character into the database (user_id is automatically logged in user due to supabase function triggers)
+ * @param character - The character to insert
+ * @param client - The Supabase client to use
+ * @returns A promise that resolves to the error or null
+ */
 export async function insertCharacter(
     character: CreateCharacter,
     client?: SupabaseClient
@@ -97,7 +103,6 @@ export async function insertCharacter(
     const { error } = await supabase
         .from('characters')
         .insert(character);
-
     return { error };
 }
 

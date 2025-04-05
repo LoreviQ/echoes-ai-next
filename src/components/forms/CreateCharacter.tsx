@@ -231,13 +231,6 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
         setIsSubmitting(true);
 
         try {
-            const supabase = createClient();
-            const { user, error: userError } = await database.getLoggedInUser(supabase);
-
-            if (!user || userError) {
-                throw new Error('Authentication error');
-            }
-
             // Upload images if provided as Files, use direct URLs if strings
             let avatarUrl = null;
             let bannerUrl = null;
@@ -269,7 +262,6 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
             }
 
             const { error: insertError } = await database.insertCharacter({
-                user_id: user.id,
                 name,
                 path,
                 bio: bio || null,
@@ -280,7 +272,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 banner_url: bannerUrl,
                 tags,
                 gender: gender === Gender.CUSTOM ? customGender : gender,
-            }, supabase);
+            });
 
             if (insertError) {
                 console.error('Error creating character:', insertError);

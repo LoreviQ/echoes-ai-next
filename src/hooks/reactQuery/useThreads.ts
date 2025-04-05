@@ -80,11 +80,7 @@ export function useCreateThread() {
 
     return useMutation({
         mutationFn: async ({ characterId }: { characterId: string }) => {
-            const supabase = createClient();
-            const { data: { user }, error: userError } = await supabase.auth.getUser();
-            if (userError || !user) throw new Error('Authentication error');
             const { thread, error } = await database.insertThread({
-                user_id: user.id,
                 character_id: characterId,
                 title: 'New Thread',
             });
@@ -106,9 +102,6 @@ export function useCreateMessage() {
     return useMutation({
         // Insert a message into the database
         mutationFn: async ({ threadId, content }: { threadId: string; content: string }) => {
-            const supabase = createClient();
-            const { data: { user }, error: userError } = await supabase.auth.getUser();
-            if (userError || !user) throw new Error('Authentication error');
             const { message, error } = await database.insertMessage({
                 thread_id: threadId,
                 sender_type: 'user',
