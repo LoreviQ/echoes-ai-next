@@ -57,7 +57,11 @@ export function useThreadMessages(threadId: string | undefined) {
 
     return useQuery({
         queryKey: ['messages', threadId],
-        queryFn: () => database.getMessages(threadId!),
+        queryFn: async () => {
+            const { messages, error } = await database.getMessages(threadId!);
+            if (error) throw error;
+            return messages;
+        },
         enabled: !!threadId,
     });
 }
@@ -111,6 +115,7 @@ export function useCreateMessage() {
             return message;
         },
         onMutate: async ({ threadId, content }) => {
+            console.log('onMutate', { threadId, content });
             // Cancel any outgoing refetches
             await queryClient.cancelQueries({ queryKey: ['messages', threadId] });
 
@@ -122,6 +127,7 @@ export function useCreateMessage() {
 
             // Optimistically update to the new value
             queryClient.setQueryData(['messages', threadId], (old: Message[] = []) => {
+                console.log('setQueryData', { old });
                 const optimisticMessage: Message = {
                     id: tempId,
                     thread_id: threadId,

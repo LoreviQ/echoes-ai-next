@@ -178,7 +178,7 @@ export function useRightSidebar() {
             threadsLoading,
             sendMessage,
             messageSending: isSending,
-            messages: messages?.messages || [],
+            messages: messages || [],
             messagesLoading,
         };
     };
