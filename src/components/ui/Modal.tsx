@@ -12,7 +12,7 @@ interface ModalProps {
     redirectPath?: string;
 }
 
-export default function Modal({
+export function Modal({
     isOpen,
     onClose,
     title,

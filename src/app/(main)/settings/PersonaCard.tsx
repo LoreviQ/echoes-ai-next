@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { UserPersonasSchema, UserPersonas } from '@/types';
 import { PenSquareIcon, CheckSquareIcon } from '@/assets/icons';
+import { UserIdentity } from '@/components/ui';
 
 interface PersonaCardProps {
     persona: UserPersonasSchema | (UserPersonas & { temp_id: string });
@@ -21,33 +22,7 @@ interface PersonaEditProps extends PersonaDisplayProps {
 function ReadPersona({ persona }: PersonaDisplayProps) {
     return (
         <div>
-            <h3 className="text-lg font-medium">{persona.name || 'Unnamed Persona'}</h3>
-            {persona.gender && <p className="text-sm text-gray-500 mt-1">Gender: {persona.gender}</p>}
-            {persona.bio && <p className="text-sm mt-2">{persona.bio}</p>}
-            {persona.appearance && (
-                <div className="mt-2">
-                    <h4 className="text-sm font-medium">Appearance</h4>
-                    <p className="text-sm text-gray-600">{persona.appearance}</p>
-                </div>
-            )}
-            {persona.description && (
-                <div className="mt-2">
-                    <h4 className="text-sm font-medium">Description</h4>
-                    <p className="text-sm text-gray-600">{persona.description}</p>
-                </div>
-            )}
-            {persona.avatar_url && (
-                <div className="mt-2">
-                    <h4 className="text-sm font-medium">Avatar URL</h4>
-                    <p className="text-sm text-gray-600 truncate">{persona.avatar_url}</p>
-                </div>
-            )}
-            {persona.banner_url && (
-                <div className="mt-2">
-                    <h4 className="text-sm font-medium">Banner URL</h4>
-                    <p className="text-sm text-gray-600 truncate">{persona.banner_url}</p>
-                </div>
-            )}
+            <UserIdentity persona={persona} />
         </div>
     );
 }

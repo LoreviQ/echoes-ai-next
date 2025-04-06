@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { database } from '@/utils';
 import { createServerClient } from '@/utils/supabase.server';
-import { CharacterFeed, BackHeader } from '@/components/ui';
+import { CharacterFeed, BackHeader } from '@/components/ui'
 import { CharacterInfo } from './CharacterInfo';
 import { CharacterStatusAlerts } from './CharacterStatusAlerts';
 

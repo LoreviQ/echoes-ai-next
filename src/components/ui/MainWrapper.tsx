@@ -7,7 +7,7 @@ interface MainWrapperProps {
     initialExpanded: boolean;
 }
 
-export default function MainWrapper({ children, initialExpanded }: MainWrapperProps) {
+export function MainWrapper({ children, initialExpanded }: MainWrapperProps) {
     return (
         <main className={`w-full flex-1 h-screen overflow-y-auto ${!initialExpanded && 'sm:max-w-[600px] sm:flex-none'}`}>
             {children}

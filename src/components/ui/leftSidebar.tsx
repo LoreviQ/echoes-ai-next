@@ -37,7 +37,7 @@ interface LeftSidebarProps {
     initialExpanded?: boolean;
 }
 
-export default function LeftSidebar({ initialExpanded = true }: LeftSidebarProps) {
+export function LeftSidebar({ initialExpanded = true }: LeftSidebarProps) {
     const [isExpanded, setIsExpanded] = useState(initialExpanded);
     const { getModal, setIsOpen } = useModal();
     const { Modal } = getModal("Create a New Character", "/create-character");

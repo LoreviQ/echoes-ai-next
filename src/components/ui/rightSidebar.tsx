@@ -45,7 +45,7 @@ interface RightSidebarProps {
     initialExpanded?: boolean;
 }
 
-export default function RightSidebar({ initialExpanded = false }: RightSidebarProps) {
+export function RightSidebar({ initialExpanded = false }: RightSidebarProps) {
     const [isExpanded, setIsExpanded] = useState(initialExpanded);
     const { contentType } = useRightSidebar();
     const headerRef = useRef<HTMLDivElement>(null);
