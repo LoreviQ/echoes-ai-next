@@ -3,6 +3,7 @@ import { NsfwFilter } from "@/types/user";
 export interface SettingsState {
     nsfw_filter: NsfwFilter;
     isSubmitting: boolean;
+    user_id: string | null;
 }
 
 
@@ -11,7 +12,8 @@ export type SettingsAction =
 
 export const initialSettingsState: SettingsState = {
     nsfw_filter: 'hide',
-    isSubmitting: false
+    isSubmitting: false,
+    user_id: null
 };
 
 export function settingsReducer(

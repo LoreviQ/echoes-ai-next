@@ -1,5 +1,5 @@
 import { AuthError, SupabaseClient, User as SupabaseUser } from "@supabase/supabase-js";
-import { User, UserPreferencesSchema } from "@/types";
+import { User, UserPreferencesSchema, UserPreferencesSupabase } from "@/types";
 import { createClient } from "@/utils";
 
 export async function getLoggedInUser(
@@ -21,10 +21,26 @@ export async function getLoggedInUser(
         return { user: null, error: preferencesError };
     }
 
-    // Return the user with the preferences
+    // Return the user with the preferences, omitting user_id from preferences
+    const { user_id, ...preferencesWithoutId } = preferences || {};
     const user = {
         ...data.user,
-        preferences: preferences || {} as UserPreferencesSchema
+        preferences: preferencesWithoutId as UserPreferencesSupabase
     } as User;
     return { user, error: null };
+}
+
+export async function updateUserPreferences(
+    userId: string,
+    preferences: UserPreferencesSupabase,
+    client?: SupabaseClient
+) {
+    const supabase = client || createClient();
+
+    const { error } = await supabase
+        .from('user_preferences')
+        .update(preferences)
+        .eq('user_id', userId);
+
+    return { error };
 }
