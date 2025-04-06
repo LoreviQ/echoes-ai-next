@@ -33,7 +33,7 @@ export function UserIdentity({ persona, editable = false, onFileSelected }: User
     return (
         <Identity
             name={persona.name || 'Unnamed Persona'}
-            avatar_url={persona.avatar_url}
+            avatar_url={persona.avatar_url || null}
             editable={editable}
             onFileSelected={onFileSelected}
             tooltip={false}
