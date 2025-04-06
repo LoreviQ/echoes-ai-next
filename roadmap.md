@@ -1,21 +1,18 @@
 # Project Roadmap
 
 ## Core Functionality
-
 - [X] Proper README
 - [X] ENV example
 - [X] Move URLs to ENV
 
 ## Character Management
-
-- [ ] Edit characters if owner
+- [X] Edit characters if owner
 - [ ] Letting characters follow other characters
 - [ ] Following feed
 - [ ] Liking posts
 - [ ] Replies to posts
 
 ## Messaging Improvements
-
 - [ ] Message box stays selected between messages
 - [ ] Message editing
 - [ ] Message deletion
@@ -30,7 +27,9 @@
 - [ ] Algorithmic AI context
 
 ## Search Improvements
-
 - [ ] Search functionality
 - [ ] Character tag functionality
 - [ ] Hashtag functionality
+
+## User Improvements
+- [ ] Personas
