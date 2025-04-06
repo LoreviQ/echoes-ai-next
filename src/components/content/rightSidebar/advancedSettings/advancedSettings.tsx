@@ -56,25 +56,29 @@ const AdvancedSettingsContentComponent = () => {
 
             try {
                 const { attributes, error } = await database.getCharacterAttributes(currentCharacter.id);
-                if (error) {
-                    console.error('Error fetching character attributes:', error);
-                    return;
+                if (error || !attributes) {
+                    throw new Error(String(error));
                 }
-
-                if (attributes) {
-                    // Update each field from the attributes
-                    Object.entries(attributes).forEach(([field, value]) => {
-                        if (field in initialAdvancedSettingsState) {
-                            dispatch({
-                                type: 'SET_FIELD',
-                                field: field as keyof AdvancedSettingsState,
-                                value
-                            });
-                        }
-                    });
-                }
+                // Update each field from the attributes
+                Object.entries(attributes).forEach(([field, value]) => {
+                    if (field in initialAdvancedSettingsState) {
+                        dispatch({
+                            type: 'SET_FIELD',
+                            field: field as keyof AdvancedSettingsState,
+                            value
+                        });
+                    }
+                });
             } catch (error) {
                 console.error('Error fetching character attributes:', error);
+                // Reset to initial state on any error
+                Object.keys(initialAdvancedSettingsState).forEach((field) => {
+                    dispatch({
+                        type: 'SET_FIELD',
+                        field: field as keyof AdvancedSettingsState,
+                        value: initialAdvancedSettingsState[field as keyof AdvancedSettingsState]
+                    });
+                });
             }
         };
 
