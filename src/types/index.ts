@@ -9,3 +9,4 @@ export * from './supabase';
 export * from './subscriptions';
 export * from './message';
 export * from './characterAttributes';
+export * from './user';

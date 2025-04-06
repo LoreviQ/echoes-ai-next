@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Slider } from '@/components/ui';
 import { CharacterAttributes, attributeMetadata, getAttributeValueDescription } from '@/types/characterAttributes';
-import { FormState, FormAction } from './reducer';
+import { SubHeading } from '@/components/forms/formComponents/subheading';
 
 interface AdvancedSettingsProps {
     state: any;
@@ -132,14 +132,7 @@ export function AdvancedSettingsForm({ state, dispatch }: AdvancedSettingsProps)
     );
 }
 
-function SubHeading({ name, description }: { name: string, description: string }) {
-    return (
-        <div className="flex items-baseline space-x-8">
-            <h1 className="text-2xl font-bold">{name}</h1>
-            <span className="text-zinc-400 text-sm">{description}</span>
-        </div>
-    );
-}
+
 
 function InputSection({ field, state, dispatch }: {
     field: keyof CharacterAttributes,
