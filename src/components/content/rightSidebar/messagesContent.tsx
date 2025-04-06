@@ -54,6 +54,12 @@ const MessagesContentComponent = () => {
     const [inputValue, setInputValue] = React.useState('');
     const [statusMessage, setStatusMessage] = React.useState<string | null>(null);
     const messagesEndRef = React.useRef<HTMLDivElement>(null);
+    const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+    // Focus textarea on mount
+    useEffect(() => {
+        textareaRef.current?.focus();
+    }, []);
 
     // Scroll to bottom when messages change
     useEffect(() => {
@@ -101,6 +107,10 @@ const MessagesContentComponent = () => {
             try {
                 setInputValue('');
                 await threadData?.sendMessage(trimmedContent);
+                // Add a small delay before focusing or itwon't work?
+                setTimeout(() => {
+                    textareaRef.current?.focus();
+                }, 0);
             } catch (error) {
                 console.error('Failed to send message:', error);
                 // Restore the input value on error
@@ -140,6 +150,7 @@ const MessagesContentComponent = () => {
             <div className="p-4 border-t border-zinc-700">
                 <div className="relative group w-full">
                     <textarea
+                        ref={textareaRef}
                         value={inputValue}
                         onChange={(e) => {
                             setInputValue(e.target.value);
