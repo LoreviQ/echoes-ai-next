@@ -15,7 +15,6 @@ const DescriptionHeaderComponent = () => {
             // If we're in edit mode, trigger the submit handler
             await (window as any).__handleDescriptionSubmit?.();
         } else {
-            // If we're not in edit mode, just toggle edit mode
             toggleEdit();
         }
     };
