@@ -10,3 +10,4 @@ export * from './subscriptions';
 export * from './message';
 export * from './characterAttributes';
 export * from './user';
+export * from './gender';
