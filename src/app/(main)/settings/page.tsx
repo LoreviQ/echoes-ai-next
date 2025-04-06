@@ -1,24 +1,37 @@
 'use client';
 
-import { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
 
 import { database } from '@/utils';
 import { BackHeader } from '@/components/ui';
-import { settingsReducer, initialSettingsState } from './reducer';
+import { settingsReducer, initialSettingsState, SettingsAction, SettingsState } from './reducer';
 import { NsfwFilter } from '@/types';
 import { SubHeading, ToggleButtonGroup } from '@/components/forms/formComponents';
 
 export default function SettingsPage() {
+    const [state, dispatch] = useReducer(settingsReducer, initialSettingsState);
     return (
         <>
             <BackHeader text="Settings" />
-            <SettingsContent />
+            <SettingsContent state={state} dispatch={dispatch} />
         </>
     );
 }
 
-function SettingsContent() {
-    const [state, dispatch] = useReducer(settingsReducer, initialSettingsState);
+function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: React.Dispatch<SettingsAction> }) {
+    useEffect(() => {
+        async function loadUserPreferences() {
+            const { user } = await database.getLoggedInUser();
+            if (user?.preferences) {
+                dispatch({
+                    type: 'SET_FIELD',
+                    field: 'nsfw_filter',
+                    value: user.preferences.nsfw_filter
+                });
+            }
+        }
+        loadUserPreferences();
+    }, []);
 
     return (
         <form className="flex flex-col p-4 space-y-4">
