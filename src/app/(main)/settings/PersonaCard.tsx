@@ -3,16 +3,16 @@ import { UserPersonasSchema, UserPersonas } from '@/types';
 import { PenSquareIcon, CheckSquareIcon } from '@/assets/icons';
 import { UserIdentity } from '@/components/ui';
 import { Gender } from '@/types';
+import { SettingsAction } from './reducer';
 
 
 interface PersonaCardProps {
     persona: UserPersonasSchema | (UserPersonas & { temp_id: string });
-    onUpdate: (id: string, updates: Partial<UserPersonas>) => void;
-    onDelete: (id: string) => void;
+    dispatch: React.Dispatch<SettingsAction>;
     isNew?: boolean;
 }
 
-export function PersonaCard({ persona, onUpdate, onDelete, isNew = false }: PersonaCardProps) {
+export function PersonaCard({ persona, dispatch, isNew = false }: PersonaCardProps) {
     const [isEditing, setIsEditing] = useState(isNew);
     const [isExpanded, setIsExpanded] = useState(false);
     const id = 'id' in persona ? persona.id : persona.temp_id;
@@ -34,7 +34,7 @@ export function PersonaCard({ persona, onUpdate, onDelete, isNew = false }: Pers
             {/* Delete button */}
             <button
                 type="button"
-                onClick={() => onDelete(id)}
+                onClick={() => dispatch({ type: 'DELETE_PERSONA', id })}
                 className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
                 aria-label="Delete persona"
             >
@@ -42,7 +42,7 @@ export function PersonaCard({ persona, onUpdate, onDelete, isNew = false }: Pers
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
             </button>
-            <PersonaDetails persona={persona} isExpanded={isExpanded} setIsExpanded={setIsExpanded} isEditing={isEditing} id={id} onUpdate={onUpdate} />
+            <PersonaDetails persona={persona} isExpanded={isExpanded} setIsExpanded={setIsExpanded} isEditing={isEditing} id={id} dispatch={dispatch} />
         </div>
     );
 }
@@ -53,10 +53,10 @@ interface PersonaDetailsProps {
     setIsExpanded: (isExpanded: boolean) => void;
     isEditing: boolean;
     id: string;
-    onUpdate: (id: string, updates: Partial<UserPersonas>) => void;
+    dispatch: React.Dispatch<SettingsAction>;
 }
 
-function PersonaDetails({ persona, isExpanded, setIsExpanded, isEditing, id, onUpdate }: PersonaDetailsProps) {
+function PersonaDetails({ persona, isExpanded, setIsExpanded, isEditing, id, dispatch }: PersonaDetailsProps) {
     const [customGenderText, setCustomGenderText] = useState<string>(
         persona.gender && !Object.values(Gender).includes(persona.gender as Gender)
             ? persona.gender
@@ -67,7 +67,7 @@ function PersonaDetails({ persona, isExpanded, setIsExpanded, isEditing, id, onU
         e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
         const { name, value } = e.target;
-        onUpdate(id, { [name]: value });
+        dispatch({ type: 'UPDATE_PERSONA', id, updates: { [name]: value } });
     };
 
     const handleGenderChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -75,10 +75,10 @@ function PersonaDetails({ persona, isExpanded, setIsExpanded, isEditing, id, onU
 
         if (value === Gender.CUSTOM) {
             // Just set the gender to Custom initially
-            onUpdate(id, { gender: value });
+            dispatch({ type: 'UPDATE_PERSONA', id, updates: { gender: value } });
         } else {
             // For standard genders, just use the enum value
-            onUpdate(id, { gender: value });
+            dispatch({ type: 'UPDATE_PERSONA', id, updates: { gender: value } });
             // Reset custom gender when switching back to standard gender
             setCustomGenderText('');
         }
@@ -90,7 +90,14 @@ function PersonaDetails({ persona, isExpanded, setIsExpanded, isEditing, id, onU
 
         // When typing in the custom field, update the gender field directly with the text
         // This is what will be sent to the database
-        onUpdate(id, { gender: value });
+        dispatch({ type: 'UPDATE_PERSONA', id, updates: { gender: value } });
+    };
+
+    const onFileSelected = (file: File | string) => {
+        if (file instanceof File) {
+            // Store the file for later upload
+            dispatch({ type: 'SET_AVATAR_FILE', id, file });
+        }
     };
 
     // Determine what to display in the dropdown
@@ -106,7 +113,7 @@ function PersonaDetails({ persona, isExpanded, setIsExpanded, isEditing, id, onU
     return (
         <>
             <div className="p-4" onClick={() => setIsExpanded(!isExpanded)}>
-                <UserIdentity persona={persona} editable={isEditing} />
+                <UserIdentity persona={persona} editable={true} onFileSelected={onFileSelected} />
             </div>
             {isExpanded && (
                 <div className="p-4 space-y-4">

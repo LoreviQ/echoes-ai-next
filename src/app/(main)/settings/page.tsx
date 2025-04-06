@@ -45,6 +45,32 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
         const { error: preferencesError } = await database.updateUserPreferences(state.user_id, preferences);
         if (preferencesError) throw preferencesError;
 
+        // First, upload any avatar files that have been selected
+        const avatarUploads = [];
+
+        // Process existing personas with new avatars
+        for (const persona of state.personas) {
+            if (state.avatarFiles[persona.id]) {
+                const file = state.avatarFiles[persona.id]!;
+                const fileExt = file.name.split('.').pop() || 'jpg';
+                const filePath = `persona_avatars/${persona.id}.${fileExt}`;
+
+                const { publicUrl, error } = await database.uploadAuth(filePath, file);
+                if (error) throw error;
+
+                // Update the persona with the new avatar URL
+                avatarUploads.push({ id: persona.id, avatar_url: publicUrl });
+            }
+        }
+
+        // Process new personas with avatars
+        for (const newPersona of state.newPersonas) {
+            if (state.avatarFiles[newPersona.temp_id]) {
+                // We'll handle these after inserting (we need real IDs first)
+                continue;
+            }
+        }
+
         // Delete removed personas
         for (const personaId of state.deletedPersonaIds) {
             const { error } = await database.deleteUserPersona(personaId);
@@ -54,15 +80,57 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
         // Update existing personas
         for (const persona of state.personas) {
             const { id, user_id, created_at, updated_at, ...personaToUpdate } = persona;
-            const { error } = await database.updateUserPersona(id, personaToUpdate);
+
+            // Apply avatar URL if it was uploaded
+            const avatarUpload = avatarUploads.find(upload => upload.id === id);
+            if (avatarUpload) {
+                personaToUpdate.avatar_url = avatarUpload.avatar_url;
+            }
+
+            const { error } = await database.updateUserPersona(id, personaToUpdate as UserPersonas);
             if (error) throw error;
         }
 
         // Insert new personas
+        const newPersonaIds = [];
         for (const newPersona of state.newPersonas) {
             const { temp_id, ...personaToInsert } = newPersona;
+
+            // Insert the new persona
             const { error } = await database.insertUserPersona(personaToInsert);
             if (error) throw error;
+
+            // Get the personas to find the newly created one
+            const { personas: updatedPersonas } = await database.getUserPersonas();
+            const createdPersona = updatedPersonas?.find(p =>
+                p.name === personaToInsert.name &&
+                p.bio === personaToInsert.bio
+            );
+
+            if (createdPersona && state.avatarFiles[temp_id]) {
+                // Now we have a real ID, we can upload the avatar
+                const file = state.avatarFiles[temp_id]!;
+                const fileExt = file.name.split('.').pop() || 'jpg';
+                const filePath = `persona_avatars/${createdPersona.id}.${fileExt}`;
+
+                const { publicUrl, error: uploadError } = await database.uploadAuth(filePath, file);
+                if (uploadError) throw uploadError;
+
+                // Update the persona with the new avatar URL
+                await database.updateUserPersona(createdPersona.id, {
+                    name: createdPersona.name || '',
+                    bio: createdPersona.bio || '',
+                    appearance: createdPersona.appearance || '',
+                    description: createdPersona.description || '',
+                    gender: createdPersona.gender || '',
+                    avatar_url: publicUrl,
+                    banner_url: createdPersona.banner_url || ''
+                } as UserPersonas);
+            }
+
+            if (createdPersona) {
+                newPersonaIds.push({ tempId: temp_id, realId: createdPersona.id });
+            }
         }
 
         // Reload personas to get fresh data including IDs for new personas
@@ -74,6 +142,7 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
         // Reset tracking of new and deleted personas
         dispatch({ type: 'SET_FIELD', field: 'newPersonas', value: [] });
         dispatch({ type: 'SET_FIELD', field: 'deletedPersonaIds', value: [] });
+        dispatch({ type: 'SET_FIELD', field: 'avatarFiles', value: {} });
 
     } catch (error) {
         console.error('Failed to update settings:', error);
@@ -125,14 +194,6 @@ function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: 
         dispatch({ type: 'ADD_PERSONA', persona: newPersona });
     };
 
-    const handleUpdatePersona = (id: string, updates: Partial<UserPersonas>) => {
-        dispatch({ type: 'UPDATE_PERSONA', id, updates });
-    };
-
-    const handleDeletePersona = (id: string) => {
-        dispatch({ type: 'DELETE_PERSONA', id });
-    };
-
     return (
         <form className="flex flex-col p-4 space-y-8" onSubmit={(e) => e.preventDefault()}>
             <div>
@@ -162,8 +223,7 @@ function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: 
                     <PersonaCard
                         key={persona.id}
                         persona={persona}
-                        onUpdate={handleUpdatePersona}
-                        onDelete={handleDeletePersona}
+                        dispatch={dispatch}
                     />
                 ))}
 
@@ -171,8 +231,7 @@ function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: 
                     <PersonaCard
                         key={newPersona.temp_id}
                         persona={newPersona}
-                        onUpdate={handleUpdatePersona}
-                        onDelete={handleDeletePersona}
+                        dispatch={dispatch}
                         isNew={true}
                     />
                 ))}

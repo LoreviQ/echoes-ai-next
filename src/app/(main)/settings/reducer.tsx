@@ -8,6 +8,7 @@ export interface SettingsState {
     personas: UserPersonasSchema[];
     newPersonas: Array<UserPersonas & { temp_id: string }>;
     deletedPersonaIds: string[];
+    avatarFiles: Record<string, File | undefined>; // Map of persona ID to avatar file
 }
 
 
@@ -16,7 +17,8 @@ export type SettingsAction =
     | { type: 'ADD_PERSONA'; persona: UserPersonas & { temp_id: string } }
     | { type: 'UPDATE_PERSONA'; id: string; updates: Partial<UserPersonas> }
     | { type: 'DELETE_PERSONA'; id: string }
-    | { type: 'LOAD_PERSONAS'; personas: UserPersonasSchema[] };
+    | { type: 'LOAD_PERSONAS'; personas: UserPersonasSchema[] }
+    | { type: 'SET_AVATAR_FILE'; id: string; file: File };
 
 export const initialSettingsState: SettingsState = {
     nsfw_filter: 'hide',
@@ -24,7 +26,8 @@ export const initialSettingsState: SettingsState = {
     user_id: null,
     personas: [],
     newPersonas: [],
-    deletedPersonaIds: []
+    deletedPersonaIds: [],
+    avatarFiles: {}
 };
 
 export function settingsReducer(
@@ -67,18 +70,34 @@ export function settingsReducer(
         case 'DELETE_PERSONA':
             // If it's an existing persona, add to deletedPersonaIds
             if (state.personas.some(p => p.id === action.id)) {
+                const newAvatarFiles = { ...state.avatarFiles };
+                delete newAvatarFiles[action.id];
+
                 return {
                     ...state,
                     personas: state.personas.filter(p => p.id !== action.id),
-                    deletedPersonaIds: [...state.deletedPersonaIds, action.id]
+                    deletedPersonaIds: [...state.deletedPersonaIds, action.id],
+                    avatarFiles: newAvatarFiles
                 };
             } else {
                 // If it's a new persona, just remove it from newPersonas
+                const newAvatarFiles = { ...state.avatarFiles };
+                delete newAvatarFiles[action.id];
+
                 return {
                     ...state,
-                    newPersonas: state.newPersonas.filter(p => p.temp_id !== action.id)
+                    newPersonas: state.newPersonas.filter(p => p.temp_id !== action.id),
+                    avatarFiles: newAvatarFiles
                 };
             }
+        case 'SET_AVATAR_FILE':
+            return {
+                ...state,
+                avatarFiles: {
+                    ...state.avatarFiles,
+                    [action.id]: action.file
+                }
+            };
         default:
             return state;
     }
