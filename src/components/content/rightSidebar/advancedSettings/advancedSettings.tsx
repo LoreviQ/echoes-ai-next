@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { useRightSidebar } from '@/contexts/rightSidebar';
 import { CheckSquareIcon } from "@/assets";
 import { AdvancedSettingsForm } from '@/components/forms/CreateCharacter/advancedSettingsComponent';
-import { advancedSettingsReducer, initialAdvancedSettingsState } from './advancedSettingsReducer';
+import { advancedSettingsReducer, initialAdvancedSettingsState } from './reducer';
 
 const AdvancedSettingsHeaderComponent = () => {
     const { currentCharacter } = useRightSidebar();
@@ -28,10 +28,7 @@ const AdvancedSettingsContentComponent = () => {
 
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold">Advanced Settings</h1>
-            <div className="p-4">
-                <AdvancedSettingsForm state={state} dispatch={dispatch} />
-            </div>
+            <AdvancedSettingsForm state={state} dispatch={dispatch} />
         </div>
     );
 };

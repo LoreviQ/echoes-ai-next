@@ -1,6 +1,7 @@
 // Define the state interface for advanced settings
 export interface AdvancedSettingsState {
     path: string;
+    postingFrequency: number;
     isSubmitting?: boolean;
     isGenerating?: boolean;
 }
@@ -12,6 +13,7 @@ export type AdvancedSettingsAction =
 // Define the initial state
 export const initialAdvancedSettingsState: AdvancedSettingsState = {
     path: '',
+    postingFrequency: 0,
     isSubmitting: false,
     isGenerating: false
 };

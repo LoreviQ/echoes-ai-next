@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Slider } from '@/components/ui';
 
 interface AdvancedSettingsProps {
     state: any;
@@ -33,6 +34,19 @@ export function AdvancedSettings({ state, dispatch }: AdvancedSettingsProps) {
 
             {isExpanded && (
                 <div className="mt-4 space-y-4">
+                    <div className="flex items-center">
+                        <label htmlFor="path" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Path</label>
+                        <input
+                            type="text"
+                            id="path"
+                            value={state.path}
+                            onChange={(e) => dispatch({ type: 'SET_FIELD', field: 'path', value: e.target.value })}
+                            required
+                            disabled={state.isSubmitting || state.isGenerating}
+                            className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
+                            placeholder="url-friendly-path"
+                        />
+                    </div>
                     <AdvancedSettingsForm state={state} dispatch={dispatch} />
                 </div>
             )}
@@ -42,18 +56,22 @@ export function AdvancedSettings({ state, dispatch }: AdvancedSettingsProps) {
 
 export function AdvancedSettingsForm({ state, dispatch }: AdvancedSettingsProps) {
     return (
-        <div className="flex items-center">
-            <label htmlFor="path" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Path</label>
-            <input
-                type="text"
-                id="path"
-                value={state.path}
-                onChange={(e) => dispatch({ type: 'SET_FIELD', field: 'path', value: e.target.value })}
-                required
-                disabled={state.isSubmitting || state.isGenerating}
-                className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
-                placeholder="url-friendly-path"
-            />
+        <div className="space-y-4">
+            <h1 className="text-2xl font-bold">Actions</h1>
+            <div className="flex items-center">
+                <div className="pl-2 w-[15%]">
+                    <label className="text-sm font-medium text-zinc-200">
+                        Posting Frequency
+                    </label>
+                </div>
+                <Slider
+                    value={state.postingFrequency}
+                    onChange={(value) => dispatch({ type: 'SET_FIELD', field: 'postingFrequency', value })}
+                    min={-100}
+                    max={100}
+                    disabled={state.isSubmitting || state.isGenerating}
+                />
+            </div>
         </div>
     );
 }

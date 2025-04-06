@@ -10,3 +10,4 @@ export { HomeFeed, CharacterFeed, CharacterRecommendationFeed } from './Feed';
 export { Dropdown, DropdownItem } from './Dropdown';
 export { default as BackHeader } from './BackHeader';
 export * from './character';
+export * from './Slider';

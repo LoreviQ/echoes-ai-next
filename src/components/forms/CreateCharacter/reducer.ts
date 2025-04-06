@@ -16,6 +16,7 @@ export interface FormState {
     isPublic: boolean;
     isNsfw: boolean;
     tags: string;
+    postingFrequency: number;
 
     // UI state
     error: string | null;
@@ -61,6 +62,7 @@ export const initialFormState: FormState = {
     isPublic: true,
     isNsfw: false,
     tags: '',
+    postingFrequency: 0,
     error: null,
     isSubmitting: false,
     isGenerating: false,
