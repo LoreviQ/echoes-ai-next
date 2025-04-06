@@ -41,19 +41,6 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
                 />
             </div>
             <div className="flex items-center">
-                <label htmlFor="path" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Path</label>
-                <input
-                    type="text"
-                    id="path"
-                    value={path}
-                    onChange={(e) => dispatch({ type: 'SET_FIELD', field: 'path', value: e.target.value })}
-                    required
-                    disabled={isSubmitting || isGenerating}
-                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
-                    placeholder="url-friendly-path"
-                />
-            </div>
-            <div className="flex items-center">
                 <label htmlFor="gender" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Gender</label>
                 <div className="flex w-full space-x-2">
                     <select

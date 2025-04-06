@@ -11,6 +11,7 @@ import { Gender } from '@/types';
 
 import { CharacterHero } from './heroComponent';
 import { DetailsSection } from './detailsComponent';
+import { AdvancedSettings } from './advancedSettingsComponent';
 import { formReducer, initialFormState } from './reducer';
 
 // Define form props
@@ -176,6 +177,11 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
             />
 
             <DetailsSection
+                state={state}
+                dispatch={dispatch}
+            />
+
+            <AdvancedSettings
                 state={state}
                 dispatch={dispatch}
             />
