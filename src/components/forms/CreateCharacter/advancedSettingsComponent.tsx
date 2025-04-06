@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Slider } from '@/components/ui';
-import { CharacterAttributes, attributeMetadata } from '@/types/characterAttributes';
+import { CharacterAttributes, attributeMetadata, getAttributeValueDescription } from '@/types/characterAttributes';
 import { FormState, FormAction } from './reducer';
 
 interface AdvancedSettingsProps {
@@ -181,7 +181,10 @@ function SliderSection({ field, state, dispatch }: {
 
     return (
         <div className="flex">
-            <label className="pl-2 w-[25%] text-sm font-medium text-zinc-200 cursor-help" title={metadata.description}>{metadata.name}</label>
+            <div className="pl-2 w-[25%] flex flex-col">
+                <label className="text-sm font-medium text-zinc-200 cursor-help" title={metadata.description}>{metadata.name}</label>
+                <span className="text-xs text-zinc-500">{getAttributeValueDescription(field, state[field])}</span>
+            </div>
             <Slider value={state[field]} onChange={onChange} disabled={state.isSubmitting || state.isGenerating} />
         </div>
     );
