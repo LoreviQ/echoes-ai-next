@@ -2,6 +2,9 @@
 export interface AdvancedSettingsState {
     path: string;
     postingFrequency: number;
+    originality: number;
+    likeReplyRatio: number;
+    responsiveness: number;
     isSubmitting?: boolean;
     isGenerating?: boolean;
 }
@@ -14,6 +17,9 @@ export type AdvancedSettingsAction =
 export const initialAdvancedSettingsState: AdvancedSettingsState = {
     path: '',
     postingFrequency: 0,
+    originality: 0,
+    likeReplyRatio: 0,
+    responsiveness: 0,
     isSubmitting: false,
     isGenerating: false
 };

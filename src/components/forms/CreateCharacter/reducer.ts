@@ -17,6 +17,9 @@ export interface FormState {
     isNsfw: boolean;
     tags: string;
     postingFrequency: number;
+    originality: number;
+    likeReplyRatio: number;
+    responsiveness: number;
 
     // UI state
     error: string | null;
@@ -63,6 +66,9 @@ export const initialFormState: FormState = {
     isNsfw: false,
     tags: '',
     postingFrequency: 0,
+    originality: 0,
+    likeReplyRatio: 0,
+    responsiveness: 0,
     error: null,
     isSubmitting: false,
     isGenerating: false,

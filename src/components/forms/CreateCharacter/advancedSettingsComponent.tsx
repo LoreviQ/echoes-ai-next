@@ -58,15 +58,41 @@ export function AdvancedSettingsForm({ state, dispatch }: AdvancedSettingsProps)
     return (
         <div className="space-y-4">
             <h1 className="text-2xl font-bold">Actions</h1>
-            <div className="flex items-center">
-                <div className="pl-2 w-[15%]">
-                    <label className="text-sm font-medium text-zinc-200">
-                        Posting Frequency
-                    </label>
-                </div>
+            <div className="flex">
+                <label className="pl-2 w-[25%] text-sm font-medium text-zinc-200"> Posting Frequency</label>
                 <Slider
                     value={state.postingFrequency}
                     onChange={(value) => dispatch({ type: 'SET_FIELD', field: 'postingFrequency', value })}
+                    min={-100}
+                    max={100}
+                    disabled={state.isSubmitting || state.isGenerating}
+                />
+            </div>
+            <div className="flex">
+                <label className="pl-2 w-[25%] text-sm font-medium text-zinc-200">Originality</label>
+                <Slider
+                    value={state.originality}
+                    onChange={(value) => dispatch({ type: 'SET_FIELD', field: 'originality', value })}
+                    min={-100}
+                    max={100}
+                    disabled={state.isSubmitting || state.isGenerating}
+                />
+            </div>
+            <div className="flex">
+                <label className="pl-2 w-[25%] text-sm font-medium text-zinc-200">Like/Reply Ratio</label>
+                <Slider
+                    value={state.likeReplyRatio}
+                    onChange={(value) => dispatch({ type: 'SET_FIELD', field: 'likeReplyRatio', value })}
+                    min={-100}
+                    max={100}
+                    disabled={state.isSubmitting || state.isGenerating}
+                />
+            </div>
+            <div className="flex">
+                <label className="pl-2 w-[25%] text-sm font-medium text-zinc-200">Responsiveness</label>
+                <Slider
+                    value={state.responsiveness}
+                    onChange={(value) => dispatch({ type: 'SET_FIELD', field: 'responsiveness', value })}
                     min={-100}
                     max={100}
                     disabled={state.isSubmitting || state.isGenerating}
