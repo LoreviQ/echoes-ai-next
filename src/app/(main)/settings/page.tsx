@@ -55,11 +55,8 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
                 const fileExt = file.name.split('.').pop() || 'jpg';
                 const filePath = `persona_avatars/${persona.id}.${fileExt}`;
 
-                const { publicUrl, error } = await database.uploadAuth(filePath, file);
+                const { error } = await database.uploadAuth(filePath, file);
                 if (error) throw error;
-
-                // Update the persona with the new avatar URL
-                avatarUploads.push({ id: persona.id, avatar_url: publicUrl });
             }
         }
 
@@ -79,13 +76,7 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
 
         // Update existing personas
         for (const persona of state.personas) {
-            const { id, user_id, created_at, updated_at, ...personaToUpdate } = persona;
-
-            // Apply avatar URL if it was uploaded
-            const avatarUpload = avatarUploads.find(upload => upload.id === id);
-            if (avatarUpload) {
-                personaToUpdate.avatar_url = avatarUpload.avatar_url;
-            }
+            const { id, user_id, created_at, updated_at, avatar_url, ...personaToUpdate } = persona;
 
             const { error } = await database.updateUserPersona(id, personaToUpdate as UserPersonas);
             if (error) throw error;
@@ -94,7 +85,7 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
         // Insert new personas
         const newPersonaIds = [];
         for (const newPersona of state.newPersonas) {
-            const { temp_id, ...personaToInsert } = newPersona;
+            const { temp_id, avatar_url, ...personaToInsert } = newPersona;
 
             // Insert the new persona
             const { error } = await database.insertUserPersona(personaToInsert);
@@ -113,19 +104,8 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
                 const fileExt = file.name.split('.').pop() || 'jpg';
                 const filePath = `persona_avatars/${createdPersona.id}.${fileExt}`;
 
-                const { publicUrl, error: uploadError } = await database.uploadAuth(filePath, file);
+                const { error: uploadError } = await database.uploadAuth(filePath, file);
                 if (uploadError) throw uploadError;
-
-                // Update the persona with the new avatar URL
-                await database.updateUserPersona(createdPersona.id, {
-                    name: createdPersona.name || '',
-                    bio: createdPersona.bio || '',
-                    appearance: createdPersona.appearance || '',
-                    description: createdPersona.description || '',
-                    gender: createdPersona.gender || '',
-                    avatar_url: publicUrl,
-                    banner_url: createdPersona.banner_url || ''
-                } as UserPersonas);
             }
 
             if (createdPersona) {
@@ -188,8 +168,7 @@ function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: 
             appearance: '',
             description: '',
             gender: '',
-            avatar_url: '',
-            banner_url: ''
+
         };
         dispatch({ type: 'ADD_PERSONA', persona: newPersona });
     };

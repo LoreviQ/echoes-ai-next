@@ -23,8 +23,7 @@ export type UserPersonasSchema = {
     appearance: string | null;
     description: string | null;
     gender: string | null;
-    avatar_url: string | null;
-    banner_url: string | null;
+    avatar_url?: string | null;
 };
 
 export type UserPersonas = Omit<UserPersonasSchema, 'id' | 'user_id' | 'created_at' | 'updated_at'>;

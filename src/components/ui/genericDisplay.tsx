@@ -9,8 +9,9 @@ interface IdentityProps {
     editable?: boolean;
     onFileSelected?: (file: File | string) => void;
     disabled?: boolean;
+    tooltip?: boolean;
 }
-export function Identity({ name, path = null, avatar_url, editable = false, onFileSelected, disabled = false }: IdentityProps) {
+export function Identity({ name, path = null, avatar_url, editable = false, onFileSelected, disabled = false, tooltip = true }: IdentityProps) {
     return (
         <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center justify-center w-full sm:w-auto">
@@ -18,16 +19,17 @@ export function Identity({ name, path = null, avatar_url, editable = false, onFi
                     {editable ? (
                         <SelectImage
                             src={avatar_url || '/default-avatar.png'}
-                            alt={`${name}'s avatar`}
+                            alt={`avatar`}
                             fill
                             className="object-contain"
                             onFileSelected={onFileSelected}
                             disabled={disabled}
+                            tooltip={tooltip}
                         />
                     ) : (
                         <PreviewImage
                             src={avatar_url || '/default-avatar.png'}
-                            alt={`${name}'s avatar`}
+                            alt={`avatar`}
                             fill
                             className="rounded-full object-cover"
                         />

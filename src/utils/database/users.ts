@@ -49,14 +49,25 @@ export async function getUserPersonas(
     client?: SupabaseClient
 ) {
     const supabase = client || createClient();
-    // automatically filters to logged in user due to RLS policy
+
     const { data, error } = await supabase
         .from('user_personas')
-        .select('*');
+        .select('*') as { data: UserPersonasSchema[] | null, error: AuthError | null };
+    if (error || !data) {
+        return { personas: null, error };
+    }
+    // Get the signed url for the avatars
+    for (const persona of data) {
+        const { data: signedUrl } = await supabase
+            .storage
+            .from('user-data')
+            .createSignedUrl(`${persona.user_id}/persona_avatars/${persona.id}.jpg`, 60 * 60 * 24);
+        persona.avatar_url = signedUrl?.signedUrl || null;
+    }
 
     return {
         personas: data as UserPersonasSchema[] | null,
-        error
+        error: null
     };
 }
 

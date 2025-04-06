@@ -11,6 +11,7 @@ interface SelectImageProps {
     priority?: boolean;
     onFileSelected?: (file: File | string) => void;
     disabled?: boolean;
+    tooltip?: boolean;
 }
 
 export default function SelectImage({
@@ -20,7 +21,8 @@ export default function SelectImage({
     className,
     priority,
     onFileSelected,
-    disabled
+    disabled,
+    tooltip = true
 }: SelectImageProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isHovered, setIsHovered] = useState(false);
@@ -70,7 +72,7 @@ export default function SelectImage({
             {isHovered && !disabled && (
                 <div className={`absolute inset-0 bg-black/50 flex items-center justify-center ${className}`}>
                     <span className="text-white text-center px-2 break-words w-full">
-                        {'Click to select an image'}
+                        {tooltip ? 'Click to select an image' : ''}
                     </span>
                 </div>
             )}

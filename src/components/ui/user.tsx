@@ -36,6 +36,7 @@ export function UserIdentity({ persona, editable = false, onFileSelected }: User
             avatar_url={persona.avatar_url}
             editable={editable}
             onFileSelected={onFileSelected}
+            tooltip={false}
         />
     )
 }
