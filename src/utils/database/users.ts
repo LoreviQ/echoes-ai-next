@@ -112,3 +112,27 @@ export async function insertUserPersona(
 
     return { error };
 }
+
+export async function getUserPreferences(
+    userId: string,
+    client?: SupabaseClient
+) {
+    const supabase = client || createClient();
+
+    const { data, error } = await supabase
+        .from('user_preferences')
+        .select('*')
+        .eq('user_id', userId)
+        .single() as { data: UserPreferencesSchema | null, error: AuthError | null };
+
+    if (error || !data) {
+        return { preferences: null, error };
+    }
+
+    // Remove user_id from the preferences before returning
+    const { user_id, ...preferencesWithoutId } = data;
+    return {
+        preferences: preferencesWithoutId as UserPreferencesSupabase,
+        error: null
+    };
+}

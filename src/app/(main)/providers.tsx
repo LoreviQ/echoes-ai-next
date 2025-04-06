@@ -11,11 +11,13 @@ import {
     SidebarContentType
 } from "@/contexts";
 import { useState } from 'react'
+import { UserPreferencesSupabase } from '@/types';
 
 
 interface Session {
     active: boolean;
     user: any | null;
+    preferences: UserPreferencesSupabase | null;
 }
 
 interface ClientProvidersProps {

@@ -47,6 +47,7 @@ async function getInitialSession() {
     const { user } = await database.getLoggedInUser(supabase);
     return {
         active: !!user,
-        user: user?.user_metadata ?? null
+        user: user?.user_metadata ?? null,
+        preferences: user?.preferences ?? null,
     };
 }
