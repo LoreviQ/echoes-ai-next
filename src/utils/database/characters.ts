@@ -84,12 +84,14 @@ export async function getCharacters(
 export async function insertCharacter(
     character: CreateCharacter,
     client?: SupabaseClient
-): Promise<{ error: PostgrestError | null }> {
+): Promise<{ character_id: string | null; error: PostgrestError | null }> {
     const supabase = client || createClient();
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('characters')
-        .insert(character);
-    return { error };
+        .insert(character)
+        .select('id')
+        .single();
+    return { character_id: data?.id, error };
 }
 
 export async function updateCharacterBio(

@@ -45,3 +45,18 @@ export async function getCharacterAttributes(
 
     return { attributes: null, error };
 }
+
+export async function upsertCharacterAttributes(
+    character_id: string,
+    attributes: CharacterAttributes,
+    client?: SupabaseClient
+): Promise<{ error: PostgrestError | null }> {
+    const supabase = client || createClient();
+    const { error } = await supabase
+        .from('character_attributes')
+        .upsert({
+            character_id,
+            ...attributes
+        });
+    return { error };
+}

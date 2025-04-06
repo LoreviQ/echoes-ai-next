@@ -5,31 +5,31 @@ export interface AdvancedSettingsState {
     goal: string;
 
     // action attributes
-    postingFrequency: number;
+    posting_frequency: number;
     originality: number;
-    likeReplyRatio: number;
+    like_reply_ratio: number;
     responsiveness: number;
 
     // provider attributes
-    readingScope: number;
-    informationFiltering: number;
-    sentimentFiltering: number;
-    profileScrutiny: number;
+    reading_scope: number;
+    information_filtering: number;
+    sentiment_filtering: number;
+    profile_scrutiny: number;
 
     // evaluator attributes
     influencability: number;
-    engagementSensitivity: number;
-    relationshipFormationSpeed: number;
-    relationshipClosenessThreshold: number;
-    relationshipStability: number;
-    grudgePersistence: number;
+    engagement_sensitivity: number;
+    relationship_formation_speed: number;
+    relationship_closeness_threshold: number;
+    relationship_stability: number;
+    grudge_persistence: number;
 
     // content attributes
     positivity: number;
     openness: number;
     formality: number;
-    conflictInitiation: number;
-    influenceSeeking: number;
+    conflict_initiation: number;
+    influence_seeking: number;
     inquisitiveness: number;
     humor: number;
     depth: number;
@@ -50,31 +50,31 @@ export const initialAdvancedSettingsState: AdvancedSettingsState = {
     goal: '',
 
     // action attributes
-    postingFrequency: 0,
+    posting_frequency: 0,
     originality: 0,
-    likeReplyRatio: 0,
+    like_reply_ratio: 0,
     responsiveness: 0,
 
     // provider attributes
-    readingScope: 0,
-    informationFiltering: 0,
-    sentimentFiltering: 0,
-    profileScrutiny: 0,
+    reading_scope: 0,
+    information_filtering: 0,
+    sentiment_filtering: 0,
+    profile_scrutiny: 0,
 
     // evaluator attributes
     influencability: 0,
-    engagementSensitivity: 0,
-    relationshipFormationSpeed: 0,
-    relationshipClosenessThreshold: 0,
-    relationshipStability: 0,
-    grudgePersistence: 0,
+    engagement_sensitivity: 0,
+    relationship_formation_speed: 0,
+    relationship_closeness_threshold: 0,
+    relationship_stability: 0,
+    grudge_persistence: 0,
 
     // content attributes
     positivity: 0,
     openness: 0,
     formality: 0,
-    conflictInitiation: 0,
-    influenceSeeking: 0,
+    conflict_initiation: 0,
+    influence_seeking: 0,
     inquisitiveness: 0,
     humor: 0,
     depth: 0,

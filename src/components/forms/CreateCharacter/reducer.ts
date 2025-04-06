@@ -22,31 +22,31 @@ export interface FormState {
     goal: string;
 
     // action attributes
-    postingFrequency: number;
+    posting_frequency: number;
     originality: number;
-    likeReplyRatio: number;
+    like_reply_ratio: number;
     responsiveness: number;
 
     // provider attributes
-    readingScope: number;
-    informationFiltering: number;
-    sentimentFiltering: number;
-    profileScrutiny: number;
+    reading_scope: number;
+    information_filtering: number;
+    sentiment_filtering: number;
+    profile_scrutiny: number;
 
     // evaluator attributes
     influencability: number;
-    engagementSensitivity: number;
-    relationshipFormationSpeed: number;
-    relationshipClosenessThreshold: number;
-    relationshipStability: number;
-    grudgePersistence: number;
+    engagement_sensitivity: number;
+    relationship_formation_speed: number;
+    relationship_closeness_threshold: number;
+    relationship_stability: number;
+    grudge_persistence: number;
 
     // content attributes
     positivity: number;
     openness: number;
     formality: number;
-    conflictInitiation: number;
-    influenceSeeking: number;
+    conflict_initiation: number;
+    influence_seeking: number;
     inquisitiveness: number;
     humor: number;
     depth: number;
@@ -101,31 +101,31 @@ export const initialFormState: FormState = {
     goal: '',
 
     // action attributes
-    postingFrequency: 0,
+    posting_frequency: 0,
     originality: 0,
-    likeReplyRatio: 0,
+    like_reply_ratio: 0,
     responsiveness: 0,
 
     // provider attributes
-    readingScope: 0,
-    informationFiltering: 0,
-    sentimentFiltering: 0,
-    profileScrutiny: 0,
+    reading_scope: 0,
+    information_filtering: 0,
+    sentiment_filtering: 0,
+    profile_scrutiny: 0,
 
     // evaluator attributes
     influencability: 0,
-    engagementSensitivity: 0,
-    relationshipFormationSpeed: 0,
-    relationshipClosenessThreshold: 0,
-    relationshipStability: 0,
-    grudgePersistence: 0,
+    engagement_sensitivity: 0,
+    relationship_formation_speed: 0,
+    relationship_closeness_threshold: 0,
+    relationship_stability: 0,
+    grudge_persistence: 0,
 
     // content attributes
     positivity: 0,
     openness: 0,
     formality: 0,
-    conflictInitiation: 0,
-    influenceSeeking: 0,
+    conflict_initiation: 0,
+    influence_seeking: 0,
     inquisitiveness: 0,
     humor: 0,
     depth: 0,
@@ -246,7 +246,33 @@ export function formReducer(state: FormState, action: FormAction): FormState {
                 isGeneratingBanner: false
             };
         case 'GENERATE_CHARACTER_SUCCESS': {
-            const { name, bio, description, appearance, gender, nsfw } = action.data;
+            const { name, bio, description, appearance, gender, nsfw } = action.data.character;
+            const {
+                mood,
+                goal,
+                posting_frequency,
+                originality,
+                like_reply_ratio,
+                responsiveness,
+                reading_scope,
+                information_filtering,
+                sentiment_filtering,
+                profile_scrutiny,
+                influencability,
+                engagement_sensitivity,
+                relationship_formation_speed,
+                relationship_closeness_threshold,
+                relationship_stability,
+                grudge_persistence,
+                positivity,
+                openness,
+                formality,
+                conflict_initiation,
+                influence_seeking,
+                inquisitiveness,
+                humor,
+                depth
+            } = action.data.attributes;
             const parsedGender = parseGender(gender);
             return {
                 ...state,
@@ -257,7 +283,36 @@ export function formReducer(state: FormState, action: FormAction): FormState {
                 gender: parsedGender.gender,
                 customGender: parsedGender.customValue || '',
                 isNsfw: nsfw === 'true' || nsfw === true || state.isNsfw,
-                path: nameToPath(name || state.name) // Update path based on name
+                path: nameToPath(name || state.name),
+                // State attributes
+                mood: mood || state.mood,
+                goal: goal || state.goal,
+                // Action attributes
+                posting_frequency: posting_frequency ?? state.posting_frequency,
+                originality: originality ?? state.originality,
+                like_reply_ratio: like_reply_ratio ?? state.like_reply_ratio,
+                responsiveness: responsiveness ?? state.responsiveness,
+                // Provider attributes
+                reading_scope: reading_scope ?? state.reading_scope,
+                information_filtering: information_filtering ?? state.information_filtering,
+                sentiment_filtering: sentiment_filtering ?? state.sentiment_filtering,
+                profile_scrutiny: profile_scrutiny ?? state.profile_scrutiny,
+                // Evaluator attributes
+                influencability: influencability ?? state.influencability,
+                engagement_sensitivity: engagement_sensitivity ?? state.engagement_sensitivity,
+                relationship_formation_speed: relationship_formation_speed ?? state.relationship_formation_speed,
+                relationship_closeness_threshold: relationship_closeness_threshold ?? state.relationship_closeness_threshold,
+                relationship_stability: relationship_stability ?? state.relationship_stability,
+                grudge_persistence: grudge_persistence ?? state.grudge_persistence,
+                // Content attributes
+                positivity: positivity ?? state.positivity,
+                openness: openness ?? state.openness,
+                formality: formality ?? state.formality,
+                conflict_initiation: conflict_initiation ?? state.conflict_initiation,
+                influence_seeking: influence_seeking ?? state.influence_seeking,
+                inquisitiveness: inquisitiveness ?? state.inquisitiveness,
+                humor: humor ?? state.humor,
+                depth: depth ?? state.depth
             };
         }
         case 'GENERATE_RANDOM_TAGS': {

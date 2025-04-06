@@ -6,3 +6,4 @@ export * from './posts';
 export * from './subscriptions';
 export * from './threads';
 export * from './messages';
+export * from './characterAttributes';

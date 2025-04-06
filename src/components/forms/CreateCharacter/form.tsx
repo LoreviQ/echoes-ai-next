@@ -132,7 +132,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 }
             }
 
-            const { error: insertError } = await database.insertCharacter({
+            const { character_id, error: insertError } = await database.insertCharacter({
                 name,
                 path,
                 bio: bio || null,
@@ -146,9 +146,43 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 gender: gender === Gender.CUSTOM ? customGender : gender,
             });
 
-            if (insertError) {
+            if (insertError || !character_id) {
                 console.error('Error creating character:', insertError);
-                throw insertError;
+                throw insertError || new Error('Failed to create character');
+            }
+
+            // Insert character attributes
+            const { error: attributesError } = await database.insertCharacterAttributes({
+                character_id,
+                mood: state.mood,
+                goal: state.goal,
+                posting_frequency: state.posting_frequency,
+                originality: state.originality,
+                like_reply_ratio: state.like_reply_ratio,
+                responsiveness: state.responsiveness,
+                reading_scope: state.reading_scope,
+                information_filtering: state.information_filtering,
+                sentiment_filtering: state.sentiment_filtering,
+                profile_scrutiny: state.profile_scrutiny,
+                influencability: state.influencability,
+                engagement_sensitivity: state.engagement_sensitivity,
+                relationship_formation_speed: state.relationship_formation_speed,
+                relationship_closeness_threshold: state.relationship_closeness_threshold,
+                relationship_stability: state.relationship_stability,
+                grudge_persistence: state.grudge_persistence,
+                positivity: state.positivity,
+                openness: state.openness,
+                formality: state.formality,
+                conflict_initiation: state.conflict_initiation,
+                influence_seeking: state.influence_seeking,
+                inquisitiveness: state.inquisitiveness,
+                humor: state.humor,
+                depth: state.depth
+            });
+
+            if (attributesError) {
+                console.error('Error creating character attributes:', attributesError);
+                throw attributesError;
             }
 
             // Invalidate characters query to refresh the list

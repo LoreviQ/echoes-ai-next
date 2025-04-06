@@ -6,31 +6,31 @@ export type CharacterAttributesSchema = {
     goal: string;
 
     // Governs frequency of actions
-    postingFrequency: number;
+    posting_frequency: number;
     originality: number;
-    likeReplyRatio: number;
+    like_reply_ratio: number;
     responsiveness: number;
 
     // Governs the context providers
-    readingScope: number;
-    informationFiltering: number;
-    sentimentFiltering: number;
-    profileScrutiny: number;
+    reading_scope: number;
+    information_filtering: number;
+    sentiment_filtering: number;
+    profile_scrutiny: number;
 
     // Governs evaluations of the characters state
     influencability: number;
-    engagementSensitivity: number;
-    relationshipFormationSpeed: number;
-    relationshipClosenessThreshold: number;
-    relationshipStability: number;
-    grudgePersistence: number;
+    engagement_sensitivity: number;
+    relationship_formation_speed: number;
+    relationship_closeness_threshold: number;
+    relationship_stability: number;
+    grudge_persistence: number;
 
     // Governs content of interactions
     positivity: number;
     openness: number;
     formality: number;
-    conflictInitiation: number;
-    influenceSeeking: number;
+    conflict_initiation: number;
+    influence_seeking: number;
     inquisitiveness: number;
     humor: number;
     depth: number;
@@ -55,7 +55,7 @@ export const attributeMetadata: Record<keyof CharacterAttributes, AttributeMetad
         description: "Your characters current goal",
         category: 'state'
     },
-    postingFrequency: {
+    posting_frequency: {
         name: "Posting Frequency",
         description: "How often your character interacts with the platform",
         category: 'actions'
@@ -65,7 +65,7 @@ export const attributeMetadata: Record<keyof CharacterAttributes, AttributeMetad
         description: "How often your character decides to create original content vs interacting with existing content",
         category: 'actions'
     },
-    likeReplyRatio: {
+    like_reply_ratio: {
         name: "Like/Reply Ratio",
         description: "When interacting, the frequency of replies vs likes as interactions",
         category: 'actions'
@@ -75,22 +75,22 @@ export const attributeMetadata: Record<keyof CharacterAttributes, AttributeMetad
         description: "How quickly your character responds to direct messages",
         category: 'actions'
     },
-    readingScope: {
+    reading_scope: {
         name: "Reading Scope",
         description: "How broadly your character reads and considers content across the platform",
         category: 'providers'
     },
-    informationFiltering: {
+    information_filtering: {
         name: "Information Filtering",
         description: "How selectively your character filters and processes information",
         category: 'providers'
     },
-    sentimentFiltering: {
+    sentiment_filtering: {
         name: "Sentiment Filtering",
         description: "How much your character filters content based on emotional tone",
         category: 'providers'
     },
-    profileScrutiny: {
+    profile_scrutiny: {
         name: "Profile Scrutiny",
         description: "How deeply your character examines other users' profiles",
         category: 'providers'
@@ -100,27 +100,27 @@ export const attributeMetadata: Record<keyof CharacterAttributes, AttributeMetad
         description: "How easily your character is influenced by others' opinions and behaviors",
         category: 'evaluators'
     },
-    engagementSensitivity: {
+    engagement_sensitivity: {
         name: "Engagement Sensitivity",
         description: "How sensitive your character is to engagement metrics",
         category: 'evaluators'
     },
-    relationshipFormationSpeed: {
+    relationship_formation_speed: {
         name: "Relationship Formation Speed",
         description: "How quickly your character forms relationships with others",
         category: 'evaluators'
     },
-    relationshipClosenessThreshold: {
+    relationship_closeness_threshold: {
         name: "Relationship Closeness Threshold",
         description: "How much interaction is needed before your character considers someone close",
         category: 'evaluators'
     },
-    relationshipStability: {
+    relationship_stability: {
         name: "Relationship Stability",
         description: "How stable your character's relationships are once formed",
         category: 'evaluators'
     },
-    grudgePersistence: {
+    grudge_persistence: {
         name: "Grudge Persistence",
         description: "How long your character maintains negative feelings from conflicts",
         category: 'evaluators'
@@ -140,12 +140,12 @@ export const attributeMetadata: Record<keyof CharacterAttributes, AttributeMetad
         description: "How formal or casual your character's communication style is",
         category: 'content'
     },
-    conflictInitiation: {
+    conflict_initiation: {
         name: "Conflict Initiation",
         description: "How likely your character is to initiate or engage in conflicts",
         category: 'content'
     },
-    influenceSeeking: {
+    influence_seeking: {
         name: "Influence Seeking",
         description: "How actively your character seeks to influence others",
         category: 'content'
