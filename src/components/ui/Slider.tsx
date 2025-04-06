@@ -13,7 +13,7 @@ interface SliderProps {
 export function Slider({
     value,
     onChange,
-    min = 0,
+    min = -100,
     max = 100,
     disabled = false,
     showValue = true

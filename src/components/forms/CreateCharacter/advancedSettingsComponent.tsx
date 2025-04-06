@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Slider } from '@/components/ui';
+import { CharacterAttributes, attributeMetadata } from '@/types/characterAttributes';
+import { FormState, FormAction } from './reducer';
 
 interface AdvancedSettingsProps {
     state: any;
@@ -55,72 +57,49 @@ export function AdvancedSettings({ state, dispatch }: AdvancedSettingsProps) {
 }
 
 export function AdvancedSettingsForm({ state, dispatch }: AdvancedSettingsProps) {
+    const actionAttributes = Object.entries(attributeMetadata)
+        .filter(([_, metadata]) => metadata.category === 'actions')
+        .map(([field]) => field);
+
     return (
         <div className="space-y-4">
-            <div className="flex items-baseline space-x-8">
-                <h1 className="text-2xl font-bold">Actions</h1>
-                <span className="text-zinc-400 text-sm">Attributes that determine the actions your character makes</span>
-            </div>
-            <div className="flex">
-                <label
-                    className="pl-2 w-[25%] text-sm font-medium text-zinc-200 cursor-help"
-                    title="How often your character interacts with the platform"
-                >
-                    Posting Frequency
-                </label>
-                <Slider
-                    value={state.postingFrequency}
-                    onChange={(value) => dispatch({ type: 'SET_FIELD', field: 'postingFrequency', value })}
-                    min={-100}
-                    max={100}
-                    disabled={state.isSubmitting || state.isGenerating}
+            <SubHeading name="Actions" description="Attributes that determine the actions your character makes" />
+            {actionAttributes.map((field) => (
+                <SliderSection
+                    key={field}
+                    field={field as keyof Pick<CharacterAttributes, 'postingFrequency' | 'originality' | 'likeReplyRatio' | 'responsiveness'>}
+                    state={state}
+                    dispatch={dispatch}
                 />
-            </div>
-            <div className="flex">
-                <label
-                    className="pl-2 w-[25%] text-sm font-medium text-zinc-200 cursor-help"
-                    title="How often your character decides to create original content vs interacting with existing content"
-                >
-                    Originality
-                </label>
-                <Slider
-                    value={state.originality}
-                    onChange={(value) => dispatch({ type: 'SET_FIELD', field: 'originality', value })}
-                    min={-100}
-                    max={100}
-                    disabled={state.isSubmitting || state.isGenerating}
-                />
-            </div>
-            <div className="flex">
-                <label
-                    className="pl-2 w-[25%] text-sm font-medium text-zinc-200 cursor-help"
-                    title="When interacting, the frequency of replies vs likes as interactions"
-                >
-                    Like/Reply Ratio
-                </label>
-                <Slider
-                    value={state.likeReplyRatio}
-                    onChange={(value) => dispatch({ type: 'SET_FIELD', field: 'likeReplyRatio', value })}
-                    min={-100}
-                    max={100}
-                    disabled={state.isSubmitting || state.isGenerating}
-                />
-            </div>
-            <div className="flex">
-                <label
-                    className="pl-2 w-[25%] text-sm font-medium text-zinc-200 cursor-help"
-                    title="How quickly your character responds to direct messages"
-                >
-                    Responsiveness
-                </label>
-                <Slider
-                    value={state.responsiveness}
-                    onChange={(value) => dispatch({ type: 'SET_FIELD', field: 'responsiveness', value })}
-                    min={-100}
-                    max={100}
-                    disabled={state.isSubmitting || state.isGenerating}
-                />
-            </div>
+            ))}
+        </div>
+    );
+}
+
+function SubHeading({ name, description }: { name: string, description: string }) {
+    return (
+        <div className="flex items-baseline space-x-8">
+            <h1 className="text-2xl font-bold">{name}</h1>
+            <span className="text-zinc-400 text-sm">{description}</span>
+        </div>
+    );
+}
+
+function SliderSection({ field, state, dispatch }: {
+    field: keyof Pick<CharacterAttributes, 'postingFrequency' | 'originality' | 'likeReplyRatio' | 'responsiveness'>,
+    state: FormState,
+    dispatch: React.Dispatch<FormAction>,
+}) {
+    const metadata = attributeMetadata[field];
+
+    const onChange = (value: number) => {
+        dispatch({ type: 'SET_FIELD', field: field, value: value });
+    }
+
+    return (
+        <div className="flex">
+            <label className="pl-2 w-[25%] text-sm font-medium text-zinc-200 cursor-help" title={metadata.description}>{metadata.name}</label>
+            <Slider value={state[field]} onChange={onChange} disabled={state.isSubmitting || state.isGenerating} />
         </div>
     );
 }
