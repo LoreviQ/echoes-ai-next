@@ -3,9 +3,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Character } from '@/types';
 import { database } from '@/utils';
+import { useSession } from '@/contexts';
 
 export function useCharacters() {
     const queryClient = useQueryClient();
+    const { preferences } = useSession();
 
     const { data: characterIds, isLoading, error, refetch, isRefetching } = useQuery({
         queryKey: ['character_ids'],
@@ -27,7 +29,7 @@ export function useCharacters() {
     const getCharactersForUser = useCallback(async () => {
         try {
             // For now, just use fetchCharacters (this will be expanded later)
-            const { characters, error } = await database.getCharacters();
+            const { characters, error } = await database.getCharacters(preferences?.nsfw_filter);
             if (error) throw error;
             const characterIds = characters.map(character => character.id);
 

@@ -1,6 +1,6 @@
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 
-import { Character, CreateCharacter, CharacterSchema, CharacterBio, CharacterDescription } from "@/types";
+import { Character, CreateCharacter, CharacterSchema, CharacterBio, CharacterDescription, NsfwFilter } from "@/types";
 import { createClient } from "@/utils";
 
 type CharacterWithSubscriptionCount = CharacterSchema & {
@@ -56,10 +56,11 @@ export async function getCharacterByPath(
 }
 
 export async function getCharacters(
+    nsfwFilter: NsfwFilter = 'hide',
     client?: SupabaseClient
 ): Promise<{ characters: Character[]; error: PostgrestError | null }> {
     const supabase = client || createClient();
-    const { data, error } = await supabase
+    const charactersQuery = supabase
         .from('characters')
         .select(`
             *,
@@ -68,7 +69,12 @@ export async function getCharacters(
             )
         `)
         .eq('public', true)
-        .order('created_at', { ascending: false });
+    // if nsfwFilter is hide, hide nsfw characters
+    if (nsfwFilter === 'hide') {
+        charactersQuery.neq('nsfw', true);
+    }
+
+    const { data, error } = await charactersQuery.order('created_at', { ascending: false });;
     return {
         characters: (data || []).map(transformCharacterData) as Character[],
         error
