@@ -1,5 +1,5 @@
 import { AuthError, SupabaseClient, User as SupabaseUser } from "@supabase/supabase-js";
-import { User, UserPreferencesSchema, UserPreferencesSupabase } from "@/types";
+import { User, UserPreferencesSchema, UserPreferencesSupabase, UserPersonas, UserPersonasSchema } from "@/types";
 import { createClient } from "@/utils";
 
 export async function getLoggedInUser(
@@ -41,6 +41,63 @@ export async function updateUserPreferences(
         .from('user_preferences')
         .update(preferences)
         .eq('user_id', userId);
+
+    return { error };
+}
+
+export async function getUserPersonas(
+    client?: SupabaseClient
+) {
+    const supabase = client || createClient();
+    // automatically filters to logged in user due to RLS policy
+    const { data, error } = await supabase
+        .from('user_personas')
+        .select('*');
+
+    return {
+        personas: data as UserPersonasSchema[] | null,
+        error
+    };
+}
+
+export async function updateUserPersona(
+    personaId: string,
+    persona: UserPersonas,
+    client?: SupabaseClient
+) {
+    const supabase = client || createClient();
+    const { error } = await supabase
+        .from('user_personas')
+        .update(persona)
+        .eq('id', personaId);
+
+    return { error };
+}
+
+export async function deleteUserPersona(
+    personaId: string,
+    client?: SupabaseClient
+) {
+    const supabase = client || createClient();
+
+    const { error } = await supabase
+        .from('user_personas')
+        .delete()
+        .eq('id', personaId);
+
+    return { error };
+}
+
+export async function insertUserPersona(
+    persona: UserPersonas,
+    client?: SupabaseClient
+) {
+    const supabase = client || createClient();
+
+    const { error } = await supabase
+        .from('user_personas')
+        .insert(persona)
+
 
     return { error };
 }

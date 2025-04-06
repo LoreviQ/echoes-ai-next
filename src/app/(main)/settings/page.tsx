@@ -84,6 +84,7 @@ function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: 
                 value={state.nsfw_filter}
                 dispatch={dispatch}
             />
+            <SubHeading name="Personas" description="Configure your personas" />
         </form>
     );
 }
