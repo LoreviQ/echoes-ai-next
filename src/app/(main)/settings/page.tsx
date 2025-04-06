@@ -147,9 +147,8 @@ function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: 
                 />
             </div>
 
-            <div>
-                <div className="flex justify-between items-center">
-                    <SubHeading name="Personas" description="Configure your personas" />
+            <div className="flex flex-col space-y-4">
+                <SubHeading name="Personas" description="Configure your personas" >
                     <button
                         type="button"
                         onClick={handleAddPersona}
@@ -158,34 +157,31 @@ function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: 
                     >
                         <PlusIcon className="w-5 h-5" />
                     </button>
-                </div>
+                </SubHeading>
+                {state.personas.map(persona => (
+                    <PersonaCard
+                        key={persona.id}
+                        persona={persona}
+                        onUpdate={handleUpdatePersona}
+                        onDelete={handleDeletePersona}
+                    />
+                ))}
 
-                <div className="mt-4">
-                    {state.personas.map(persona => (
-                        <PersonaCard
-                            key={persona.id}
-                            persona={persona}
-                            onUpdate={handleUpdatePersona}
-                            onDelete={handleDeletePersona}
-                        />
-                    ))}
+                {state.newPersonas.map(newPersona => (
+                    <PersonaCard
+                        key={newPersona.temp_id}
+                        persona={newPersona}
+                        onUpdate={handleUpdatePersona}
+                        onDelete={handleDeletePersona}
+                        isNew={true}
+                    />
+                ))}
 
-                    {state.newPersonas.map(newPersona => (
-                        <PersonaCard
-                            key={newPersona.temp_id}
-                            persona={newPersona}
-                            onUpdate={handleUpdatePersona}
-                            onDelete={handleDeletePersona}
-                            isNew={true}
-                        />
-                    ))}
-
-                    {state.personas.length === 0 && state.newPersonas.length === 0 && (
-                        <p className="text-gray-500 text-center py-4">
-                            No personas yet. Click the plus button to create one.
-                        </p>
-                    )}
-                </div>
+                {state.personas.length === 0 && state.newPersonas.length === 0 && (
+                    <p className="text-gray-500 text-center py-4">
+                        No personas yet. Click the plus button to create one.
+                    </p>
+                )}
             </div>
         </form>
     );
