@@ -2,6 +2,8 @@ import { ChangeEvent, useState } from 'react';
 import { UserPersonasSchema, UserPersonas } from '@/types';
 import { PenSquareIcon, CheckSquareIcon } from '@/assets/icons';
 import { UserIdentity } from '@/components/ui';
+import { Gender } from '@/types';
+
 
 interface PersonaCardProps {
     persona: UserPersonasSchema | (UserPersonas & { temp_id: string });
@@ -12,6 +14,7 @@ interface PersonaCardProps {
 
 export function PersonaCard({ persona, onUpdate, onDelete, isNew = false }: PersonaCardProps) {
     const [isEditing, setIsEditing] = useState(isNew);
+    const [isExpanded, setIsExpanded] = useState(false);
     const id = 'id' in persona ? persona.id : persona.temp_id;
 
     return (
@@ -39,125 +42,168 @@ export function PersonaCard({ persona, onUpdate, onDelete, isNew = false }: Pers
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
             </button>
-
-            {isEditing ? (
-                <PersonaEdit persona={persona} id={id} onUpdate={onUpdate} />
-            ) : (
-                <PersonaDisplay persona={persona} />
-            )}
+            <PersonaDetails persona={persona} isExpanded={isExpanded} setIsExpanded={setIsExpanded} isEditing={isEditing} id={id} onUpdate={onUpdate} />
         </div>
     );
 }
 
-interface PersonaDisplayProps {
+interface PersonaDetailsProps {
     persona: UserPersonasSchema | (UserPersonas & { temp_id: string });
-}
-
-function PersonaDisplay({ persona }: PersonaDisplayProps) {
-    return (
-        <div className="p-4">
-            <UserIdentity persona={persona} />
-        </div>
-    );
-}
-
-interface PersonaEditProps extends PersonaDisplayProps {
+    isExpanded: boolean;
+    setIsExpanded: (isExpanded: boolean) => void;
+    isEditing: boolean;
     id: string;
     onUpdate: (id: string, updates: Partial<UserPersonas>) => void;
 }
 
-function PersonaEdit({ persona, id, onUpdate }: PersonaEditProps) {
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+function PersonaDetails({ persona, isExpanded, setIsExpanded, isEditing, id, onUpdate }: PersonaDetailsProps) {
+    const [customGenderText, setCustomGenderText] = useState<string>(
+        persona.gender && !Object.values(Gender).includes(persona.gender as Gender)
+            ? persona.gender
+            : ''
+    );
+
+    const handleInputChange = (
+        e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
         const { name, value } = e.target;
         onUpdate(id, { [name]: value });
     };
 
+    const handleGenderChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value as Gender;
+
+        if (value === Gender.CUSTOM) {
+            // Just set the gender to Custom initially
+            onUpdate(id, { gender: value });
+        } else {
+            // For standard genders, just use the enum value
+            onUpdate(id, { gender: value });
+            // Reset custom gender when switching back to standard gender
+            setCustomGenderText('');
+        }
+    };
+
+    const handleCustomGenderChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setCustomGenderText(value);
+
+        // When typing in the custom field, update the gender field directly with the text
+        // This is what will be sent to the database
+        onUpdate(id, { gender: value });
+    };
+
+    // Determine what to display in the dropdown
+    const displayGender = persona.gender && Object.values(Gender).includes(persona.gender as Gender)
+        ? persona.gender
+        : persona.gender
+            ? Gender.CUSTOM  // If it's a string but not a standard enum value, show as Custom
+            : '';
+
+    // Determine if we should show the custom input
+    const showCustomInput = displayGender === Gender.CUSTOM;
+
     return (
-        <div className="space-y-3">
-            <div>
-                <label htmlFor={`name-${id}`} className="block text-sm font-medium text-gray-700">Name</label>
-                <input
-                    id={`name-${id}`}
-                    name="name"
-                    type="text"
-                    value={persona.name || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
-                />
+        <>
+            <div className="p-4" onClick={() => setIsExpanded(!isExpanded)}>
+                <UserIdentity persona={persona} editable={isEditing} />
             </div>
-
-            <div>
-                <label htmlFor={`gender-${id}`} className="block text-sm font-medium text-gray-700">Gender</label>
-                <input
-                    id={`gender-${id}`}
-                    name="gender"
-                    type="text"
-                    value={persona.gender || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
-                />
-            </div>
-
-            <div>
-                <label htmlFor={`bio-${id}`} className="block text-sm font-medium text-gray-700">Bio</label>
-                <textarea
-                    id={`bio-${id}`}
-                    name="bio"
-                    rows={2}
-                    value={persona.bio || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
-                />
-            </div>
-
-            <div>
-                <label htmlFor={`appearance-${id}`} className="block text-sm font-medium text-gray-700">Appearance</label>
-                <textarea
-                    id={`appearance-${id}`}
-                    name="appearance"
-                    rows={2}
-                    value={persona.appearance || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
-                />
-            </div>
-
-            <div>
-                <label htmlFor={`description-${id}`} className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                    id={`description-${id}`}
-                    name="description"
-                    rows={2}
-                    value={persona.description || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
-                />
-            </div>
-
-            <div>
-                <label htmlFor={`avatar_url-${id}`} className="block text-sm font-medium text-gray-700">Avatar URL</label>
-                <input
-                    id={`avatar_url-${id}`}
-                    name="avatar_url"
-                    type="text"
-                    value={persona.avatar_url || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
-                />
-            </div>
-
-            <div>
-                <label htmlFor={`banner_url-${id}`} className="block text-sm font-medium text-gray-700">Banner URL</label>
-                <input
-                    id={`banner_url-${id}`}
-                    name="banner_url"
-                    type="text"
-                    value={persona.banner_url || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
-                />
-            </div>
-        </div>
+            {isExpanded && (
+                <div className="p-4 space-y-4">
+                    <div className="flex items-center">
+                        <label htmlFor="name" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Name</label>
+                        <input
+                            id={`name-${id}`}
+                            name="name"
+                            type="text"
+                            value={persona.name || ''}
+                            onChange={handleInputChange}
+                            className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
+                            disabled={!isEditing}
+                            placeholder="Persona name"
+                        />
+                    </div>
+                    <div className="flex items-center">
+                        <label htmlFor="gender" className="pl-2 w-[15%] text-sm font-medium text-zinc-200">Gender</label>
+                        <div className="flex w-full space-x-2">
+                            <select
+                                id="gender"
+                                name="gender"
+                                value={displayGender}
+                                onChange={handleGenderChange}
+                                disabled={!isEditing}
+                                className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
+                            >
+                                {Object.values(Gender).map((genderValue) => (
+                                    <option key={genderValue} value={genderValue}>
+                                        {genderValue}
+                                    </option>
+                                ))}
+                            </select>
+                            {showCustomInput && (
+                                <input
+                                    type="text"
+                                    name="customGenderText"
+                                    value={customGenderText}
+                                    onChange={handleCustomGenderChange}
+                                    disabled={!isEditing}
+                                    className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
+                                    placeholder="Enter custom gender"
+                                />
+                            )}
+                        </div>
+                    </div>
+                    <div className="flex flex-col space-y-2">
+                        <div className="flex items-center px-2 space-x-2">
+                            <label htmlFor="bio" className="text-sm font-medium text-zinc-200">Bio</label>
+                            <span className="text-xs text-zinc-400">Your Persona's public profile</span>
+                        </div>
+                        <textarea
+                            id="bio"
+                            name="bio"
+                            value={persona.bio || ''}
+                            onChange={handleInputChange}
+                            rows={3}
+                            maxLength={200}
+                            disabled={!isEditing}
+                            className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50 resize-none"
+                            placeholder="Enter character bio (optional)"
+                        />
+                    </div>
+                    <div className="flex flex-col space-y-2">
+                        <div className="flex items-center px-2 space-x-2">
+                            <label htmlFor="description" className="text-sm font-medium text-zinc-200">Description</label>
+                            <span className="text-xs text-zinc-400">Information characters will 'figure out' when interacting with you</span>
+                        </div>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={persona.description || ''}
+                            onChange={handleInputChange}
+                            rows={3}
+                            disabled={!isEditing}
+                            className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50 min-h-[72px] overflow-hidden"
+                            placeholder="Enter character description (optional)"
+                        />
+                    </div>
+                    <div className="flex flex-col space-y-2">
+                        <div className="flex items-center px-2 space-x-2">
+                            <label htmlFor="appearance" className="text-sm font-medium text-zinc-200">Appearance</label>
+                            <span className="text-xs text-zinc-400">A physical description of your character</span>
+                        </div>
+                        <textarea
+                            id="appearance"
+                            name="appearance"
+                            value={persona.appearance || ''}
+                            onChange={handleInputChange}
+                            rows={3}
+                            disabled={!isEditing}
+                            className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50 min-h-[72px] overflow-hidden"
+                            placeholder="Enter character appearance (optional)"
+                        />
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
-

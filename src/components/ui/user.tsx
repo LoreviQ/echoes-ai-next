@@ -23,11 +23,19 @@ export function UserSection() {
     );
 }
 
-export function UserIdentity({ persona }: { persona: UserPersonas }) {
+interface UserIdentityProps {
+    persona: UserPersonas;
+    editable?: boolean;
+    onFileSelected?: (file: File | string) => void;
+}
+
+export function UserIdentity({ persona, editable = false, onFileSelected }: UserIdentityProps) {
     return (
         <Identity
             name={persona.name || 'Unnamed Persona'}
             avatar_url={persona.avatar_url}
+            editable={editable}
+            onFileSelected={onFileSelected}
         />
     )
 }
