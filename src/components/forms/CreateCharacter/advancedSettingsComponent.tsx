@@ -57,17 +57,73 @@ export function AdvancedSettings({ state, dispatch }: AdvancedSettingsProps) {
 }
 
 export function AdvancedSettingsForm({ state, dispatch }: AdvancedSettingsProps) {
+    const stateAttributes = Object.entries(attributeMetadata)
+        .filter(([_, metadata]) => metadata.category === 'state')
+        .map(([field]) => field);
+
     const actionAttributes = Object.entries(attributeMetadata)
         .filter(([_, metadata]) => metadata.category === 'actions')
         .map(([field]) => field);
 
+    const providerAttributes = Object.entries(attributeMetadata)
+        .filter(([_, metadata]) => metadata.category === 'providers')
+        .map(([field]) => field);
+
+    const evaluatorAttributes = Object.entries(attributeMetadata)
+        .filter(([_, metadata]) => metadata.category === 'evaluators')
+        .map(([field]) => field);
+
+    const contentAttributes = Object.entries(attributeMetadata)
+        .filter(([_, metadata]) => metadata.category === 'content')
+        .map(([field]) => field);
+
     return (
         <div className="space-y-4">
+            <SubHeading name="State" description="Your characters current state of mind and goals" />
+            {stateAttributes.map((field) => (
+                <InputSection
+                    key={field}
+                    field={field as keyof CharacterAttributes}
+                    state={state}
+                    dispatch={dispatch}
+                />
+            ))}
+
             <SubHeading name="Actions" description="Attributes that determine the actions your character makes" />
             {actionAttributes.map((field) => (
                 <SliderSection
                     key={field}
-                    field={field as keyof Pick<CharacterAttributes, 'postingFrequency' | 'originality' | 'likeReplyRatio' | 'responsiveness'>}
+                    field={field as keyof CharacterAttributes}
+                    state={state}
+                    dispatch={dispatch}
+                />
+            ))}
+
+            <SubHeading name="Providers" description="Attributes that determine how your character processes information" />
+            {providerAttributes.map((field) => (
+                <SliderSection
+                    key={field}
+                    field={field as keyof CharacterAttributes}
+                    state={state}
+                    dispatch={dispatch}
+                />
+            ))}
+
+            <SubHeading name="Evaluators" description="Attributes that determine how your character evaluates relationships and interactions" />
+            {evaluatorAttributes.map((field) => (
+                <SliderSection
+                    key={field}
+                    field={field as keyof CharacterAttributes}
+                    state={state}
+                    dispatch={dispatch}
+                />
+            ))}
+
+            <SubHeading name="Content" description="Attributes that determine the style and content of your character's interactions" />
+            {contentAttributes.map((field) => (
+                <SliderSection
+                    key={field}
+                    field={field as keyof CharacterAttributes}
                     state={state}
                     dispatch={dispatch}
                 />
@@ -85,10 +141,37 @@ function SubHeading({ name, description }: { name: string, description: string }
     );
 }
 
+function InputSection({ field, state, dispatch }: {
+    field: keyof CharacterAttributes,
+    state: any,
+    dispatch: React.Dispatch<any>,
+}) {
+    const metadata = attributeMetadata[field];
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({ type: 'SET_FIELD', field: field, value: e.target.value });
+    }
+
+    return (
+        <div className="flex items-center">
+            <label className="pl-2 w-[15%] text-sm font-medium text-zinc-200 cursor-help" title={metadata.description}>{metadata.name}</label>
+            <input
+                type="text"
+                id={field}
+                value={state[field]}
+                onChange={onChange}
+                required
+                disabled={state.isSubmitting || state.isGenerating}
+                className="w-full bg-black border border-zinc-600 rounded-xl py-2 px-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 disabled:opacity-50"
+                placeholder={metadata.description}
+            />
+        </div>
+    )
+}
+
 function SliderSection({ field, state, dispatch }: {
-    field: keyof Pick<CharacterAttributes, 'postingFrequency' | 'originality' | 'likeReplyRatio' | 'responsiveness'>,
-    state: FormState,
-    dispatch: React.Dispatch<FormAction>,
+    field: keyof CharacterAttributes,
+    state: any,
+    dispatch: React.Dispatch<any>,
 }) {
     const metadata = attributeMetadata[field];
 
