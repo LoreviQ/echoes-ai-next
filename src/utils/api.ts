@@ -10,6 +10,9 @@ export type Endpoint = {
     public: boolean;
 };
 
+let setupPromise: Promise<string | null> | null = null;
+let currentToken: string | null = null;
+
 // Base axios instance
 export const api = axios.create({
     baseURL: API_BASE_URL,
@@ -18,32 +21,42 @@ export const api = axios.create({
     },
 });
 
-let authInterceptorId: number | null = null;
+// Single interceptor that handles both waiting and token application
+api.interceptors.request.use(async (config) => {
+    try {
+        // If we're in the process of setting up, wait for it
+        if (setupPromise) {
+            currentToken = await setupPromise;
+        }
 
-export const setupAuthInterceptor = async (isAuthenticated: boolean) => {
-    // Remove existing interceptor if it exists
-    if (authInterceptorId !== null) {
-        api.interceptors.request.eject(authInterceptorId);
-        authInterceptorId = null;
+        // Apply the token if we have one
+        if (currentToken) {
+            config.headers.Authorization = `Bearer ${currentToken}`;
+        }
+    } catch (error) {
+        console.error('Error in auth interceptor:', error);
     }
 
-    // Add new interceptor if session is active
-    if (isAuthenticated) {
-        authInterceptorId = api.interceptors.request.use(async (config) => {
+    return config;
+});
+
+export const setupAuthInterceptor = async () => {
+    // Create setup promise if it doesn't exist
+    if (!setupPromise) {
+        setupPromise = (async () => {
             const token = await getAuthToken();
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-            return config;
-        });
+            currentToken = token;
+            return token;
+        })();
     }
+
+    // Wait for setup to complete
+    await setupPromise;
 };
 
 export const cleanupAuthInterceptor = () => {
-    if (authInterceptorId !== null) {
-        api.interceptors.request.eject(authInterceptorId);
-        authInterceptorId = null;
-    }
+    setupPromise = null;
+    currentToken = null;
 };
 
 // Define endpoints with their authentication requirements

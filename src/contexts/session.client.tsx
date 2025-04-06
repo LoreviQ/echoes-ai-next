@@ -40,7 +40,7 @@ export function SessionProvider({
 
     // Setup interceptor whenever session status changes
     useEffect(() => {
-        setupAuthInterceptor(sessionStatus.active);
+        setupAuthInterceptor();
     }, [sessionStatus.active]);
 
     return (
