@@ -53,8 +53,9 @@ export const endpoints = {
         generate: `/${API_VERSION}/generations/character`,
         generateAvatar: `/${API_VERSION}/generations/character/avatar`,
         generateBanner: `/${API_VERSION}/generations/character/banner`,
-    },
-    user: {
-        recommendations: `/${API_VERSION}/users/foryou`,
+        generateAttributes: `/${API_VERSION}/generations/character/attributes`,
+        user: {
+            recommendations: `/${API_VERSION}/users/foryou`,
+        },
     },
 };

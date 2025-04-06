@@ -8,3 +8,4 @@ export * from './session';
 export * from './supabase';
 export * from './subscriptions';
 export * from './message';
+export * from './characterAttributes';
