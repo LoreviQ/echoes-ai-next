@@ -1,6 +1,6 @@
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 
-import { Character, CreateCharacter, CharacterSchema, CharacterBio, CharacterDescription, NsfwFilter } from "@/types";
+import { Character, CreateCharacter, CharacterSchema, CharacterBio, CharacterDescription, CharacterToggles, NsfwFilter } from "@/types";
 import { createClient } from "@/utils";
 
 type CharacterWithSubscriptionCount = CharacterSchema & {
@@ -124,5 +124,19 @@ export async function updateCharacterDescription(
         .from('characters')
         .update(characterDescription)
         .eq('id', id);
+    return { error };
+}
+
+export async function updateCharacterToggles(
+    id: string,
+    characterToggles: CharacterToggles,
+    client?: SupabaseClient
+): Promise<{ error: PostgrestError | null }> {
+    const supabase = client || createClient();
+    const { error } = await supabase
+        .from('characters')
+        .update(characterToggles)
+        .eq('id', id);
+
     return { error };
 }

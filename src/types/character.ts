@@ -16,11 +16,10 @@ export type CharacterSchema = {
     appearance: string | null;
 }
 
-// CharacterBio type that includes only name, path and bio fields
-export type CharacterBio = Pick<CharacterSchema, 'name' | 'path' | 'bio' | 'public' | 'nsfw'>;
-
-// CharacterDescription type that includes only description and appearance fields
+// Trimmed Types used for database operations
+export type CharacterBio = Pick<CharacterSchema, 'name' | 'path' | 'bio'>;
 export type CharacterDescription = Pick<CharacterSchema, 'description' | 'appearance'>;
+export type CharacterToggles = Pick<CharacterSchema, 'public' | 'nsfw'>;
 
 // Character extended type that includes subscriber_count
 export type Character = CharacterSchema & {
