@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
 import { useRightSidebar } from "@/contexts";
@@ -77,16 +77,6 @@ const EditableDescription = () => {
     const [description, setDescription] = useState(currentCharacter?.description || "");
     const [appearance, setAppearance] = useState(currentCharacter?.appearance || "");
 
-    // Reset form when character changes
-    useEffect(() => {
-        setDescription(currentCharacter?.description || "");
-        setAppearance(currentCharacter?.appearance || "");
-    }, [currentCharacter]);
-
-    if (!currentCharacter) {
-        return null;
-    }
-
     const adjustTextareaHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         e.target.style.height = 'auto';
         e.target.style.height = `${e.target.scrollHeight}px`;
@@ -101,9 +91,14 @@ const EditableDescription = () => {
         setAppearance(e.target.value);
         adjustTextareaHeight(e);
     };
+    // Reset form when character changes
+    useEffect(() => {
+        setDescription(currentCharacter?.description || "");
+        setAppearance(currentCharacter?.appearance || "");
+    }, [currentCharacter]);
 
     // Set initial height on mount
-    React.useEffect(() => {
+    useEffect(() => {
         const textareas = document.querySelectorAll('textarea');
         textareas.forEach(textarea => {
             textarea.style.height = 'auto';
@@ -125,6 +120,9 @@ const EditableDescription = () => {
         };
     }, [description, appearance, updateDescription]);
 
+    if (!currentCharacter) {
+        return null;
+    }
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold">Description</h1>

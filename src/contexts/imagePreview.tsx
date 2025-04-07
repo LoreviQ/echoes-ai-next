@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
+import Image from 'next/image';
 
 interface ImagePreviewContextType {
     openPreview: (src: string) => void;
@@ -31,11 +32,13 @@ export function ImagePreviewProvider({ children }: { children: ReactNode }) {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
-                    <div className="relative max-h-[90vh] max-w-[90vw]">
-                        <img
+                    <div className="relative w-[90vw] h-[90vh]">
+                        <Image
                             src={imageSrc}
                             alt="Preview"
-                            className="max-h-[90vh] max-w-[90vw] object-contain"
+                            fill
+                            style={{ objectFit: 'contain' }}
+                            priority
                         />
                     </div>
                 </div>

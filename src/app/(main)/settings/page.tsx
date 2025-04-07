@@ -74,9 +74,15 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
 
         // Update existing personas
         for (const persona of state.personas) {
-            const { id, user_id, created_at, updated_at, avatar_url, ...personaToUpdate } = persona;
 
-            const { error } = await database.updateUserPersona(id, personaToUpdate as UserPersonas, createClient());
+
+            const { error } = await database.updateUserPersona(persona.id, {
+                name: persona.name,
+                bio: persona.bio,
+                appearance: persona.appearance,
+                description: persona.description,
+                gender: persona.gender,
+            }, createClient());
             if (error) throw error;
         }
 
@@ -156,7 +162,7 @@ function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: 
             }
         }
         loadUserData();
-    }, []);
+    }, [dispatch]);
 
     const handleAddPersona = () => {
         const newPersona: UserPersonas & { temp_id: string } = {

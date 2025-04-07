@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { CollapsableActionButton } from "./CollapsableActionButton";
 import { LoginIcon, ExclamationIcon } from "@/assets";
 import { useDropdown } from "@/hooks/ui";
@@ -56,10 +57,12 @@ function Button({ onClick, user }: { onClick: () => void, user: { avatar_url?: s
         >
             <div className="w-8 h-8 flex items-center justify-center">
                 {user.avatar_url ? (
-                    <img
+                    <Image
                         src={user.avatar_url}
                         alt={user.name || 'User avatar'}
                         className="w-full h-full rounded-full object-cover"
+                        width={32}
+                        height={32}
                     />
                 ) : (
                     <div className="w-full h-full rounded-full bg-zinc-600 flex items-center justify-center">
