@@ -1,5 +1,9 @@
 // Define the state interface for advanced settings
 export interface AdvancedSettingsState {
+    // character attributes
+    public: boolean;
+    nsfw: boolean;
+
     // state attributes
     mood: string;
     goal: string;
@@ -44,6 +48,9 @@ export type AdvancedSettingsAction =
 
 // Define the initial state
 export const initialAdvancedSettingsState: AdvancedSettingsState = {
+    // character attributes
+    public: false,
+    nsfw: false,
 
     // state attributes
     mood: '',

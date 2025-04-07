@@ -7,6 +7,7 @@ import { DiceIcon, CheckSquareIcon } from "@/assets";
 import { AdvancedSettingsForm } from '@/components/forms/CreateCharacter/advancedSettingsComponent';
 import { advancedSettingsReducer, initialAdvancedSettingsState, AdvancedSettingsState } from './reducer';
 import { api, endpoints, database } from '@/utils';
+import { Switch } from '@/components/ui';
 
 const AdvancedSettingsHeaderComponent = () => {
     const { currentCharacter } = useRightSidebar();
@@ -55,6 +56,10 @@ const AdvancedSettingsContentComponent = () => {
             }
 
             try {
+                // Set character-specific fields
+                dispatch({ type: 'SET_FIELD', field: 'public', value: currentCharacter.public });
+                dispatch({ type: 'SET_FIELD', field: 'nsfw', value: currentCharacter.nsfw });
+
                 const { attributes, error } = await database.getCharacterAttributes(currentCharacter.id);
                 if (error || !attributes) {
                     throw new Error(String(error));
@@ -138,19 +143,38 @@ const AdvancedSettingsContentComponent = () => {
             try {
                 dispatch({ type: 'SET_FIELD', field: 'isSubmitting', value: true });
 
-                // Create attributes object by excluding non-attribute fields
-                const { isSubmitting, isGenerating, ...attributes } = state;
+                // Create attributes object by excluding non-attribute fields and character fields
+                const { isSubmitting, isGenerating, public: isPublic, nsfw: isNsfw, ...attributes } = state;
 
-                const { error } = await database.upsertCharacterAttributes(
+                // Update character attributes
+                const attributesResult = await database.upsertCharacterAttributes(
                     currentCharacter.id,
                     attributes
                 );
 
-                if (error) {
-                    console.error('Error updating character attributes:', error);
+                if (attributesResult.error) {
+                    throw attributesResult.error;
+                }
+
+                // Update character public/nsfw status if they changed
+                if (isPublic !== currentCharacter.public || isNsfw !== currentCharacter.nsfw) {
+                    const { error: characterError } = await database.updateCharacterBio(
+                        currentCharacter.id,
+                        {
+                            name: currentCharacter.name,
+                            path: currentCharacter.path,
+                            bio: currentCharacter.bio,
+                            public: isPublic,
+                            nsfw: isNsfw
+                        }
+                    );
+
+                    if (characterError) {
+                        throw characterError;
+                    }
                 }
             } catch (error) {
-                console.error('Error updating character attributes:', error);
+                console.error('Error updating character:', error);
             } finally {
                 dispatch({ type: 'SET_FIELD', field: 'isSubmitting', value: false });
             }
@@ -169,6 +193,30 @@ const AdvancedSettingsContentComponent = () => {
 
     return (
         <div className="p-4">
+            <div className="flex items-center justify-center space-x-12">
+                <div className="flex items-center space-x-2">
+                    <Switch
+                        id="public"
+                        checked={state.public}
+                        onCheckedChange={(checked) => {
+                            dispatch({ type: 'SET_FIELD', field: 'public', value: checked });
+                        }}
+                        className={(state.isSubmitting || state.isGenerating) ? "opacity-50 cursor-not-allowed" : ""}
+                    />
+                    <label className="text-sm font-medium text-zinc-200" htmlFor="public">Public</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Switch
+                        id="nsfw"
+                        checked={state.nsfw}
+                        onCheckedChange={(checked) => {
+                            dispatch({ type: 'SET_FIELD', field: 'nsfw', value: checked });
+                        }}
+                        className={(state.isSubmitting || state.isGenerating) ? "opacity-50 cursor-not-allowed" : ""}
+                    />
+                    <label className="text-sm font-medium text-zinc-200" htmlFor="nsfw">NSFW</label>
+                </div>
+            </div>
             <AdvancedSettingsForm state={state} dispatch={dispatch} />
         </div>
     );

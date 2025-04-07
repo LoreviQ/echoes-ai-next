@@ -17,7 +17,7 @@ export type CharacterSchema = {
 }
 
 // CharacterBio type that includes only name, path and bio fields
-export type CharacterBio = Pick<CharacterSchema, 'name' | 'path' | 'bio'>;
+export type CharacterBio = Pick<CharacterSchema, 'name' | 'path' | 'bio' | 'public' | 'nsfw'>;
 
 // CharacterDescription type that includes only description and appearance fields
 export type CharacterDescription = Pick<CharacterSchema, 'description' | 'appearance'>;
