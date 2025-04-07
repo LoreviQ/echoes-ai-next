@@ -16,10 +16,6 @@ export type CharacterSchema = {
     appearance: string | null;
 }
 
-// Trimmed Types used for database operations
-export type CharacterBio = Pick<CharacterSchema, 'name' | 'path' | 'bio'>;
-export type CharacterDescription = Pick<CharacterSchema, 'description' | 'appearance'>;
-export type CharacterToggles = Pick<CharacterSchema, 'public' | 'nsfw'>;
 
 // Character extended type that includes subscriber_count
 export type Character = CharacterSchema & {
@@ -31,3 +27,9 @@ export type CreateCharacter = Omit<
     CharacterSchema,
     'id' | 'created_at' | 'updated_at' | 'user_id'
 >;
+
+// Type for updating a character - allows any subset of fields except protected ones
+export type UpdateCharacter = Partial<Omit<
+    CharacterSchema,
+    'id' | 'created_at' | 'updated_at' | 'user_id'
+>>;

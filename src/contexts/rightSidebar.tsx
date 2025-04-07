@@ -2,7 +2,7 @@
 
 import { createContext, useState, ReactNode, useEffect, useContext, useCallback } from 'react';
 
-import { Character, Thread, Message, CharacterDescription } from '@/types';
+import { Character, Thread, Message, UpdateCharacter } from '@/types';
 import { useCharacter, useThreads, useCreateMessage, useThreadMessages, useCharacters } from '@/hooks/reactQuery';
 import { setPreference, database } from "@/utils";
 
@@ -115,8 +115,8 @@ export function RightSidebarProvider({
     const updateDescription = useCallback(async (description: string, appearance: string) => {
         if (!currentCharacter) return;
 
-        const newDescription: CharacterDescription = { description, appearance };
-        await database.updateCharacterDescription(currentCharacter.id, newDescription);
+        const newDescription: UpdateCharacter = { description, appearance };
+        await database.updateCharacter(currentCharacter.id, newDescription);
 
         const updatedCharacter = { ...currentCharacter, description, appearance };
         setCurrentCharacter(updatedCharacter);

@@ -1,6 +1,6 @@
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 
-import { Character, CreateCharacter, CharacterSchema, CharacterBio, CharacterDescription, CharacterToggles, NsfwFilter } from "@/types";
+import { Character, CreateCharacter, CharacterSchema, NsfwFilter, UpdateCharacter } from "@/types";
 import { createClient } from "@/utils";
 
 type CharacterWithSubscriptionCount = CharacterSchema & {
@@ -100,43 +100,21 @@ export async function insertCharacter(
     return { character_id: data?.id, error };
 }
 
-export async function updateCharacterBio(
+/**
+ * Updates any fields of a character in the database
+ * @param id - The ID of the character to update
+ * @param updates - Partial object containing any character fields to update
+ * @param client - Optional Supabase client
+ */
+export async function updateCharacter(
     id: string,
-    characterBio: CharacterBio,
+    updates: UpdateCharacter,
     client?: SupabaseClient
 ): Promise<{ error: PostgrestError | null }> {
     const supabase = client || createClient();
     const { error } = await supabase
         .from('characters')
-        .update(characterBio)
+        .update(updates)
         .eq('id', id);
-
-    return { error };
-}
-
-export async function updateCharacterDescription(
-    id: string,
-    characterDescription: CharacterDescription,
-    client?: SupabaseClient
-): Promise<{ error: PostgrestError | null }> {
-    const supabase = client || createClient();
-    const { error } = await supabase
-        .from('characters')
-        .update(characterDescription)
-        .eq('id', id);
-    return { error };
-}
-
-export async function updateCharacterToggles(
-    id: string,
-    characterToggles: CharacterToggles,
-    client?: SupabaseClient
-): Promise<{ error: PostgrestError | null }> {
-    const supabase = client || createClient();
-    const { error } = await supabase
-        .from('characters')
-        .update(characterToggles)
-        .eq('id', id);
-
     return { error };
 }

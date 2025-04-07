@@ -160,7 +160,7 @@ const AdvancedSettingsContentComponent = () => {
 
                 // Update character public/nsfw status if they changed
                 if (state.public !== currentCharacter.public || state.nsfw !== currentCharacter.nsfw) {
-                    const { error: characterError } = await database.updateCharacterToggles(
+                    const { error: characterError } = await database.updateCharacter(
                         currentCharacter.id,
                         {
                             public: state.public,
