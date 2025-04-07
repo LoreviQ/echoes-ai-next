@@ -1,4 +1,4 @@
-import { ContentReference, ContentType, ContentItem } from '@/types';
+import { type ContentReference, ContentType, type ContentItem } from 'echoes-shared/types';
 import { useCharacter, usePost } from '@/hooks/reactQuery';
 
 /**

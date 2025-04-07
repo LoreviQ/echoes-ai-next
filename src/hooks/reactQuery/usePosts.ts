@@ -1,7 +1,8 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { Post } from '@/types';
-import { api, endpoints, database } from '@/utils';
+import { type Post } from 'echoes-shared/types';
+import { api, endpoints, createClient } from '@/utils';
+import { database } from 'echoes-shared';
 
 export function usePosts(characterId: string) {
     const queryClient = useQueryClient();
@@ -9,7 +10,7 @@ export function usePosts(characterId: string) {
     return useQuery({
         queryKey: ['character_posts', characterId],
         queryFn: async () => {
-            const { posts, error } = await database.getPostsByCharacterId(characterId);
+            const { posts, error } = await database.getPostsByCharacterId(characterId, createClient());
             if (error) throw error;
             const postIds = posts.map(post => post.id);
 
@@ -59,7 +60,7 @@ export function usePost(postId: string) {
             if (cachedPost) return cachedPost;
 
             // Fetch from API if not in cache
-            const { post, error } = await database.getPost(postId);
+            const { post, error } = await database.getPost(postId, createClient());
             if (error) throw error;
             if (!post) throw new Error(`Post not found: ${postId}`);
             return post;

@@ -1,4 +1,4 @@
-import { Character } from "@/types";
+import { type Character } from "echoes-shared/types";
 import { Identity } from "./genericDisplay";
 
 export function CharacterIdentity({ character }: { character: Character }) {

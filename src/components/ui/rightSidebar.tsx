@@ -9,6 +9,7 @@ import { setPreference } from "@/utils";
 import { HeaderLoading, ContentLoading } from '@/components/ui';
 import * as RightSidebarContent from '@/components/content/rightSidebar';
 import { CharacterIdentity } from "@/components/ui";
+
 interface SidebarContentComponents {
     Header: React.ComponentType;
     Content: React.ComponentType;

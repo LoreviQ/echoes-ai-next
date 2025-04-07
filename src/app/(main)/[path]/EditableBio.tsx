@@ -1,11 +1,12 @@
 'use client';
 
-import { Character, UpdateCharacter } from "@/types";
 import { MarkdownContent } from "@/components/ui";
 import { useState } from "react";
 import { PenSquareIcon, CheckSquareIcon } from "@/assets";
-import { database } from "@/utils";
 import { useCharacters } from "@/hooks/reactQuery/useCharacters";
+import type { Character, PartialCharacter } from 'echoes-shared/types';
+import { database } from 'echoes-shared';
+import { createClient } from '@/utils';
 
 interface EditableBioProps {
     character: Character;
@@ -73,8 +74,8 @@ function BioForm({ character, toggleEdit: onClick, setCharacter }: BioFormProps)
         e.preventDefault();
         onClick(e);
         const newCharacter: Character = { ...character, name, path, bio };
-        const newBio: UpdateCharacter = { name, path, bio };
-        database.updateCharacter(character.id, newBio);
+        const newBio: PartialCharacter = { name, path, bio };
+        database.updateCharacter(character.id, newBio, createClient());
         setCharacter(newCharacter);
         updateCharacter(character.id, newCharacter);
     }

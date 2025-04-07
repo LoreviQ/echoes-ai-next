@@ -1,7 +1,7 @@
 import { CharacterActions } from "./CharacterActions";
-import { Character } from "@/types";
 import { DynamicImage } from "@/components/images";
 import { EditableBio } from "./EditableBio";
+import type { Character } from 'echoes-shared/types';
 
 export function CharacterInfo({ character, isOwner }: { character: Character, isOwner: boolean }) {
     return (

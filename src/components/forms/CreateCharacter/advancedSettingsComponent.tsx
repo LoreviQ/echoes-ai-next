@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Slider } from '@/components/ui';
-import { CharacterAttributes, attributeMetadata, getAttributeValueDescription } from '@/types/characterAttributes';
+import { type CharacterAttributes, attributeMetadata, getAttributeValueDescription } from 'echoes-shared/types';
 import { SubHeading } from '@/components/forms/formComponents/subheading';
 
 interface AdvancedSettingsProps {

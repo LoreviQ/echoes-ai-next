@@ -1,5 +1,5 @@
 // Define the state interface for advanced settings
-import { CharacterAttributes } from '@/types/characterAttributes';
+import { type CharacterAttributes } from 'echoes-shared/types';
 
 export interface AdvancedSettingsState {
     // character settings

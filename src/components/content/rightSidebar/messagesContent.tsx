@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
-import { Message } from '@/types';
+import { type Message } from 'echoes-shared/types';
 import { useRightSidebar, useSession } from "@/contexts";
 import { RightArrowIcon } from '@/assets';
 import { MarkdownContent } from '@/components/ui';

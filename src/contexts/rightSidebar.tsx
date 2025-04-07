@@ -2,9 +2,10 @@
 
 import { createContext, useState, ReactNode, useEffect, useContext, useCallback } from 'react';
 
-import { Character, Thread, Message, UpdateCharacter } from '@/types';
+import type { Character, Thread, Message, PartialCharacter } from 'echoes-shared/types';
 import { useCharacter, useThreads, useCreateMessage, useThreadMessages, useCharacters } from '@/hooks/reactQuery';
-import { setPreference, database } from "@/utils";
+import { setPreference, createClient } from "@/utils";
+import { database } from 'echoes-shared';
 
 // Define possible content types for the sidebar
 export enum SidebarContentType {
@@ -115,8 +116,8 @@ export function RightSidebarProvider({
     const updateDescription = useCallback(async (description: string, appearance: string) => {
         if (!currentCharacter) return;
 
-        const newDescription: UpdateCharacter = { description, appearance };
-        await database.updateCharacter(currentCharacter.id, newDescription);
+        const newDescription: PartialCharacter = { description, appearance };
+        await database.updateCharacter(currentCharacter.id, newDescription, createClient());
 
         const updatedCharacter = { ...currentCharacter, description, appearance };
         setCurrentCharacter(updatedCharacter);

@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import { api, endpoints, nameToPath } from '@/utils';
+import { api, endpoints } from '@/utils';
 import { DiceIcon, RightArrowIcon, LoadingSpinner, GenerateIcon } from '@/assets';
 import { CircleActionButton } from '@/components/buttons';
 import { Dropdown, DropdownItem } from '@/components/ui';
 import { SelectImage } from '@/components/images';
 import { uiHook } from '@/hooks';
-import { Gender } from '@/types';
+import { Gender } from 'echoes-shared/types';
 
 import { FormState, FormAction } from './reducer';
 

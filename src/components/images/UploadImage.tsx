@@ -3,8 +3,9 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 
-import { createClient, database } from '@/utils';
-import type { SupabaseCellReference } from '@/types';
+import { createClient } from '@/utils';
+import { database } from 'echoes-shared';
+import type { SupabaseCellReference } from 'echoes-shared/types';
 
 interface UploadImageProps {
     src: string;
@@ -41,17 +42,14 @@ export default function UploadImage({
 
         try {
             setIsUploading(true);
-            // create reusable supabase client
-            const supabase = createClient();
-
             // Upload file to storage
             const fileExt = file.name.split('.').pop();
             const filePath = `${reference.id}.${fileExt}`;
-            const { publicUrl, error: uploadError } = await database.upload(bucketName, filePath, file, supabase);
+            const { publicUrl, error: uploadError } = await database.upload(bucketName, filePath, file, createClient());
             if (uploadError) throw uploadError;
 
             // Update database reference
-            const { error: updateError } = await database.updateByReference(reference, publicUrl, supabase);
+            const { error: updateError } = await database.updateByReference(reference, publicUrl, createClient());
             if (updateError) throw updateError;
 
             // Notify parent component

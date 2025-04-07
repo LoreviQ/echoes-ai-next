@@ -1,6 +1,6 @@
 'use client';
 
-import { Character, ContentType } from "@/types";
+import { type Character, ContentType } from "echoes-shared/types";
 import { ContentCard } from "@/components/content/cards";
 import { usePostsWithData } from "@/hooks/reactQuery";
 

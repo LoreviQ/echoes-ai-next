@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { Character } from "@/types";
+import type { Character } from "echoes-shared/types";
 import { PreviewImage } from "@/components/images";
 import { SubscriptionButton } from "@/components/buttons";
 

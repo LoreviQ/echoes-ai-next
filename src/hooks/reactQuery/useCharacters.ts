@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { Character } from '@/types';
-import { database } from '@/utils';
+import { type Character } from 'echoes-shared/types';
+import { database } from 'echoes-shared';
 import { useSession } from '@/contexts';
+import { createClient } from '@/utils';
 
 export function useCharacters() {
     const queryClient = useQueryClient();
@@ -12,7 +13,7 @@ export function useCharacters() {
     const { data: characterIds, isLoading, error, refetch, isRefetching } = useQuery({
         queryKey: ['character_ids'],
         queryFn: async () => {
-            const { characters, error } = await database.getCharacters();
+            const { characters, error } = await database.getCharacters(preferences?.nsfw_filter, createClient());
             if (error) throw error;
             const characterIds = characters.map(character => character.id);
 
@@ -29,7 +30,7 @@ export function useCharacters() {
     const getCharactersForUser = useCallback(async () => {
         try {
             // For now, just use fetchCharacters (this will be expanded later)
-            const { characters, error } = await database.getCharacters(preferences?.nsfw_filter);
+            const { characters, error } = await database.getCharacters(preferences?.nsfw_filter, createClient());
             if (error) throw error;
             const characterIds = characters.map(character => character.id);
 
@@ -98,7 +99,7 @@ export function useCharacter(id: string | undefined) {
             if (cachedCharacter) return cachedCharacter;
 
             // If not in cache, fetch it
-            const { character, error } = await database.getCharacter(id);
+            const { character, error } = await database.getCharacter(id, createClient());
             if (error) throw error;
             if (character) {
                 // Add this character ID to the character_ids list if it's not there

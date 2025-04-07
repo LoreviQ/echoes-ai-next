@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
-import { ContentReference } from '@/types';
+import { type ContentReference } from 'echoes-shared/types';
 import { ContentCard } from '@/components/content/cards';
 import { useContentItem } from '@/hooks/reactQuery';
 import { useFeed } from '@/contexts';

@@ -1,4 +1,4 @@
-import { SupabaseCellReference } from "@/types";
+import { type SupabaseCellReference } from "echoes-shared/types";
 import { PreviewImage, UploadImage } from "@/components/images";
 
 /**

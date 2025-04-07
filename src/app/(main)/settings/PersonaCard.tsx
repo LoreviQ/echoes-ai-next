@@ -1,9 +1,8 @@
 import { ChangeEvent, useState } from 'react';
-import { UserPersonasSchema, UserPersonas } from '@/types';
 import { PenSquareIcon, CheckSquareIcon } from '@/assets/icons';
 import { UserIdentity } from '@/components/ui';
-import { Gender } from '@/types';
 import { SettingsAction } from './reducer';
+import { type UserPersonasSchema, type UserPersonas, Gender } from 'echoes-shared/types';
 
 
 interface PersonaCardProps {
@@ -163,7 +162,7 @@ function PersonaDetails({ persona, isExpanded, setIsExpanded, isEditing, id, dis
                     <div className="flex flex-col space-y-2">
                         <div className="flex items-center px-2 space-x-2">
                             <label htmlFor="bio" className="text-sm font-medium text-zinc-200">Bio</label>
-                            <span className="text-xs text-zinc-400">Your Persona's public profile</span>
+                            <span className="text-xs text-zinc-400">Your Persona&apos;s public profile</span>
                         </div>
                         <textarea
                             id="bio"
@@ -180,7 +179,7 @@ function PersonaDetails({ persona, isExpanded, setIsExpanded, isEditing, id, dis
                     <div className="flex flex-col space-y-2">
                         <div className="flex items-center px-2 space-x-2">
                             <label htmlFor="description" className="text-sm font-medium text-zinc-200">Description</label>
-                            <span className="text-xs text-zinc-400">Information characters will 'figure out' when interacting with you</span>
+                            <span className="text-xs text-zinc-400">Information characters will &apos;figure out&apos; when interacting with you</span>
                         </div>
                         <textarea
                             id="description"

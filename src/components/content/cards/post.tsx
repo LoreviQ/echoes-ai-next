@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Post } from "@/types";
+import { type Post } from "echoes-shared/types";
 import { useCharacter } from "@/hooks/reactQuery";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets";
 import { formatFriendlyDate } from "@/utils";

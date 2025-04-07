@@ -2,7 +2,10 @@
 
 'use client'
 
+import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import type { UserMetadata } from '@supabase/supabase-js';
+
 import {
     SessionProvider,
     ImagePreviewProvider,
@@ -10,13 +13,11 @@ import {
     FeedProvider,
     SidebarContentType
 } from "@/contexts";
-import { useState } from 'react'
-import { UserPreferencesSupabase } from '@/types';
-
+import type { UserPreferencesSupabase } from 'echoes-shared/types';
 
 interface Session {
     active: boolean;
-    user: any | null;
+    user: UserMetadata | null;
     preferences: UserPreferencesSupabase | null;
 }
 

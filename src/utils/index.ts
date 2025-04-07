@@ -7,6 +7,3 @@ export { formatFriendlyDate } from './dateFormat';
 export { debug } from './debug';
 export { logout } from './authUtils';
 export * from './string';
-
-import * as database from './database';
-export { database };

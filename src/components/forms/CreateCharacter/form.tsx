@@ -4,11 +4,11 @@ import React, { useEffect, useReducer } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { PROTECTED_ROUTES } from '@/config';
-import { uploadImage, database } from '@/utils';
+import { uploadImage, createClient } from '@/utils';
 import { queryHook } from '@/hooks';
 import { SubmitButton } from '@/components/buttons';
-import { Gender } from '@/types';
-
+import { Gender } from 'echoes-shared/types';
+import { database } from 'echoes-shared';
 import { CharacterHero } from './heroComponent';
 import { DetailsSection } from './detailsComponent';
 import { AdvancedSettings } from './advancedSettingsComponent';
@@ -144,7 +144,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
                 banner_url: bannerUrl,
                 tags,
                 gender: gender === Gender.CUSTOM ? customGender : gender,
-            });
+            }, createClient());
 
             if (insertError || !character_id) {
                 console.error('Error creating character:', insertError);
@@ -155,7 +155,7 @@ export default function CreateCharacterForm({ onSuccess, modal = false }: Create
             const { error: attributesError } = await database.insertCharacterAttributes({
                 character_id,
                 ...state.attributes
-            });
+            }, createClient());
 
             if (attributesError) {
                 console.error('Error creating character attributes:', attributesError);

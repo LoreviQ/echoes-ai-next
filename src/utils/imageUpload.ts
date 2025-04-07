@@ -1,4 +1,5 @@
-import { database } from '.';
+import { database } from 'echoes-shared';
+import { createClient } from '@/utils';
 
 /**
  * Uploads an image file to Supabase storage and returns the public URL
@@ -14,7 +15,7 @@ export async function uploadImage(file: File, bucketName: string): Promise<strin
         const filePath = `${fileName}.${fileExt}`;
 
         // Upload file to storage
-        const { publicUrl, error } = await database.upload(bucketName, filePath, file);
+        const { publicUrl, error } = await database.upload(bucketName, filePath, file, createClient());
         if (error) throw error;
         return publicUrl;
     } catch (error) {

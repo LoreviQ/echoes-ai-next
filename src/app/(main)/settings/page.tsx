@@ -2,13 +2,14 @@
 
 import { useReducer, useEffect } from 'react';
 
-import { database } from '@/utils';
+import { createClient } from '@/utils';
 import { BackHeader } from '@/components/ui';
 import { settingsReducer, initialSettingsState, SettingsAction, SettingsState } from './reducer';
-import { NsfwFilter, UserPreferencesSupabase, UserPersonas } from '@/types';
 import { SubHeading, ToggleButtonGroup } from '@/components/forms/formComponents';
 import { PersonaCard } from './PersonaCard';
 import { PlusIcon } from '@/assets';
+import type { NsfwFilter, UserPreferencesSupabase, UserPersonas } from 'echoes-shared/types';
+import { database } from 'echoes-shared';
 
 export default function SettingsPage() {
     const [state, dispatch] = useReducer(settingsReducer, initialSettingsState);
@@ -42,11 +43,8 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
             nsfw_filter: state.nsfw_filter
         };
 
-        const { error: preferencesError } = await database.updateUserPreferences(state.user_id, preferences);
+        const { error: preferencesError } = await database.updateUserPreferences(state.user_id, preferences, createClient());
         if (preferencesError) throw preferencesError;
-
-        // First, upload any avatar files that have been selected
-        const avatarUploads = [];
 
         // Process existing personas with new avatars
         for (const persona of state.personas) {
@@ -55,7 +53,7 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
                 const fileExt = file.name.split('.').pop() || 'jpg';
                 const filePath = `persona_avatars/${persona.id}.${fileExt}`;
 
-                const { error } = await database.uploadAuth(filePath, file);
+                const { error } = await database.uploadAuth(filePath, file, createClient());
                 if (error) throw error;
             }
         }
@@ -70,7 +68,7 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
 
         // Delete removed personas
         for (const personaId of state.deletedPersonaIds) {
-            const { error } = await database.deleteUserPersona(personaId);
+            const { error } = await database.deleteUserPersona(personaId, createClient());
             if (error) throw error;
         }
 
@@ -78,7 +76,7 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
         for (const persona of state.personas) {
             const { id, user_id, created_at, updated_at, avatar_url, ...personaToUpdate } = persona;
 
-            const { error } = await database.updateUserPersona(id, personaToUpdate as UserPersonas);
+            const { error } = await database.updateUserPersona(id, personaToUpdate as UserPersonas, createClient());
             if (error) throw error;
         }
 
@@ -88,11 +86,11 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
             const { temp_id, avatar_url, ...personaToInsert } = newPersona;
 
             // Insert the new persona
-            const { error } = await database.insertUserPersona(personaToInsert);
+            const { error } = await database.insertUserPersona(personaToInsert, createClient());
             if (error) throw error;
 
             // Get the personas to find the newly created one
-            const { personas: updatedPersonas } = await database.getUserPersonas();
+            const { personas: updatedPersonas } = await database.getUserPersonas(createClient());
             const createdPersona = updatedPersonas?.find(p =>
                 p.name === personaToInsert.name &&
                 p.bio === personaToInsert.bio
@@ -104,7 +102,7 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
                 const fileExt = file.name.split('.').pop() || 'jpg';
                 const filePath = `persona_avatars/${createdPersona.id}.${fileExt}`;
 
-                const { error: uploadError } = await database.uploadAuth(filePath, file);
+                const { error: uploadError } = await database.uploadAuth(filePath, file, createClient());
                 if (uploadError) throw uploadError;
             }
 
@@ -114,7 +112,7 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
         }
 
         // Reload personas to get fresh data including IDs for new personas
-        const { personas } = await database.getUserPersonas();
+        const { personas } = await database.getUserPersonas(createClient());
         if (personas) {
             dispatch({ type: 'LOAD_PERSONAS', personas });
         }
@@ -135,7 +133,7 @@ async function handleSubmit(state: SettingsState, dispatch: React.Dispatch<Setti
 function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: React.Dispatch<SettingsAction> }) {
     useEffect(() => {
         async function loadUserData() {
-            const { user } = await database.getLoggedInUser();
+            const { user } = await database.getLoggedInUser(createClient());
             if (user) {
                 dispatch({
                     type: 'SET_FIELD',
@@ -151,7 +149,7 @@ function SettingsContent({ state, dispatch }: { state: SettingsState, dispatch: 
                 }
 
                 // Load personas
-                const { personas } = await database.getUserPersonas();
+                const { personas } = await database.getUserPersonas(createClient());
                 if (personas) {
                     dispatch({ type: 'LOAD_PERSONAS', personas });
                 }

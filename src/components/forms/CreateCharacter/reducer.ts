@@ -1,8 +1,6 @@
-import { Gender } from '@/types';
-import { parseGender } from '@/types';
 import { getRandomWords } from '@/config';
 import { nameToPath } from '@/utils';
-import { CharacterAttributes } from '@/types/characterAttributes';
+import { Gender, parseGender, type CharacterAttributes } from 'echoes-shared/types';
 
 // Define the state interface for our reducer
 export interface FormState {

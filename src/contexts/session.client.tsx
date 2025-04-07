@@ -2,8 +2,10 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 
-import type { SessionStatus, UserPreferencesSupabase } from '@/types';
-import { createClient, setupAuthInterceptor, cleanupAuthInterceptor, database } from '@/utils';
+import type { SessionStatus, UserPreferencesSupabase } from 'echoes-shared/types';
+import { createClient, setupAuthInterceptor, cleanupAuthInterceptor } from '@/utils';
+import { database } from 'echoes-shared';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 const SessionContext = createContext<SessionStatus>({
     active: false,
@@ -21,14 +23,13 @@ export function SessionProvider({
     initialSession: SessionStatus;
 }) {
     const [sessionStatus, setSessionStatus] = useState<SessionStatus>(initialSession);
-    const supabase = createClient();
 
     const fetchPreferences = async () => {
         if (!sessionStatus.user || !sessionStatus.user.id) {
             return;
         }
 
-        const { preferences, error } = await database.getUserPreferences(sessionStatus.user.id);
+        const { preferences, error } = await database.getUserPreferences(sessionStatus.user.id, createClient());
         if (error) {
             console.error('Error fetching user preferences:', error);
         } else {
@@ -40,6 +41,7 @@ export function SessionProvider({
     }
 
     useEffect(() => {
+        const supabase = createClient() as SupabaseClient;
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {

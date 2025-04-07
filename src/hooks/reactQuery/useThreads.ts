@@ -1,9 +1,9 @@
 import React from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { Message } from '@/types';
+import { type Message } from 'echoes-shared/types';
 import { createClient } from '@/utils';
-import { database } from '@/utils';
+import { database } from 'echoes-shared';
 
 export function useThreads(characterId: string | undefined) {
     const createThreadMutation = useCreateThread();
@@ -11,7 +11,7 @@ export function useThreads(characterId: string | undefined) {
     return useQuery({
         queryKey: ['threads', characterId],
         queryFn: async () => {
-            const { threads, error } = await database.getThreads(characterId!);
+            const { threads, error } = await database.getThreads(characterId!, createClient());
             if (error) throw error;
             // If no threads exist, create one automatically
             if (threads.length === 0 && characterId) {
@@ -46,8 +46,7 @@ export function useThreadMessages(threadId: string | undefined) {
     React.useEffect(() => {
         if (!threadId) return;
 
-        const supabase = createClient();
-        const subscription = database.createMessageSubscription(threadId, updateMessageCache, supabase);
+        const subscription = database.createMessageSubscription(threadId, updateMessageCache, createClient());
 
         // Clean up subscription when component unmounts or threadId changes
         return () => {
@@ -58,7 +57,7 @@ export function useThreadMessages(threadId: string | undefined) {
     return useQuery({
         queryKey: ['messages', threadId],
         queryFn: async () => {
-            const { messages, error } = await database.getMessages(threadId!);
+            const { messages, error } = await database.getMessages(threadId!, createClient());
             if (error) throw error;
             return messages;
         },
@@ -87,7 +86,7 @@ export function useCreateThread() {
             const { thread, error } = await database.insertThread({
                 character_id: characterId,
                 title: 'New Thread',
-            });
+            }, createClient());
             if (error) throw error;
             return thread;
         },
@@ -110,7 +109,7 @@ export function useCreateMessage() {
                 thread_id: threadId,
                 sender_type: 'user',
                 content,
-            });
+            }, createClient());
             if (error) throw error;
             return message;
         },

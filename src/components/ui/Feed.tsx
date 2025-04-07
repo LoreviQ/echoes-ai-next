@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FeedType, Character } from '@/types';
+import { FeedType, type Character } from 'echoes-shared/types';
 
 import * as FeedContent from '@/components/content/feeds';
 

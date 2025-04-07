@@ -1,4 +1,4 @@
-import { Character } from "@/types";
+import type { Character } from 'echoes-shared/types';
 
 export function CharacterStatusAlerts({ character, isOwner }: { character: Character, isOwner: boolean }) {
     return (

@@ -2,7 +2,7 @@
 
 import { PostCard } from "./post";
 import { CharacterCard } from "./character";
-import { ContentItem, ContentType } from "@/types";
+import { type ContentItem, ContentType } from "echoes-shared/types";
 
 
 export function ContentCard({ item }: { item: ContentItem }) {

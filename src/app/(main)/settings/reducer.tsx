@@ -1,5 +1,4 @@
-import { NsfwFilter } from "@/types/user";
-import { UserPersonasSchema, UserPersonas } from "@/types";
+import type { NsfwFilter, UserPersonasSchema, UserPersonas } from "echoes-shared/types";
 
 export interface SettingsState {
     nsfw_filter: NsfwFilter;

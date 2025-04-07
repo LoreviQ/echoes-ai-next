@@ -4,7 +4,7 @@ import { useSession } from '@/contexts';
 import { NavButton, UserButton } from "@/components/buttons";
 import { LoginIcon } from "@/assets";
 import { Identity } from './genericDisplay';
-import { UserPersonas } from '@/types';
+import { type UserPersonas } from 'echoes-shared/types';
 
 export function UserSection() {
     const sessionStatus = useSession();

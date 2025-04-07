@@ -5,10 +5,11 @@ import dynamic from 'next/dynamic';
 import { useRightSidebar } from '@/contexts/rightSidebar';
 import { DiceIcon, CheckSquareIcon } from "@/assets";
 import { AdvancedSettingsForm } from '@/components/forms/CreateCharacter/advancedSettingsComponent';
-import { advancedSettingsReducer, initialAdvancedSettingsState, AdvancedSettingsState } from './reducer';
-import { api, endpoints, database } from '@/utils';
+import { advancedSettingsReducer, initialAdvancedSettingsState } from './reducer';
+import { api, endpoints, createClient } from '@/utils';
 import { Switch } from '@/components/ui';
-import { CharacterAttributes } from '@/types/characterAttributes';
+import { CharacterAttributes } from 'echoes-shared/types';
+import { database } from 'echoes-shared';
 
 const AdvancedSettingsHeaderComponent = () => {
     const { currentCharacter } = useRightSidebar();
@@ -63,7 +64,7 @@ const AdvancedSettingsContentComponent = () => {
             dispatch({ type: 'SET_FIELD', field: 'public', value: currentCharacter.public });
             dispatch({ type: 'SET_FIELD', field: 'nsfw', value: currentCharacter.nsfw });
 
-            const result = await database.getCharacterAttributes(currentCharacter.id);
+            const result = await database.getCharacterAttributes(currentCharacter.id, createClient());
 
             if (result.error || !result.attributes) {
                 // This is an expected case for new characters - set defaults for attributes
@@ -154,7 +155,8 @@ const AdvancedSettingsContentComponent = () => {
                 // Update character attributes
                 const attributesResult = await database.upsertCharacterAttributes(
                     currentCharacter.id,
-                    state.attributes
+                    state.attributes,
+                    createClient()
                 );
 
                 if (attributesResult.error) {
@@ -168,7 +170,8 @@ const AdvancedSettingsContentComponent = () => {
                         {
                             public: state.public,
                             nsfw: state.nsfw
-                        }
+                        },
+                        createClient()
                     );
 
                     if (characterError) {

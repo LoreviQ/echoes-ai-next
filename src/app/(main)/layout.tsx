@@ -1,13 +1,12 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { Providers } from "./providers";
 import { LeftSidebar, RightSidebar, MainWrapper } from "@/components/ui";
 import { SidebarContentType } from "@/contexts";
-import { UserPreferences, DEFAULT_PREFERENCES } from "@/types";
+import { type UserPreferences, DEFAULT_PREFERENCES } from "echoes-shared/types";
 import { createServerClient } from '@/utils/supabase.server';
-import { database } from '@/utils';
+import { database } from 'echoes-shared';
 
 export default async function MainLayout({
     children,

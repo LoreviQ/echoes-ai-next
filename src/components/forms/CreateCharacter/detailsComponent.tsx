@@ -3,7 +3,7 @@
 import React from 'react';
 import { Switch } from '@/components/ui';
 import { nameToPath } from '@/utils';
-import { Gender } from '@/types';
+import { Gender } from 'echoes-shared/types';
 
 import { FormState, FormAction } from './reducer';
 

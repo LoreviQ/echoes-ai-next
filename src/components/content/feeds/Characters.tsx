@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import { useCharacters } from "@/hooks/reactQuery";
 import { ContentCard } from "@/components/content/cards";
-import { ContentType } from "@/types";
+import { ContentType } from "echoes-shared/types";
 
 export function Characters() {
     const {
