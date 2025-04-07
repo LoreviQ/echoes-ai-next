@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { type Post } from 'echoes-shared/types';
+import { type PostSchema } from 'echoes-shared/types';
 import { api, endpoints, createClient } from '@/utils';
 import { database } from 'echoes-shared';
 
@@ -35,8 +35,8 @@ export function usePostsWithData(characterId: string) {
 
     // Map IDs to full post objects from the cache
     const posts = postIds?.map(id =>
-        queryClient.getQueryData<Post>(['post', id])
-    ).filter(Boolean) as Post[] | undefined;
+        queryClient.getQueryData<PostSchema>(['post', id])
+    ).filter(Boolean) as PostSchema[] | undefined;
 
     // Return the same query interface but with full posts instead of IDs
     return {
@@ -56,7 +56,7 @@ export function usePost(postId: string) {
         queryKey: ['post', postId],
         queryFn: async () => {
             // Try to get from cache first
-            const cachedPost = queryClient.getQueryData<Post>(['post', postId]);
+            const cachedPost = queryClient.getQueryData<PostSchema>(['post', postId]);
             if (cachedPost) return cachedPost;
 
             // Fetch from API if not in cache
