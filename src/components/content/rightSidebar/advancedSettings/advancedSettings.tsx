@@ -113,11 +113,14 @@ const AdvancedSettingsContentComponent = () => {
                 const { data } = await api.post(endpoints.characters.generateAttributes, payload);
 
                 if (data.success && data.content) {
-                    // Update attributes
-                    dispatch({
-                        type: 'SET_FIELD',
-                        field: 'attributes',
-                        value: data.content.attributes || data.content
+                    console.log(data.content);
+                    // Update each attribute individually
+                    Object.entries(data.content).forEach(([field, value]) => {
+                        dispatch({
+                            type: 'SET_ATTRIBUTE',
+                            field: field as keyof CharacterAttributes,
+                            value: value
+                        });
                     });
                 }
             } catch (error) {

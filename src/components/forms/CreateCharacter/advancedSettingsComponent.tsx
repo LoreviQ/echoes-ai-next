@@ -132,8 +132,6 @@ export function AdvancedSettingsForm({ state, dispatch }: AdvancedSettingsProps)
     );
 }
 
-
-
 function InputSection({ field, state, dispatch }: {
     field: keyof CharacterAttributes,
     state: any,
@@ -141,7 +139,7 @@ function InputSection({ field, state, dispatch }: {
 }) {
     const metadata = attributeMetadata[field];
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch({ type: 'SET_FIELD', field: field, value: e.target.value });
+        dispatch({ type: 'SET_ATTRIBUTE', field: field, value: e.target.value });
     }
 
     return (
@@ -150,7 +148,7 @@ function InputSection({ field, state, dispatch }: {
             <input
                 type="text"
                 id={field}
-                value={state[field]}
+                value={state.attributes[field]}
                 onChange={onChange}
                 required
                 disabled={state.isSubmitting || state.isGenerating}
@@ -169,16 +167,16 @@ function SliderSection({ field, state, dispatch }: {
     const metadata = attributeMetadata[field];
 
     const onChange = (value: number) => {
-        dispatch({ type: 'SET_FIELD', field: field, value: value });
+        dispatch({ type: 'SET_ATTRIBUTE', field: field, value: value });
     }
 
     return (
         <div className="flex">
             <div className="pl-2 w-[25%] flex flex-col">
                 <label className="text-sm font-medium text-zinc-200 cursor-help" title={metadata.description}>{metadata.name}</label>
-                <span className="text-xs text-zinc-500">{getAttributeValueDescription(field, state[field])}</span>
+                <span className="text-xs text-zinc-500">{getAttributeValueDescription(field, state.attributes[field])}</span>
             </div>
-            <Slider value={state[field]} onChange={onChange} disabled={state.isSubmitting || state.isGenerating} />
+            <Slider value={state.attributes[field]} onChange={onChange} disabled={state.isSubmitting || state.isGenerating} />
         </div>
     );
 }
