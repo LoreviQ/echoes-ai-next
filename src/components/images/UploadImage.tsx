@@ -51,7 +51,7 @@ export default function UploadImage({
             if (uploadError) throw uploadError;
 
             // Update database reference
-            const { error: updateError } = await database.updateByReference(reference, { [reference.columnName]: publicUrl }, supabase);
+            const { error: updateError } = await database.updateByReference(reference, publicUrl, supabase);
             if (updateError) throw updateError;
 
             // Notify parent component
