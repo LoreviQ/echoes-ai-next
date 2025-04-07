@@ -63,7 +63,7 @@ export function useCharacters() {
             console.error('Error in getCharactersForUser:', error);
             throw error;
         }
-    }, [queryClient]);
+    }, [queryClient, preferences?.nsfw_filter]);
 
     const updateCharacter = useCallback((id: string, character: Character) => {
         // Update the character in the cache

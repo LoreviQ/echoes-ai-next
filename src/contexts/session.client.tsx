@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 import type { SessionStatus, UserPreferencesSupabase } from 'echoes-shared/types';
 import { createClient, setupAuthInterceptor, cleanupAuthInterceptor } from '@/utils';
@@ -24,7 +24,7 @@ export function SessionProvider({
 }) {
     const [sessionStatus, setSessionStatus] = useState<SessionStatus>(initialSession);
 
-    const fetchPreferences = async () => {
+    const fetchPreferences = useCallback(async () => {
         if (!sessionStatus.user || !sessionStatus.user.id) {
             return;
         }
@@ -33,12 +33,12 @@ export function SessionProvider({
         if (error) {
             console.error('Error fetching user preferences:', error);
         } else {
-            setSessionStatus({
-                ...sessionStatus,
+            setSessionStatus(current => ({
+                ...current,
                 preferences: preferences ?? null,
-            });
+            }));
         }
-    }
+    }, [sessionStatus.user]);
 
     useEffect(() => {
         const supabase = createClient() as SupabaseClient;
@@ -62,7 +62,7 @@ export function SessionProvider({
     // get preferences when session changes
     useEffect(() => {
         fetchPreferences();
-    }, [sessionStatus.active]);
+    }, [sessionStatus.active, fetchPreferences]);
 
     // Setup interceptor whenever session status changes
     useEffect(() => {

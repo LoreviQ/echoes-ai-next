@@ -1,17 +1,17 @@
 import Link from "next/link";
 
-import { type Post } from "echoes-shared/types";
-import { useCharacter } from "@/hooks/reactQuery";
+import { useCharacter, usePost } from "@/hooks/reactQuery";
 import { DotsMenuIcon, SpeechBubbleIcon, RepostIcon, HeartIcon, MiniBarChartIcon } from "@/assets";
 import { formatFriendlyDate } from "@/utils";
 import { CircleActionButton } from "@/components/buttons";
 import { MarkdownContent } from "@/components/ui";
 import { PreviewImage } from "@/components/images";
 
-export function PostCard({ post }: { post: Post }) {
-    const { data: character, isLoading, error } = useCharacter(post.character_id);
+export function PostCard({ postId }: { postId: string }) {
+    const { data: post, isLoading: isLoadingPost, error: postError } = usePost(postId);
+    const { data: character, isLoading: isLoadingCharacter, error: characterError } = useCharacter(post?.character_id || '');
 
-    if (isLoading) {
+    if (isLoadingPost || (post && isLoadingCharacter)) {
         return (
             <div className="px-4 py-2 border-b border-zinc-600">
                 <div className="w-full text-center">
@@ -21,7 +21,7 @@ export function PostCard({ post }: { post: Post }) {
         );
     }
 
-    if (error || !character) {
+    if (postError || !post || characterError || !character) {
         return (
             <div className="px-4 py-2 border-b border-zinc-600">
                 <div className="w-full text-center">

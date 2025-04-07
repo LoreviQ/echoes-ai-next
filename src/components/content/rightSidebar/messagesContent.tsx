@@ -8,35 +8,30 @@ import { useRightSidebar, useSession } from "@/contexts";
 import { RightArrowIcon } from '@/assets';
 import { MarkdownContent } from '@/components/ui';
 import { formatFriendlyDate } from '@/utils';
+import { useThreadMessages } from '@/hooks/reactQuery';
 
 const MessagesHeaderComponent = () => {
-    const { active: isLoggedIn } = useSession();
-    const { currentCharacter, getThreadMessages } = useRightSidebar();
-    const threadData = isLoggedIn ? getThreadMessages() : null;
+    const { currentCharacter, selectedThreadId, setSelectedThreadId, threads, threadsLoading } = useRightSidebar();
 
     if (!currentCharacter) {
         return null;
-    }
-
-    if (!threadData) {
-        throw new Error('Required props missing for logged in state');
     }
 
     return (
         <div className="w-full sm:w-auto ml-auto">
             <select
                 className="w-full bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-sm"
-                value={threadData.selectedThreadId}
-                onChange={(e) => threadData.setSelectedThreadId(e.target.value)}
+                value={selectedThreadId}
+                onChange={(e) => setSelectedThreadId(e.target.value)}
             >
-                {threadData.threadsLoading ? (
+                {threadsLoading ? (
                     <option>Loading threads...</option>
-                ) : !threadData.threads ? (
+                ) : !threads ? (
                     <option>No threads available</option>
-                ) : threadData.threads.length === 0 ? (
+                ) : threads.length === 0 ? (
                     <option>No threads available</option>
                 ) : (
-                    threadData.threads.map((thread) => (
+                    threads.map((thread) => (
                         <option key={thread.id} value={thread.id}>
                             {thread.title}
                         </option>
@@ -49,8 +44,8 @@ const MessagesHeaderComponent = () => {
 
 const MessagesContentComponent = () => {
     const { active: isLoggedIn } = useSession();
-    const { currentCharacter, getThreadMessages } = useRightSidebar();
-    const threadData = isLoggedIn ? getThreadMessages() : null;
+    const { currentCharacter, selectedThreadId, sendMessage, isSending: messageSending } = useRightSidebar();
+    const { data: messages = [], isLoading: messagesLoading } = useThreadMessages(selectedThreadId);
     const [inputValue, setInputValue] = React.useState('');
     const [statusMessage, setStatusMessage] = React.useState<string | null>(null);
     const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -64,7 +59,7 @@ const MessagesContentComponent = () => {
     // Scroll to bottom when messages change
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [threadData?.messages]);
+    }, [messages]);
 
     // Set status message based on current state
     useEffect(() => {
@@ -78,36 +73,31 @@ const MessagesContentComponent = () => {
             return;
         }
 
-        if (threadData?.messagesLoading) {
+        if (messagesLoading) {
             setStatusMessage('Loading messages...');
             return;
         }
 
-        if (threadData?.messages.length === 0) {
+        if (messages.length === 0) {
             setStatusMessage('No messages yet...');
             return;
         }
 
         setStatusMessage(null);
-    }, [currentCharacter, isLoggedIn, threadData?.messagesLoading, threadData?.messages?.length]);
+    }, [currentCharacter, isLoggedIn, messagesLoading, messages.length]);
 
     // blank content if no character
     if (!currentCharacter) {
         return null;
     }
 
-    // Type guard to ensure required props are present when logged in
-    if (isLoggedIn && !threadData) {
-        throw new Error('Required props missing for logged in state');
-    }
-
     const handleSendMessage = async () => {
         const trimmedContent = inputValue.trim();
-        if (trimmedContent && !threadData?.messageSending) {
+        if (trimmedContent && !messageSending) {
             try {
                 setInputValue('');
-                await threadData?.sendMessage(trimmedContent);
-                // Add a small delay before focusing or itwon't work?
+                await sendMessage(trimmedContent);
+                // Add a small delay before focusing or it won't work?
                 setTimeout(() => {
                     textareaRef.current?.focus();
                 }, 0);
@@ -127,7 +117,6 @@ const MessagesContentComponent = () => {
         }
     };
 
-
     return (
         <div className="flex flex-col flex-1 h-full">
             {/* Messages container */}
@@ -138,7 +127,7 @@ const MessagesContentComponent = () => {
                             {statusMessage}
                         </div>
                     ) : (
-                        threadData?.messages.map((message) => (
+                        messages.map((message) => (
                             <ChatMessage key={message.id} message={message} />
                         ))
                     )}
@@ -161,12 +150,12 @@ const MessagesContentComponent = () => {
                         onKeyDown={handleKeyDown}
                         placeholder={isLoggedIn ? "Type a message..." : "Please log in to send messages"}
                         rows={1}
-                        disabled={threadData?.messageSending || !isLoggedIn}
+                        disabled={messageSending || !isLoggedIn}
                         className="w-full bg-black border border-zinc-600 rounded-xl py-2 pr-10 pl-4 text-white placeholder-zinc-400 focus:border-white focus:outline-none transition-colors duration-200 resize-none overflow-hidden disabled:opacity-50"
                     />
                     <button
                         onClick={handleSendMessage}
-                        disabled={!inputValue.trim() || threadData?.messageSending || !isLoggedIn}
+                        disabled={!inputValue.trim() || messageSending || !isLoggedIn}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 disabled:opacity-50"
                     >
                         <RightArrowIcon className="w-5 h-5 text-zinc-400 transition-colors duration-200 group-focus-within:text-white" />

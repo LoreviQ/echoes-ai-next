@@ -1,12 +1,34 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import type { Character } from "echoes-shared/types";
+import { useCharacter } from "@/hooks/reactQuery";
 import { PreviewImage } from "@/components/images";
 import { SubscriptionButton } from "@/components/buttons";
 
-export function CharacterCard({ character }: { character: Character }) {
+export function CharacterCard({ characterId }: { characterId: string }) {
     const router = useRouter();
+    const { data: character, isLoading, error } = useCharacter(characterId);
+
+    if (isLoading) {
+        return (
+            <div className="px-4 py-3 border-b border-zinc-600">
+                <div className="w-full text-center">
+                    <p className="text-zinc-400">Loading character...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !character) {
+        return (
+            <div className="px-4 py-3 border-b border-zinc-600">
+                <div className="w-full text-center">
+                    <p className="text-red-500">Failed to load character</p>
+                </div>
+            </div>
+        );
+    }
+
     const avatarUrl = character.avatar_url || '/images/avatar-placeholder.jpg';
     const characterUrl = `/${character.path}`;
 

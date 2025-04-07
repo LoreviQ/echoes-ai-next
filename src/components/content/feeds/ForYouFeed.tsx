@@ -2,9 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
-import { type ContentReference } from 'echoes-shared/types';
 import { ContentCard } from '@/components/content/cards';
-import { useContentItem } from '@/hooks/reactQuery';
 import { useFeed } from '@/contexts';
 
 export function ForYouFeed() {
@@ -83,9 +81,9 @@ export function ForYouFeed() {
             {/* Content feed */}
             <div className="w-full">
                 {currentFeed.map((contentRef) => (
-                    <FeedItem
+                    <ContentCard
                         key={`${contentRef.type}-${contentRef.id}`}
-                        contentRef={contentRef}
+                        reference={contentRef}
                     />
                 ))}
             </div>
@@ -103,34 +101,4 @@ export function ForYouFeed() {
     );
 }
 
-// Individual feed item component that fetches and displays a content item
-function FeedItem({ contentRef }: { contentRef: ContentReference }) {
-    const { data: contentItem, isLoading, error } = useContentItem(contentRef);
 
-    if (isLoading) {
-        return (
-            <div className="px-4 py-3 border-b border-zinc-600 animate-pulse">
-                <div className="flex space-x-4">
-                    <div className="flex-shrink-0 h-12 w-12 rounded-full bg-zinc-700"></div>
-                    <div className="flex-grow space-y-2">
-                        <div className="h-4 bg-zinc-700 rounded w-1/4"></div>
-                        <div className="h-3 bg-zinc-700 rounded w-3/4"></div>
-                        <div className="h-3 bg-zinc-700 rounded w-1/2"></div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (error || !contentItem) {
-        return (
-            <div className="px-4 py-3 border-b border-zinc-600">
-                <div className="w-full text-center">
-                    <p className="text-red-500">Failed to load content</p>
-                </div>
-            </div>
-        );
-    }
-
-    return <ContentCard item={contentItem} />;
-}

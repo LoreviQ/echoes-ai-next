@@ -2,18 +2,15 @@
 
 import { PostCard } from "./post";
 import { CharacterCard } from "./character";
-import { type ContentItem, ContentType } from "echoes-shared/types";
+import { type ContentReference, ContentType } from "echoes-shared/types";
 
-
-export function ContentCard({ item }: { item: ContentItem }) {
-    switch (item.type) {
+export function ContentCard({ reference }: { reference: ContentReference }) {
+    switch (reference.type) {
         case ContentType.POST:
-            return <PostCard post={item.data} />;
+            return <PostCard postId={reference.id} />;
         case ContentType.CHARACTER:
-            return <CharacterCard character={item.data} />;
+            return <CharacterCard characterId={reference.id} />;
         default:
-            // TypeScript should prevent this, but adding as a safeguard
-            const exhaustiveCheck: never = item;
             return null;
     }
 }

@@ -50,10 +50,7 @@ export function Posts({ character }: { character: Character }) {
             {posts.map((post) => (
                 <ContentCard
                     key={post.id}
-                    item={{
-                        type: ContentType.POST,
-                        data: post
-                    }}
+                    reference={{ type: ContentType.POST, id: post.id }}
                 />
             ))}
         </div>

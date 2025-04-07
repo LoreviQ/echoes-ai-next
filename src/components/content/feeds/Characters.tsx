@@ -72,7 +72,7 @@ export function Characters() {
             {characters.map((character) => (
                 <ContentCard
                     key={character.id}
-                    item={{ type: ContentType.CHARACTER, data: character }}
+                    reference={{ type: ContentType.CHARACTER, id: character.id }}
                 />
             ))}
         </div>
