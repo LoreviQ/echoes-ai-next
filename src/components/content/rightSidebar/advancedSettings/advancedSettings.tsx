@@ -8,6 +8,7 @@ import { AdvancedSettingsForm } from '@/components/forms/CreateCharacter/advance
 import { advancedSettingsReducer, initialAdvancedSettingsState, AdvancedSettingsState } from './reducer';
 import { api, endpoints, database } from '@/utils';
 import { Switch } from '@/components/ui';
+import { CharacterAttributes } from '@/types/characterAttributes';
 
 const AdvancedSettingsHeaderComponent = () => {
     const { currentCharacter } = useRightSidebar();
@@ -55,39 +56,41 @@ const AdvancedSettingsContentComponent = () => {
                 return;
             }
 
-            try {
-                // Set character-specific fields
-                dispatch({ type: 'SET_FIELD', field: 'public', value: currentCharacter.public });
-                dispatch({ type: 'SET_FIELD', field: 'nsfw', value: currentCharacter.nsfw });
+            // Reset error state at start of fetch
+            dispatch({ type: 'SET_FIELD', field: 'error', value: null });
 
-                const { attributes, error } = await database.getCharacterAttributes(currentCharacter.id);
-                if (error || !attributes) {
-                    throw new Error(String(error));
-                }
-                // Update each field from the attributes
-                Object.entries(attributes).forEach(([field, value]) => {
-                    if (field in initialAdvancedSettingsState) {
-                        dispatch({
-                            type: 'SET_FIELD',
-                            field: field as keyof AdvancedSettingsState,
-                            value
-                        });
-                    }
+            // Set character-specific fields
+            dispatch({ type: 'SET_FIELD', field: 'public', value: currentCharacter.public });
+            dispatch({ type: 'SET_FIELD', field: 'nsfw', value: currentCharacter.nsfw });
+
+            const result = await database.getCharacterAttributes(currentCharacter.id);
+
+            if (result.error || !result.attributes) {
+                // This is an expected case for new characters - set defaults for attributes
+                dispatch({
+                    type: 'SET_FIELD',
+                    field: 'attributes',
+                    value: initialAdvancedSettingsState.attributes
                 });
-            } catch (error) {
-                console.error('Error fetching character attributes:', error);
-                // Reset to initial state on any error
-                Object.keys(initialAdvancedSettingsState).forEach((field) => {
-                    dispatch({
-                        type: 'SET_FIELD',
-                        field: field as keyof AdvancedSettingsState,
-                        value: initialAdvancedSettingsState[field as keyof AdvancedSettingsState]
-                    });
-                });
+                return;
             }
+
+            // Update attributes
+            const characterAttributes: CharacterAttributes = result.attributes;
+            dispatch({ type: 'SET_FIELD', field: 'attributes', value: characterAttributes });
         };
 
-        fetchCharacterAttributes();
+        try {
+            fetchCharacterAttributes();
+        } catch (error) {
+            // This is for unexpected errors
+            console.error('Error fetching character attributes:', error);
+            dispatch({
+                type: 'SET_FIELD',
+                field: 'error',
+                value: 'An unexpected error occurred while fetching character attributes. Please try again later.'
+            });
+        }
     }, [currentCharacter]);
 
     // Add generate handler to be called from header
@@ -110,19 +113,20 @@ const AdvancedSettingsContentComponent = () => {
                 const { data } = await api.post(endpoints.characters.generateAttributes, payload);
 
                 if (data.success && data.content) {
-                    // Update each field from the content, ensuring it's a valid field
-                    (Object.entries(data.content) as [keyof AdvancedSettingsState, any][]).forEach(([field, value]) => {
-                        if (field in initialAdvancedSettingsState) {
-                            dispatch({
-                                type: 'SET_FIELD',
-                                field,
-                                value
-                            });
-                        }
+                    // Update attributes
+                    dispatch({
+                        type: 'SET_FIELD',
+                        field: 'attributes',
+                        value: data.content.attributes || data.content
                     });
                 }
             } catch (error) {
                 console.error(error);
+                dispatch({
+                    type: 'SET_FIELD',
+                    field: 'error',
+                    value: 'An error occurred while generating attributes. Please try again later.'
+                });
             }
         };
         // Store the handler in a custom property on the window object
@@ -143,13 +147,11 @@ const AdvancedSettingsContentComponent = () => {
             try {
                 dispatch({ type: 'SET_FIELD', field: 'isSubmitting', value: true });
 
-                // Create attributes object by excluding non-attribute fields and character fields
-                const { isSubmitting, isGenerating, public: isPublic, nsfw: isNsfw, ...attributes } = state;
 
                 // Update character attributes
                 const attributesResult = await database.upsertCharacterAttributes(
                     currentCharacter.id,
-                    attributes
+                    state.attributes
                 );
 
                 if (attributesResult.error) {
@@ -157,15 +159,15 @@ const AdvancedSettingsContentComponent = () => {
                 }
 
                 // Update character public/nsfw status if they changed
-                if (isPublic !== currentCharacter.public || isNsfw !== currentCharacter.nsfw) {
+                if (state.public !== currentCharacter.public || state.nsfw !== currentCharacter.nsfw) {
                     const { error: characterError } = await database.updateCharacterBio(
                         currentCharacter.id,
                         {
                             name: currentCharacter.name,
                             path: currentCharacter.path,
                             bio: currentCharacter.bio,
-                            public: isPublic,
-                            nsfw: isNsfw
+                            public: state.public,
+                            nsfw: state.nsfw
                         }
                     );
 
@@ -193,31 +195,39 @@ const AdvancedSettingsContentComponent = () => {
 
     return (
         <div className="p-4">
-            <div className="flex items-center justify-center space-x-12">
-                <div className="flex items-center space-x-2">
-                    <Switch
-                        id="public"
-                        checked={state.public}
-                        onCheckedChange={(checked) => {
-                            dispatch({ type: 'SET_FIELD', field: 'public', value: checked });
-                        }}
-                        className={(state.isSubmitting || state.isGenerating) ? "opacity-50 cursor-not-allowed" : ""}
-                    />
-                    <label className="text-sm font-medium text-zinc-200" htmlFor="public">Public</label>
+            {state.error ? (
+                <div className="mb-4 p-4 bg-red-500/10 border border-red-500 rounded text-red-500">
+                    {state.error}
                 </div>
-                <div className="flex items-center space-x-2">
-                    <Switch
-                        id="nsfw"
-                        checked={state.nsfw}
-                        onCheckedChange={(checked) => {
-                            dispatch({ type: 'SET_FIELD', field: 'nsfw', value: checked });
-                        }}
-                        className={(state.isSubmitting || state.isGenerating) ? "opacity-50 cursor-not-allowed" : ""}
-                    />
-                    <label className="text-sm font-medium text-zinc-200" htmlFor="nsfw">NSFW</label>
-                </div>
-            </div>
-            <AdvancedSettingsForm state={state} dispatch={dispatch} />
+            ) : (
+                <>
+                    <div className="flex items-center justify-center space-x-12">
+                        <div className="flex items-center space-x-2">
+                            <Switch
+                                id="public"
+                                checked={state.public}
+                                onCheckedChange={(checked) => {
+                                    dispatch({ type: 'SET_FIELD', field: 'public', value: checked });
+                                }}
+                                className={(state.isSubmitting || state.isGenerating) ? "opacity-50 cursor-not-allowed" : ""}
+                            />
+                            <label className="text-sm font-medium text-zinc-200" htmlFor="public">Public</label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Switch
+                                id="nsfw"
+                                checked={state.nsfw}
+                                onCheckedChange={(checked) => {
+                                    dispatch({ type: 'SET_FIELD', field: 'nsfw', value: checked });
+                                }}
+                                className={(state.isSubmitting || state.isGenerating) ? "opacity-50 cursor-not-allowed" : ""}
+                            />
+                            <label className="text-sm font-medium text-zinc-200" htmlFor="nsfw">NSFW</label>
+                        </div>
+                    </div>
+                    <AdvancedSettingsForm state={state} dispatch={dispatch} />
+                </>
+            )}
         </div>
     );
 };

@@ -1,93 +1,62 @@
 // Define the state interface for advanced settings
+import { CharacterAttributes } from '@/types/characterAttributes';
+
 export interface AdvancedSettingsState {
-    // character attributes
+    // character settings
     public: boolean;
     nsfw: boolean;
 
-    // state attributes
-    mood: string;
-    goal: string;
+    // character attributes
+    attributes: CharacterAttributes;
 
-    // action attributes
-    posting_frequency: number;
-    originality: number;
-    like_reply_ratio: number;
-    responsiveness: number;
-
-    // provider attributes
-    reading_scope: number;
-    information_filtering: number;
-    sentiment_filtering: number;
-    profile_scrutiny: number;
-
-    // evaluator attributes
-    influencability: number;
-    engagement_sensitivity: number;
-    relationship_formation_speed: number;
-    relationship_closeness_threshold: number;
-    relationship_stability: number;
-    grudge_persistence: number;
-
-    // content attributes
-    positivity: number;
-    openness: number;
-    formality: number;
-    conflict_initiation: number;
-    influence_seeking: number;
-    inquisitiveness: number;
-    humor: number;
-    depth: number;
-
+    // UI state
     isSubmitting?: boolean;
     isGenerating?: boolean;
+    error: string | null;
 }
 
 // Define action types for our reducer
 export type AdvancedSettingsAction =
-    | { type: 'SET_FIELD'; field: keyof AdvancedSettingsState; value: any };
+    | { type: 'SET_FIELD'; field: keyof AdvancedSettingsState; value: any }
+    | { type: 'SET_ATTRIBUTE'; field: keyof CharacterAttributes; value: any };
 
 // Define the initial state
 export const initialAdvancedSettingsState: AdvancedSettingsState = {
-    // character attributes
+    // character settings
     public: false,
     nsfw: false,
 
-    // state attributes
-    mood: '',
-    goal: '',
-
-    // action attributes
-    posting_frequency: 0,
-    originality: 0,
-    like_reply_ratio: 0,
-    responsiveness: 0,
-
-    // provider attributes
-    reading_scope: 0,
-    information_filtering: 0,
-    sentiment_filtering: 0,
-    profile_scrutiny: 0,
-
-    // evaluator attributes
-    influencability: 0,
-    engagement_sensitivity: 0,
-    relationship_formation_speed: 0,
-    relationship_closeness_threshold: 0,
-    relationship_stability: 0,
-    grudge_persistence: 0,
-
-    // content attributes
-    positivity: 0,
-    openness: 0,
-    formality: 0,
-    conflict_initiation: 0,
-    influence_seeking: 0,
-    inquisitiveness: 0,
-    humor: 0,
-    depth: 0,
+    // character attributes
+    attributes: {
+        mood: '',
+        goal: '',
+        posting_frequency: 0,
+        originality: 0,
+        like_reply_ratio: 0,
+        responsiveness: 0,
+        reading_scope: 0,
+        information_filtering: 0,
+        sentiment_filtering: 0,
+        profile_scrutiny: 0,
+        influencability: 0,
+        engagement_sensitivity: 0,
+        relationship_formation_speed: 0,
+        relationship_closeness_threshold: 0,
+        relationship_stability: 0,
+        grudge_persistence: 0,
+        positivity: 0,
+        openness: 0,
+        formality: 0,
+        conflict_initiation: 0,
+        influence_seeking: 0,
+        inquisitiveness: 0,
+        humor: 0,
+        depth: 0
+    },
 
     isSubmitting: false,
-    isGenerating: false
+    isGenerating: false,
+    error: null
 };
 
 // Create the reducer function
@@ -100,6 +69,14 @@ export function advancedSettingsReducer(
             return {
                 ...state,
                 [action.field]: action.value
+            };
+        case 'SET_ATTRIBUTE':
+            return {
+                ...state,
+                attributes: {
+                    ...state.attributes,
+                    [action.field]: action.value
+                }
             };
         default:
             return state;
